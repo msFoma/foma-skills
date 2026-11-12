@@ -1,5 +1,5 @@
 #!/bin/sh
-# foma-skills SessionStart: skill router (DEC-027) + handoff pointer (DEC-019).
+# foma-skills SessionStart: skill router (DEC-027) + handoff + plan progress (DEC-019, IDEA-127).
 # POSIX sh, shell builtins only (runs in Git Bash too). Output goes into context.
 
 cat <<'TXT'
@@ -7,6 +7,20 @@ foma-skills is active. Before you act on a task, check the foma-skills skills: i
 TXT
 
 if [ -f ".claude/.scratch/handoff.md" ]; then
-  echo "A handoff note from the last session is in .claude/.scratch/handoff.md; read it before you start."
+  read -r first < ".claude/.scratch/handoff.md"
+  echo "Handoff note: .claude/.scratch/handoff.md. $first"
 fi
+
+# Active plan progress, e.g. "Plan refunds: 2/5 tasks done".
+for plan in docs/plans/*/plan.md; do
+  [ -f "$plan" ] || continue
+  total=0; done_n=0
+  while IFS= read -r line; do
+    case "$line" in
+      "## T"[0-9]*) total=$((total + 1)) ;;
+      "Status: done"*) done_n=$((done_n + 1)) ;;
+    esac
+  done < "$plan"
+  [ "$total" -gt 0 ] && [ "$done_n" -lt "$total" ] && d=${plan#docs/plans/}; echo "Plan ${d%/plan.md}: $done_n/$total tasks done."
+done
 exit 0

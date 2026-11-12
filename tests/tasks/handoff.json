@@ -1,0 +1,37 @@
+{
+  "fixture": "shop-plan",
+  "setup": [
+    "printf 'SCRATCH\\n' > notes.tmp",
+    "printf 'x\\n' > shop/orders.py.bak"
+  ],
+  "prompt": "We just finished T1 of the refunds plan (refund() written, test passes). I decided to keep refunds as a separate function, not a method of Order. Wrap up the session.",
+  "command": "foma-skills:handoff",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Bash(git status*)",
+    "Bash(mkdir *)",
+    "Bash(cat *)",
+    "Bash(ls*)"
+  ],
+  "checks": [
+    {
+      "name": "no code touched",
+      "cmd": "git diff --quiet HEAD -- shop tests"
+    },
+    {
+      "name": "junk not deleted",
+      "cmd": "test -f notes.tmp && test -f shop/orders.py.bak"
+    }
+  ],
+  "checklist": [
+    "Headless runs block writes to .claude/ (FACT-117), so the note may only be shown. The note (written or shown in the answer) starts with a line 'Next: ...' naming a concrete action (T2 of the refunds plan), is at most 20 lines, and records the decision that refunds stay a separate function, not an Order method.",
+    "The final answer flags the leftover files (notes.tmp, orders.py.bak) for tidying without deleting them, tells the user to run /clear, and does not claim a write that was blocked."
+  ],
+  "timeout": 240
+}
