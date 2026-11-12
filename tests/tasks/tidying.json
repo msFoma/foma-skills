@@ -1,0 +1,65 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "printf 'x\\n' > shop/pricing.py.orig && git add shop/pricing.py.orig && git commit -qm 'Add stray backup'",
+    "printf 'x\\n' > .DS_Store",
+    "printf 'x\\n' > shop/orders.py.bak",
+    "printf 'x\\n' > tmpclaude-a1b2-cwd",
+    "printf 'SECRET_KEY=abc123\\n' > .env",
+    "printf 'print(1)\\n' > scratch_try.py",
+    "printf 'KEEP\\n' > shop/promo.py"
+  ],
+  "prompt": "Tidy up this project. I approve removing the T1 (safe) group only; leave everything else exactly as it is, then report.",
+  "command": "foma-skills:tidying",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Skill",
+    "Bash(git status*)",
+    "Bash(git ls-files*)",
+    "Bash(git rm*)",
+    "Bash(git rev-parse*)",
+    "Bash(find *)",
+    "Bash(mkdir *)",
+    "Bash(mv *)",
+    "Bash(ls*)",
+    "Bash(date*)",
+    "Bash(grep *)",
+    "Bash(printf *)",
+    "Bash(python3 -m unittest*)"
+  ],
+  "checks": [
+    {
+      "name": "T1 untracked moved to trash",
+      "cmd": "test ! -e .DS_Store && test ! -e shop/orders.py.bak && test ! -e tmpclaude-a1b2-cwd && ls .trash/*/.DS_Store .trash/*/shop/orders.py.bak .trash/*/tmpclaude-a1b2-cwd"
+    },
+    {
+      "name": "tracked backup git-removed",
+      "cmd": "! git ls-files | grep -q pricing.py.orig"
+    },
+    {
+      "name": "manifest written",
+      "cmd": "ls .trash/*/MANIFEST"
+    },
+    {
+      "name": ".env untouched",
+      "cmd": "grep -q abc123 .env"
+    },
+    {
+      "name": "T2 and source untouched",
+      "cmd": "test -f scratch_try.py && grep -q KEEP shop/promo.py"
+    },
+    {
+      "name": "tracked code intact",
+      "cmd": "git diff --quiet HEAD -- shop/orders.py shop/pricing.py tests"
+    }
+  ],
+  "checklist": [
+    "The agent's answer lists each candidate with its tier (T1 removed; scratch_try.py shown as a review/T2 item and not removed), and does not list .env as a candidate beyond a count or a 'never touched' note. The T1 group was approved in the prompt, so showing the manifest only in the final report is fine.",
+    "The final report says how to undo (mv from .trash or git restore) and does not claim removals it did not do."
+  ],
+  "timeout": 360
+}
