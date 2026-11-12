@@ -31,3 +31,4 @@ Rules (DEC-002): Apache-2.0, MIT, ISC and CC0 sources may be adapted; CC-BY need
 | tidying | [github/gitignore](https://github.com/github/gitignore) Global lists | CC0-1.0 | OS and editor junk names (`.DS_Store`, `Thumbs.db`, `*~`, …). Rest is own: tiers, manifest, `.trash/` removal (DEC-016) |
 | learning | own | Apache-2.0 | No outside source; design from DEC-015 and its research notes |
 | skill-finder | [vercel-labs/skills](https://github.com/vercel-labs/skills) `find-skills` (idea only) | no license read | Idea only, own wording: check a registry before recommending. Vetting rules, no `-y`, copy-not-run install are own (FACT-086, FACT-087, NOTE-160) |
+| writing-skills | own | Apache-2.0 | No outside source; condensed from this repo's lite standard (`docs/lite-standard.md`) |

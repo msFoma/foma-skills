@@ -1,0 +1,11 @@
+@fixture shop
++ Write a skill for our release process in this project.
++ Create a skill that reviews SQL migrations before they are merged.
++ My skill's description is long and it rarely fires. Rewrite it.
++ Turn our release procedure (tests, version bump, changelog, commit) into a reusable skill for this project.
++ This SKILL.md is 2000 tokens. Shrink it without losing behaviour.
+- Find a skill for generating changelogs and install it.
+- Explain what a Claude Code skill is.
+- Plan adding partial refunds to the shop.
+- Add the deploy steps to the README.
+- Add a rule to CLAUDE.md: stage files by path.

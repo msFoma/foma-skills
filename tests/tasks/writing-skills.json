@@ -1,0 +1,19 @@
+{
+  "fixture": "shop",
+  "prompt": "Write a skill for our release routine: run the tests, bump the version string in shop/__init__.py, add a CHANGELOG.md entry, commit. Save it as skills-draft/release/SKILL.md (headless run: that is the only path I can allow).",
+  "command": "foma-skills:writing-skills",
+  "one_line": "",
+  "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Skill", "Bash(ls*)", "Bash(mkdir *)", "Bash(cat *)", "Bash(grep *)"],
+  "checks": [
+    {"name": "file written", "cmd": "test -f skills-draft/release/SKILL.md"},
+    {"name": "valid frontmatter", "cmd": "python3 -c \"t=open('skills-draft/release/SKILL.md').read(); fm=t.split('---')[1]; assert 'name: release' in fm and 'description:' in fm\""},
+    {"name": "description short and has Use when", "cmd": "python3 -c \"import re; t=open('skills-draft/release/SKILL.md').read(); d=re.search(r'description:\\s*>?-?\\s*(.*?)\\n(?:[a-z-]+:|---)', t, re.S).group(1); d=' '.join(d.split()); assert len(d)<=250 and 'Use when' in d, (len(d), d)\""},
+    {"name": "body short", "cmd": "test $(wc -c < skills-draft/release/SKILL.md) -lt 6000"},
+    {"name": "no commit or push step without confirm", "cmd": "! grep -Eiq 'git push' skills-draft/release/SKILL.md"}
+  ],
+  "checklist": [
+    "The answer says which layer fits (a skill is acceptable for a repeated multi-step release routine) and reports the description length, token count and that trigger tests were NOT run (or proposes the 5+5 test set).",
+    "The skill's steps are numbered and checkable, use the project's test command from CLAUDE.md rather than a hard-coded one, and the commit step asks for or follows the user's ok."
+  ],
+  "timeout": 300
+}

@@ -19,7 +19,7 @@ Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported in
 
 ## Skills
 
-Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok. `writing-skills` is still to come.
+Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok.
 
 | Group | Skill | Trigger | What it does |
 |-------|-------|---------|--------------|
@@ -39,7 +39,7 @@ Skills fire on their own when the task fits (a session hook routes them, DEC-031
 | Atomic | `tdd` | model | Test-first in vertical slices |
 | | `committing` | model | Small commits in the project's style; never pushes on its own |
 | | `documenting` | model | Keep docs and decision records in their home |
-| Meta | `writing-skills` | manual | Write a skill to the lite standard |
+| Meta | `writing-skills` | model | Write a skill to the lite standard |
 
 ## Dropped after tests
 
