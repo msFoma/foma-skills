@@ -2,3 +2,4 @@
 .claude/.scratch/
 .trash/
 __pycache__/
+tests/.runs/

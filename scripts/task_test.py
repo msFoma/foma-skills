@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Task check vs baselines (docs/lite-standard.md §8.3–8.4, DEC-024). Costs model usage.
 
-Usage: python3 scripts/task_test.py <skill> [--models haiku,sonnet] [--runs N] [--variants skill,none,line]
+Usage: python3 scripts/task_test.py <task> [--models haiku,sonnet] [--runs N] [--variants skill,none,line]
+       python3 scripts/task_test.py <task> --rejudge   (re-grade saved runs that have no verdict)
 
 Task: tests/tasks/<skill>.json
   {"fixture": "calc", "prompt": "...", "one_line": "...",
@@ -11,11 +12,15 @@ Task: tests/tasks/<skill>.json
 Variants: skill = plugin loaded; none = no plugin; line = no plugin, one_line
 appended to the fixture CLAUDE.md. A Sonnet judge grades every run against the
 checklist; a run passes only if every item passes.
+Every run is saved to tests/.runs/<task>/ (transcript + diff + verdict), so a
+failed judge call is re-graded with --rejudge instead of re-running the agent.
+A run with no agent output (limit, network) is NORUN: not judged, not scored.
 """
 import argparse
 import json
 import subprocess
 import sys
+import time
 
 import claude_run as cr
 
@@ -51,7 +56,18 @@ def transcript(events):
     return "\n".join(out)
 
 
-def judge(task, log, diff):
+RUNS = cr.ROOT / "tests/.runs"
+
+
+def judge(task, log, diff, retries=1):
+    marks, reason = judge_once(task, log, diff)
+    while marks is None and retries > 0:
+        retries -= 1
+        marks, reason = judge_once(task, log, diff)
+    return marks, reason
+
+
+def judge_once(task, log, diff):
     items = "\n".join(f"{i + 1}. {c}" for i, c in enumerate(task["checklist"]))
     prompt = (
         "You grade one run of a coding agent. Use only the evidence below. "
@@ -81,7 +97,7 @@ def judge(task, log, diff):
         return None, f"judge error: {e}; {clip(res.stdout, 200)}"
 
 
-def run_variant(task, variant, model):
+def run_variant(name, task, variant, model):
     with cr.new_tmp() as tmp:
         project = cr.fixture_copy(task["fixture"], tmp,
                                   claude_md_extra=task["one_line"] if variant == "line" else None,
@@ -91,8 +107,45 @@ def run_variant(task, variant, model):
         events, secs, timed_out = cr.run(cmd, project, timeout=task.get("timeout", 300))
         diff = subprocess.run(["git", "diff"], cwd=project, capture_output=True, text=True).stdout
     skills = [u.get("input", {}).get("skill") for u in cr.tool_uses(events) if u.get("name") == "Skill"]
-    marks, reason = judge(task, transcript(events), diff)
-    return marks, reason, skills, secs, timed_out
+    log = transcript(events)
+    record = {"variant": variant, "model": model, "skills": skills, "secs": round(secs),
+              "timed_out": timed_out, "transcript": log, "diff": diff, "marks": None, "reason": ""}
+    if not any(e.get("type") == "assistant" for e in events):
+        record["reason"] = "NORUN: no agent output"
+    else:
+        record["marks"], record["reason"] = judge(task, log, diff)
+    out = RUNS / name
+    out.mkdir(parents=True, exist_ok=True)
+    path = out / f"{time.strftime('%Y%m%d-%H%M%S')}-{variant}-{model.replace('@', '_')}.json"
+    path.write_text(json.dumps(record))
+    return record
+
+
+def show(record, score):
+    marks = record["marks"]
+    key = (record["variant"], record["model"])
+    if record["reason"].startswith("NORUN"):
+        status = "NORUN"
+    else:
+        ok = bool(marks) and all(marks)
+        p, t = score.get(key, (0, 0))
+        score[key] = (p + ok, t + 1)
+        status = "PASS" if ok else "FAIL"
+    items = "".join("+" if m else "-" for m in marks) if marks else "?"
+    print(f"{status} {record['variant']:5} {record['model']:9} items={items} "
+          f"skills={record['skills'] or '-'} {record['secs']}s"
+          f"{' TIMEOUT' if record['timed_out'] else ''} | {record['reason']}", flush=True)
+
+
+def rejudge(name, task):
+    score = {}
+    for path in sorted((RUNS / name).glob("*.json")):
+        record = json.loads(path.read_text())
+        if record["marks"] is None and not record["reason"].startswith("NORUN"):
+            record["marks"], record["reason"] = judge(task, record["transcript"], record["diff"])
+            path.write_text(json.dumps(record))
+        show(record, score)
+    return score
 
 
 def main():
@@ -101,21 +154,18 @@ def main():
     ap.add_argument("--models", default="haiku,sonnet")
     ap.add_argument("--runs", type=int, default=2)
     ap.add_argument("--variants", default="skill,none,line")
+    ap.add_argument("--rejudge", action="store_true")
     args = ap.parse_args()
 
     task = json.loads((cr.ROOT / f"tests/tasks/{args.skill}.json").read_text())
-    score = {}
-    for variant in args.variants.split(","):
-        for model in args.models.split(","):
-            for _ in range(args.runs):
-                marks, reason, skills, secs, timed_out = run_variant(task, variant, model)
-                ok = bool(marks) and all(marks)
-                p, t = score.get((variant, model), (0, 0))
-                score[(variant, model)] = (p + ok, t + 1)
-                items = "".join("+" if m else "-" for m in marks) if marks else "?"
-                print(f"{'PASS' if ok else 'FAIL'} {variant:5} {model:6} items={items} "
-                      f"skills={skills or '-'} {secs:.0f}s{' TIMEOUT' if timed_out else ''} | {reason}",
-                      flush=True)
+    if args.rejudge:
+        score = rejudge(args.skill, task)
+    else:
+        score = {}
+        for variant in args.variants.split(","):
+            for model in args.models.split(","):
+                for _ in range(args.runs):
+                    show(run_variant(args.skill, task, variant, model), score)
     print(f"{args.skill}: " + ", ".join(f"{v}/{m} {p}/{t}" for (v, m), (p, t) in score.items()))
     return 0
 
