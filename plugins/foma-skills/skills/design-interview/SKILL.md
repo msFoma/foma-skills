@@ -1,8 +1,8 @@
 ---
 name: design-interview
-description: Questions you about the look, builds 3 deliberately different variants (or playable prototypes for games) side by side in your browser, and records your pick or mix in DESIGN.md.
+description: >-
+  Builds 3 different visual variants side by side in the browser and records the pick in DESIGN.md. Use when the user wants a new look, UI, screen design or game feel and the style isn't fixed. Not for styling within an existing design system.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "process"
   uses: ""

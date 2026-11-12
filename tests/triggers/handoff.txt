@@ -1,0 +1,11 @@
+@fixture shop
++ That's all for today. Save where we are so I can continue tomorrow.
++ I'm going to start a new session, wrap this one up.
++ Let's stop here and pick this up later. Leave a note for the next session.
++ We're done for now, write down the state of the work before I clear the context.
++ Context is getting long. Write a handoff so I can /clear.
+- Commit my changes.
+- Update the docs with the new refund function.
+- Write a summary of what shop/orders.py does.
+- Run the tests and tell me what fails.
+- Plan adding partial refunds to the shop.

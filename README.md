@@ -19,17 +19,17 @@ Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported in
 
 ## Skills
 
-Model skills fire on their own when the task fits; manual skills (setup and upkeep) run when you call them.
+Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok. `learning`, `skill-finder` and `writing-skills` stay manual for now.
 
 | Group | Skill | Trigger | What it does |
 |-------|-------|---------|--------------|
-| Setup & upkeep | `groundwork` | manual | Set up or audit a project: safety, CLAUDE.md contract, docs structure, session-start token cost, opt-in hooks |
-| | `tidying` | manual | Find junk by tier, report first, remove reversibly |
+| Setup & upkeep | `groundwork` | model | Set up or audit a project: safety, CLAUDE.md contract, docs structure, session-start token cost, opt-in hooks |
+| | `tidying` | model | Find junk by tier, report first, remove reversibly |
 | | `learning` | manual | Turn session lessons into the smallest fix (CLAUDE.md line, rule, hook, project skill); prune stale rules |
 | | `skill-finder` | manual | Find, vet, install and register a third-party skill safely |
-| | `handoff` | manual | Write a session note before `/clear`; the next session picks it up |
-| Ideas & design | `shaping` | manual | Question an idea until it becomes a spec |
-| | `design-interview` | manual | Interview about the look, show 2–4 variants side by side, record the choice |
+| | `handoff` | model | Write a session note before `/clear`; the next session picks it up |
+| Ideas & design | `shaping` | model | Question an idea until it becomes a spec |
+| | `design-interview` | model | Interview about the look, show 2–4 variants side by side, record the choice |
 | Build | `planning` | model | Proportional plan: small change → just do it; multi-step → task files |
 | | `executing` | model | Run plan tasks, review once per feature, archive the plan |
 | | `routing` | model | Pick a model and effort per plan task |

@@ -1,0 +1,11 @@
+@fixture shop
++ Set up this project for working with Claude: CLAUDE.md, docs, the usual structure.
++ Audit this repo for AI work: is my CLAUDE.md any good?
++ I'm starting a new project from scratch. Prepare the repo layout and instructions for you.
++ Check how much my CLAUDE.md and plugins cost at session start and what to trim.
++ There is no CLAUDE.md here. Create the project setup.
+- Add the test command to CLAUDE.md.
+- Record the decision to use Decimal in docs/decisions.md.
+- Plan adding partial refunds to the shop.
+- Why does test_first_page fail?
+- Write a README for this project.

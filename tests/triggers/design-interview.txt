@@ -1,0 +1,11 @@
+@fixture shop
++ I need a receipt page for orders. I have no idea what it should look like, show me options.
++ Design the look of the order summary screen. I want to compare a few directions.
++ Help me decide on the visual style of the shop's admin dashboard.
++ My platformer's jump feels wrong. Let me try a few different feels side by side.
++ I want a new landing page for the shop, but I don't know the style yet.
+- Plan adding partial refunds: refund(order, amount) puts items back in stock.
+- Review the CSS in this repo for spacing problems.
+- Change the button color to #1a73e8 as specified in DESIGN.md.
+- Rename get_inv to get_inventory everywhere.
+- Explain what shop/pricing.py does.

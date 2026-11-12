@@ -1,13 +1,13 @@
 ---
 name: groundwork
-description: Sets up a new project or audits an existing one for AI work - CLAUDE.md contract, docs layout, subagents, safety scan, session-start cost. Writes only after your ok.
+description: >-
+  Sets up or audits a project for AI work: CLAUDE.md contract, docs layout, agents. Use when starting a new project, there is no CLAUDE.md, or the user asks to set up or audit the repo. Writes only after your ok.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "setup"
   uses: ""
   agents: ""
-  tokens: "866"
+  tokens: "865"
 ---
 
 Sets up or audits the project layout and the CLAUDE.md contract the other foma-skills read. Explore, present, confirm, write.

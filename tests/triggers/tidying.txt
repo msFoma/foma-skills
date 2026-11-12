@@ -1,0 +1,11 @@
+@fixture shop
++ This repo is a mess, there are .bak files and scratch scripts everywhere. Clean it up.
++ Remove the leftover temp files the agent created in this project.
++ Tidy up the project, find junk files and get rid of them.
++ There are a lot of stray files in the root. Find what's not needed.
++ Clean up the project folder before I share it.
+- Refactor shop/orders.py to be cleaner.
+- Delete the failing test test_first_page.
+- Remove the unused import from shop/report.py.
+- Rename get_inv to get_inventory everywhere.
+- Commit my changes.

@@ -1,13 +1,13 @@
 ---
 name: shaping
-description: Turns a raw idea into a short spec by questioning you - the problem, appetite, scope, risks and approaches - then writes a spec file in docs/specs for your approval. Builds nothing.
+description: >-
+  Turns a raw idea into an approved spec by questioning the user first. Use when the user has a new feature or product idea, says "I want to build...", or a request is vague with a design choice open. Not for clear small edits or bugs.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "process"
   uses: "documenting"
   agents: ""
-  tokens: "954"
+  tokens: "983"
 ---
 
 Turns a raw idea into an approved spec. You ask and propose; the user decides, and their words go in the spec. Nothing gets built here.
@@ -17,6 +17,7 @@ Uses: foma-skills:documenting (a decision that outlives the spec: a library chos
 ## Steps
 1. *Always.* Look before you ask: read the CLAUDE.md contract, `$ARGUMENTS`, anything the user pointed at, and the code or material the idea touches (grep, then ranges). If a spec for this idea exists, continue it. Never ask what the project or the conversation already answers.
 2. *Always.* Pick the path and say it in one line.
+   - Small, clear change (1-2 files, no design choice): say "small change, doing it directly" and stop; do the task.
    - Everything that matters is in the request: play it back in ≤5 lines with a short design (approach, why not the others), ask for ok, then hand off. No spec file unless asked.
    - The conversation already settled it: go to step 6, no re-interview.
    - Otherwise: the full path below.

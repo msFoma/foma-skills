@@ -1,8 +1,8 @@
 ---
 name: tidying
-description: Finds junk the project doesn't need - backups, temp files, stray notes, leftovers - and removes it reversibly after your ok.
+description: >-
+  Finds junk files (backups, temp, stray notes) and removes them reversibly after your ok. Use when the user asks to clean up the project, remove leftovers, or says the repo is messy. Not for refactoring code.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "setup"
   uses: ""

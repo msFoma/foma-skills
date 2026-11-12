@@ -85,6 +85,8 @@ Leave out: rationale, history, evidence, generic advice, anything the model infe
 
 Pack always-on (all model-invoked descriptions): ≈0.9k target, 1.2k cap.
 
+DEC-031: setup, shaping and design-interview skills are model-invoked too. They use the model-invoked description rules (§3) and the propose-only rule for side effects (§6); the manual column applies only to skills that still set `disable-model-invocation`.
+
 ## 6. Behaviour rules every skill follows
 
 Apply by context: a skill writes a line only for what it does (asks, delegates, causes a side effect); that line counts toward its caps.

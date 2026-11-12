@@ -1,0 +1,11 @@
+@fixture shop
++ I want to add loyalty points for repeat customers. Not sure how it should work yet.
++ Idea: let shop owners offer subscription boxes. Help me think it through.
++ I'm thinking about building a wishlist feature, but I haven't decided what it should do.
++ We keep losing customers after the first order. What should we build to fix that?
++ I want to add multi-currency support, but I'm not sure it's worth it.
+- Rename get_inv to get_inventory everywhere.
+- Plan adding partial refunds: refund(order, amount) puts items back in stock.
+- Why does test_first_page fail?
+- Fix the typo in the README.
+- Commit my changes.

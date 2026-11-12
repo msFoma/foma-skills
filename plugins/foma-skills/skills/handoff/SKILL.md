@@ -1,8 +1,8 @@
 ---
 name: handoff
-description: Writes a short session note so the next session resumes in one step; then you run /clear. Flags lessons for learning and junk for tidying.
+description: >-
+  Writes a short session note so the next session resumes in one step. Use when the user says wrap up, done for today, continue later, or start a new session. Not for commits or docs.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "setup"
   uses: ""
