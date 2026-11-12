@@ -6,6 +6,7 @@ closed, the whole process group killed on stop or timeout.
 """
 import json
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -27,6 +28,34 @@ def plugin_snapshot():
         _SNAPSHOT = tempfile.TemporaryDirectory()
         shutil.copytree(PLUGIN, Path(_SNAPSHOT.name) / "foma-skills")
     return Path(_SNAPSHOT.name) / "foma-skills"
+
+
+class LimitHit(Exception):
+    """The account's usage limit stopped the session; the run says nothing about the skill."""
+
+
+LIMIT_RE = re.compile(r"(?:you.ve (?:hit|reached) your .{0,40}limit|claude (?:ai )?usage limit reached)", re.I)
+
+
+def limit_text(text):
+    """The limit notice if text is one (the notice is the whole reply, so match at the start), else None."""
+    text = str(text or "").strip()
+    return text.splitlines()[0] if LIMIT_RE.match(text) else None
+
+
+def limit_message(events):
+    """The limit notice found in a session's events, else None."""
+    for e in events:
+        if e.get("type") == "result":
+            found = limit_text(e.get("result"))
+        elif e.get("type") == "assistant":
+            blocks = e.get("message", {}).get("content", [])
+            found = next((m for b in blocks if b.get("type") == "text" for m in [limit_text(b.get("text"))] if m), None)
+        else:
+            continue
+        if found:
+            return found
+    return None
 
 
 def base_cmd(prompt, model, plugin=True, allowed_tools=None, extra=None):

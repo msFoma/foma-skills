@@ -20,7 +20,11 @@ only if every check and checklist item passes. Runs go round-robin per model and
 stop early once the variant gap can no longer change (--all-runs to disable).
 Every run is saved to tests/.runs/<task>/ (transcript + diff + verdict), so a
 failed judge call is re-graded with --rejudge instead of re-running the agent.
-A run with no agent output (limit, network) is NORUN: not judged, not scored.
+A run with no agent output (network) is NORUN: not judged, not scored.
+A usage-limit notice stops the whole batch with exit code 2 (nothing from that run is
+scored; a judge call hit by the limit is saved unjudged, finish it with --rejudge).
+A failed run is repeated --retries times (default 2); the verdict is the majority of
+all tries, every try is printed and saved (--retries 0 = single run).
 """
 import argparse
 import json
@@ -94,6 +98,8 @@ def judge_once(task, log, diff):
                 text = json.loads(line).get("result", "") or text
             except (json.JSONDecodeError, AttributeError):
                 continue
+        if cr.limit_text(text):
+            raise cr.LimitHit(cr.limit_text(text))
         verdict = json.loads(text[text.find("{"):text.rfind("}") + 1])
         marks = [bool(x) for x in verdict["items"]]
         if len(marks) != len(task["checklist"]):
@@ -117,6 +123,8 @@ def run_variant(name, task, variant, model):
         cmd = cr.base_cmd(prompt, model, plugin=(variant == "skill"),
                           allowed_tools=task.get("allowed_tools"))
         events, secs, timed_out = cr.run(cmd, project, timeout=task.get("timeout", 300))
+        if cr.limit_message(events):
+            raise cr.LimitHit(cr.limit_message(events))
         checks = [subprocess.run(c["cmd"], shell=True, cwd=project, capture_output=True).returncode == 0
                   for c in task.get("checks", [])]
         subprocess.run(["git", "add", "-N", "."], cwd=project, capture_output=True)  # after checks: show new files
@@ -126,33 +134,67 @@ def run_variant(name, task, variant, model):
     record = {"variant": variant, "model": model, "skills": skills, "secs": round(secs),
               "timed_out": timed_out, "transcript": log, "diff": diff, "checks": checks,
               "marks": None, "reason": ""}
+    limit = None
     if not any(e.get("type") == "assistant" for e in events):
         record["reason"] = "NORUN: no agent output"
     elif not task.get("checklist"):
         record["marks"] = []
     else:
-        record["marks"], record["reason"] = judge(task, log, diff)
+        try:
+            record["marks"], record["reason"] = judge(task, log, diff)
+        except cr.LimitHit as e:  # keep the run, grade it later with --rejudge
+            record["reason"], limit = f"LIMIT: {e}", e
     out = RUNS / name
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{time.strftime('%Y%m%d-%H%M%S')}-{variant}-{model.replace('@', '_')}.json"
     path.write_text(json.dumps(record))
+    if limit:
+        raise limit
     return record
 
 
-def show(record, score):
-    marks = None if record["marks"] is None else record.get("checks", []) + record["marks"]
+def tally(score, record, ok):
     key = (record["variant"], record["model"])
-    if record["reason"].startswith("NORUN"):
-        status = "NORUN"
+    p, t = score.get(key, (0, 0))
+    score[key] = (p + ok, t + 1)
+
+
+def show(record):
+    """Print one run; return True/False, or None when it is not a verdict (NORUN, LIMIT)."""
+    marks = None if record["marks"] is None else record.get("checks", []) + record["marks"]
+    ok = None
+    if record["reason"].startswith(("NORUN", "LIMIT")):
+        status = record["reason"].split(":")[0]
     else:
         ok = bool(marks) and all(marks)
-        p, t = score.get(key, (0, 0))
-        score[key] = (p + ok, t + 1)
         status = "PASS" if ok else "FAIL"
     items = "".join("+" if m else "-" for m in marks) if marks else "?"
     print(f"{status} {record['variant']:5} {record['model']:9} items={items} "
           f"skills={record['skills'] or '-'} {record['secs']}s"
           f"{' TIMEOUT' if record['timed_out'] else ''} | {record['reason']}", flush=True)
+    return ok
+
+
+def majority(votes):
+    """True/False by majority of the counted tries (None = not a verdict); None if none counted."""
+    counted = [v for v in votes if v is not None]
+    return sum(counted) * 2 > len(counted) if counted else None
+
+
+def run_voted(name, task, variant, model, retries):
+    """One run; if it fails, up to `retries` more tries (stopping once the majority is decided)."""
+    votes = [show(run_variant(name, task, variant, model))]
+    if votes[0] is not False or not retries:
+        return votes[0]
+    need = (retries + 1) // 2 + 1  # passes needed out of retries + 1 tries
+    for left in range(retries, 0, -1):
+        if sum(v is True for v in votes) >= need or sum(v is True for v in votes) + left < need:
+            break
+        print("   retry after FAIL", flush=True)
+        votes.append(show(run_variant(name, task, variant, model)))
+    ok = majority(votes)
+    print(f"   majority of {len(votes)} tries: {'PASS' if ok else 'FAIL'}", flush=True)
+    return ok
 
 
 def rejudge(name, task, force=False):
@@ -162,16 +204,20 @@ def rejudge(name, task, force=False):
         if (force or record["marks"] is None) and not record["reason"].startswith("NORUN"):
             record["marks"], record["reason"] = judge(task, record["transcript"], record["diff"])
             path.write_text(json.dumps(record))
-        show(record, score)
+        ok = show(record)
+        if ok is not None:
+            tally(score, record, ok)
     return score
 
 
-def run_matrix(name, task, variants, models, runs, all_runs):
-    score = {}
+def run_matrix(name, task, variants, models, runs, all_runs, retries=0, score=None):
+    score = {} if score is None else score
     for model in models:
         for i in range(runs):
             for variant in variants:
-                show(run_variant(name, task, variant, model), score)
+                ok = run_voted(name, task, variant, model, retries)
+                if ok is not None:
+                    tally(score, {"variant": variant, "model": model}, ok)
             passed = [score.get((v, model), (0, 0))[0] for v in variants]
             if not all_runs and len(variants) == 2 and abs(passed[0] - passed[1]) > runs - i - 1:
                 print(f"-- {model}: decided after {i + 1} round(s)", flush=True)
@@ -186,6 +232,7 @@ def main():
     ap.add_argument("--runs", type=int, default=2)
     ap.add_argument("--variants", default="skill,line")
     ap.add_argument("--all-runs", action="store_true")
+    ap.add_argument("--retries", type=int, default=2, help="extra tries after a FAIL, majority decides (0 = off)")
     ap.add_argument("--rejudge", action="store_true")
     ap.add_argument("--rejudge-all", action="store_true", help="re-grade every saved run (after a checklist fix)")
     args = ap.parse_args()
@@ -194,8 +241,15 @@ def main():
     if args.rejudge or args.rejudge_all:
         score = rejudge(args.skill, task, force=args.rejudge_all)
     else:
-        score = run_matrix(args.skill, task, args.variants.split(","), args.models.split(","),
-                           args.runs, args.all_runs)
+        score = {}
+        try:
+            run_matrix(args.skill, task, args.variants.split(","), args.models.split(","),
+                       args.runs, args.all_runs, args.retries, score)
+        except cr.LimitHit as e:
+            print(f"LIMIT: {e}\nStopped: nothing from the interrupted run is scored. Rerun after the "
+                  f"reset; unjudged runs: --rejudge.", file=sys.stderr)
+            print(f"{args.skill} (partial): " + ", ".join(f"{v}/{m} {p}/{t}" for (v, m), (p, t) in score.items()))
+            return 2
     print(f"{args.skill}: " + ", ".join(f"{v}/{m} {p}/{t}" for (v, m), (p, t) in score.items()))
     return 0
 

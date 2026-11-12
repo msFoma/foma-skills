@@ -6,7 +6,7 @@ payload=""
 [ -t 0 ] || read -r payload
 
 cat <<'TXT'
-foma-skills is active. Before you act on a task, if a foma-skills skill matches it, call it with the Skill tool first and follow it. Questions, explanations and one-line edits need no skill.
+foma-skills is active. Before you act on a task, if a foma-skills skill matches it, call it with the Skill tool first and follow it. Plain questions, explanations and one-line edits need no skill; questions about models for plan tasks do.
 TXT
 
 # Handoff note: only a fresh one (24 h), never after compaction (the context is still there).

@@ -9,6 +9,7 @@ Cases: tests/triggers/<skill>.txt, one prompt per line:
   + prompt that must fire the skill
   - prompt that must not fire it
   @fixture <name>   (optional directive; default: calc)
+A usage-limit notice stops the batch with exit code 2 (such a run is not a miss).
 Each prompt runs N times on every model. A run stops at the first Skill call
 or after MAX_TOOL_CALLS other tool calls.
 """
@@ -40,12 +41,22 @@ def run_once(prompt, model, fixture):
     with cr.new_tmp() as tmp:
         project = cr.fixture_copy(fixture, tmp)
         events, secs, _ = cr.run(cr.base_cmd(prompt, model), project, stop=stop)
+    if cr.limit_message(events):
+        raise cr.LimitHit(cr.limit_message(events))
     uses = list(cr.tool_uses(events))
     skills = [u.get("input", {}).get("skill", "?") for u in uses if u.get("name") == "Skill"]
     return skills, len(uses) - len(skills), secs
 
 
 def main():
+    try:
+        return run_all()
+    except cr.LimitHit as e:
+        print(f"LIMIT: {e}\nStopped: the interrupted prompt is not scored. Rerun after the reset.", file=sys.stderr)
+        return 2
+
+
+def run_all():
     ap = argparse.ArgumentParser()
     ap.add_argument("skill")
     ap.add_argument("--models", default="haiku")
