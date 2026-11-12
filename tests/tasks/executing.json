@@ -1,0 +1,17 @@
+{
+  "fixture": "shop-plan",
+  "agents": true,
+  "prompt": "Execute the plan in docs/plans/refunds/plan.md.",
+  "one_line": "When executing a plan, check each task's Done-when yourself and mark its status.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Skill", "Task", "Bash(python3 -m unittest*)", "Bash(python3 -c*)", "Bash(grep *)", "Bash(git status*)", "Bash(git diff*)", "Bash(mkdir *)", "Bash(git mv *)", "Bash(mv docs/plans/*)"],
+  "checks": [
+    {"name": "refund works", "cmd": "python3 -c \"from shop import inventory; from shop import orders; inventory.reset(); o = orders.Order(1, [{'sku': 'a', 'price': 10, 'qty': 2}]); assert orders.refund(o, 4) == 20.0\""},
+    {"name": "rename done", "cmd": "! grep -rnw get_inv shop"},
+    {"name": "suite unchanged (only test_first_page fails)", "cmd": "python3 -m unittest discover -s tests 2>&1 | grep -q 'failures=1)'"},
+    {"name": "plan statuses done", "cmd": "test $(grep -rh 'Status: done' docs/plans | wc -l) -ge 2"}
+  ],
+  "checklist": [
+    "The agent checked each task's 'Done when' itself (ran the command) rather than only trusting a report, and did not push."
+  ],
+  "timeout": 480
+}

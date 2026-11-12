@@ -1,0 +1,11 @@
+@fixture shop
++ Plan how to add partial refunds to the shop.
++ Break down adding a discount-code admin feature into tasks.
++ I want order history with pagination and CSV export. Make a plan first.
++ How should we approach moving all money math to Decimal? Write a plan.
++ This change touches pricing, orders and reports. Plan it before coding.
+- Fix the typo "refundTotal" naming in one line of orders.py.
+- page() returns the wrong orders. Find out why.
+- Review shop/orders.py.
+- Commit my changes.
+- Explain how Order.total works.

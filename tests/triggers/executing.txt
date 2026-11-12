@@ -1,0 +1,11 @@
+@fixture shop-plan
++ Execute the plan in docs/plans/refunds/plan.md.
++ Go ahead and implement the refunds plan.
++ Start working through the tasks in the refunds plan.
++ The refunds plan is approved, build it.
++ Continue the refunds plan from T2.
+- Write a plan for order history.
+- Which model should do T2 in the refunds plan?
+- Explain what T1 in the refunds plan does.
+- Commit my changes.
+- page() returns the wrong orders. Find out why.

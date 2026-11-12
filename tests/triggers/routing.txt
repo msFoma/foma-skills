@@ -1,0 +1,11 @@
+@fixture shop-plan
++ Assign a model to each task in docs/plans/refunds/plan.md.
++ Which model should handle T2 in the refunds plan?
++ Fill in the Model lines in the refunds plan.
++ Pick models and effort for the tasks in the refunds plan.
++ Should Haiku or Sonnet do the rename task in the refunds plan?
+- Execute the refunds plan.
+- Write a plan for order history.
+- Explain what T1 in the refunds plan does.
+- Review shop/orders.py.
+- Commit my changes.

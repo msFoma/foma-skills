@@ -117,9 +117,10 @@ def run_variant(name, task, variant, model):
         cmd = cr.base_cmd(prompt, model, plugin=(variant == "skill"),
                           allowed_tools=task.get("allowed_tools"))
         events, secs, timed_out = cr.run(cmd, project, timeout=task.get("timeout", 300))
-        diff = subprocess.run(["git", "diff"], cwd=project, capture_output=True, text=True).stdout
         checks = [subprocess.run(c["cmd"], shell=True, cwd=project, capture_output=True).returncode == 0
                   for c in task.get("checks", [])]
+        subprocess.run(["git", "add", "-N", "."], cwd=project, capture_output=True)  # after checks: show new files
+        diff = subprocess.run(["git", "diff"], cwd=project, capture_output=True, text=True).stdout
     skills = [u.get("input", {}).get("skill") for u in cr.tool_uses(events) if u.get("name") == "Skill"]
     log = transcript(events)
     record = {"variant": variant, "model": model, "skills": skills, "secs": round(secs),

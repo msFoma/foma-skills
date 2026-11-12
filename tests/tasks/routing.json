@@ -1,0 +1,13 @@
+{
+  "fixture": "shop-plan",
+  "prompt": "Assign a model and effort to each task in docs/plans/refunds/plan.md.",
+  "one_line": "Routing: Opus for complex or UI work, Sonnet for routine code, Haiku for mechanical edits.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Skill"],
+  "checks": [
+    {"name": "both Model lines filled", "cmd": "test $(grep -Eci '^Model: *(opus|sonnet|haiku)' docs/plans/refunds/plan.md) -eq 2"},
+    {"name": "rename task routed to haiku", "cmd": "awk '/^## T2/{f=1} f && /^Model:/{print; exit}' docs/plans/refunds/plan.md | grep -qi haiku"},
+    {"name": "only the plan changed", "cmd": "git diff --quiet HEAD -- shop tests"}
+  ],
+  "checklist": [],
+  "timeout": 180
+}

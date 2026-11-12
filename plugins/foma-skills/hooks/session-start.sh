@@ -3,7 +3,7 @@
 # POSIX sh, shell builtins only (runs in Git Bash too). Output goes into context.
 
 cat <<'TXT'
-foma-skills is active. Before you act on a task, check the foma-skills skills: if one fits the task, call it with the Skill tool first and follow it. It fits when the task matches its "Use when"; for a bug, a failing test or "why" use foma-skills:debugging; for tests-first or a regression test use foma-skills:tdd; for a code review or "ready to merge?" use foma-skills:reviewing; for refactoring, cleanup or restructuring use foma-skills:refactoring; to commit or open a PR use foma-skills:committing; to record a decision or update docs use foma-skills:documenting. Questions, explanations and one-line edits need no skill.
+foma-skills is active. Before you act on a task, check the foma-skills skills: if one fits the task, call it with the Skill tool first and follow it. It fits when the task matches its "Use when"; for a bug, a failing test or "why" use foma-skills:debugging; for tests-first or a regression test use foma-skills:tdd; for a code review or "ready to merge?" use foma-skills:reviewing; for refactoring, cleanup or restructuring use foma-skills:refactoring; to commit or open a PR use foma-skills:committing; to record a decision or update docs use foma-skills:documenting; to plan a feature or a multi-step change use foma-skills:planning; to carry out an existing plan use foma-skills:executing; to pick a model per plan task use foma-skills:routing. Questions, explanations and one-line edits need no skill.
 TXT
 
 if [ -f ".claude/.scratch/handoff.md" ]; then

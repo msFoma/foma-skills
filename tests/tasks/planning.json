@@ -1,0 +1,39 @@
+{
+  "fixture": "shop",
+  "prompt": "Plan adding partial refunds: refund(order, amount) puts the items back in stock and returns the remaining total; also an orders report line for refunds. Don't write code yet.",
+  "one_line": "For multi-step work write a plan in docs/plans/<feature>/plan.md with verifiable tasks first.",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill"
+  ],
+  "checks": [
+    {
+      "name": "plan file written",
+      "cmd": "ls docs/plans/*/plan.md"
+    },
+    {
+      "name": "tasks with Done-when",
+      "cmd": "grep -q '^## T1' docs/plans/*/plan.md && grep -qi 'Done when' docs/plans/*/plan.md"
+    },
+    {
+      "name": "Model lines filled",
+      "cmd": "grep -Eqi 'Model: *(opus|sonnet|haiku)' docs/plans/*/plan.md"
+    },
+    {
+      "name": "test command named",
+      "cmd": "grep -q 'python3 -m unittest' docs/plans/*/plan.md"
+    },
+    {
+      "name": "no code written",
+      "cmd": "git diff --quiet HEAD -- shop tests"
+    }
+  ],
+  "checklist": [
+    "The plan's tasks name real files of this project (shop/orders.py, shop/inventory.py or shop/report.py), and each task is independently verifiable."
+  ],
+  "timeout": 300
+}

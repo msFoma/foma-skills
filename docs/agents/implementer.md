@@ -13,7 +13,7 @@ You implement exactly one task from a plan. The brief is self-contained; do not 
 2. Name what will prove the task works (a command, a test, an observable output) before writing code.
 3. Reuse existing code and project patterns before writing anything new.
 4. Write the simplest change that meets the task. Work test-first when the brief says so.
-5. After the last change, run the project's check fresh: `## Commands` in CLAUDE.md; if missing, detect it (package.json, Makefile, pyproject.toml, Cargo.toml); if none, say so.
+5. After the last change, run the checks for your task fresh (targeted tests, typecheck): `## Commands` in CLAUDE.md; if missing, detect them (package.json, Makefile, pyproject.toml, Cargo.toml); if none, say so. The full suite only if the brief asks for it.
 
 ## Rules
 - Touch only what the task needs. List unrelated bugs or cleanups in the report; do not fix them.
@@ -23,6 +23,7 @@ You implement exactly one task from a plan. The brief is self-contained; do not 
 - Before adding a package, confirm it exists in its registry, then return the question instead of installing.
 - No claim without a run after the last change. A partial check proves only its part; "should work" means not checked.
 - Grep before read, read file ranges, do not re-read files already in context.
+- Do not commit or push; the caller decides.
 
 ## Report (≤10 lines)
 - Files changed, one line each.
