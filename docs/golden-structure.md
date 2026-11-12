@@ -82,7 +82,7 @@ A conclusion that changes how code is written also becomes a line in CLAUDE.md o
 | Test-gaming guard | `PreToolUse` on Edit/Write | Ask when an edit adds skip/xit/@ts-ignore/eslint-disable/`type: ignore` | NOTE-214, NOTE-220 |
 | Swallowed-error guard | `PreToolUse` on Edit/Write | Warn on empty catch, `except: pass`, `\|\| true` | NOTE-216, NOTE-220 |
 
-Hooks use shell builtins only and are tested on Git Bash (NOTE-042). Off by default; `groundwork` offers them.
+Hooks use shell builtins only and are tested on Git Bash (NOTE-042). Off by default; `groundwork` offers them, copies the scripts into `.claude/hooks/` and registers them in `.claude/settings.json` (plugin hooks are always on, FACT-056; plugin paths change on update, FACT-062). Bash hooks block; Write/Edit hooks only warn until live-tested (FACT-105).
 
 ## Special cases
 
@@ -105,19 +105,21 @@ Hooks use shell builtins only and are tested on Git Bash (NOTE-042). Off by defa
 
 ## groundwork audit checklist
 
+`groundwork` owns safety, contract and structure. Rule content (stale, duplicate, contradicting rules) belongs to `learning`; junk files, stray `*.md` and leftover plans belong to `tidying` — the audit hands off to them (DEC-019).
+
 Safety first (read-only, reported before any write):
 - [ ] `.claude/settings*.json` hooks, `env` (esp. `ANTHROPIC_BASE_URL`), `enableAllProjectMcpServers`, `.mcp.json` servers — listed for the user (PROB-027).
 
 Structure:
 - [ ] Root CLAUDE.md ≤200 lines; no trees, dependency lists, overviews, duplicates (P1).
 - [ ] Commands run; referenced paths exist.
-- [ ] No contradictions between root, nested CLAUDE.md, rules, skills (PROB-003, PROB-022).
-- [ ] Old `verified` stamps / rules naming removed tools (PROB-004).
+- → `learning`: contradictions between root, nested CLAUDE.md, rules, skills (PROB-003, PROB-022).
+- → `learning`: old `verified` stamps / rules naming removed tools (PROB-004).
 - [ ] `MEMORY.md` ≤200 lines (PROB-009).
 - [ ] `.gitignore` has personal files and does not ignore all of `.claude/` (PROB-017, PROB-018).
 - [ ] No secrets in `.claude/`; no symlinked instruction files (PROB-029, PROB-011).
 - [ ] AGENTS.md + CLAUDE.md/CLAUDE.local.md trap (PROB-025).
-- [ ] Stray `*.md` outside the docs home; finished plans not archived (PROB-012, PROB-013).
+- → `tidying`: stray `*.md` outside the docs home; finished plans not archived (PROB-012, PROB-013).
 - [ ] Decisions without status (PROB-014).
 
 ## Open points

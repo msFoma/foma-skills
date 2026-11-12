@@ -65,9 +65,9 @@
 <body>
 <main>
   <header>
-    <h1>foma-skills · skill graph v1</h1>
+    <h1>foma-skills · skill graph v1.1</h1>
     <p>Lite Claude Code skills linked by levels. Edges only point down.</p>
-    <div class="stats"><span><b>19</b>skills</span><span><b>3</b>agents</span><span><b>7</b>manual</span><span><b>≈1k</b>always-on tokens</span></div>
+    <div class="stats"><span><b>19</b>skills</span><span><b>3</b>agents</span><span><b>8</b>manual</span><span><b>≈0.9k</b>always-on tokens</span></div>
   </header>
 
   <div class="board"><svg id="g" viewBox="0 0 1280 770" role="img" aria-label="Skill dependency graph"></svg></div>
@@ -93,7 +93,7 @@
         <li><code>handoff</code> sees signals → <code>learning</code> adds or prunes one rule</li>
         <li><code>handoff</code> sees junk → <code>tidying</code> cleans reversibly</li>
         <li>after big changes → <code>groundwork</code> audit checks the contract stamp</li>
-        <li>prose advises, hooks enforce</li>
+        <li>prose advises; Bash hooks enforce; Write/Edit hooks warn until proven</li>
       </ul>
     </div>
     <div class="card">
@@ -101,11 +101,11 @@
       <ul>
         <li><code>## Commands</code> — test, typecheck</li>
         <li><code>## Where things live</code> — docs, decisions, specs, plans, design, rules, scratch, trash</li>
-        <li><code>## Workflow</code> — idea → shaping, UI → design-interview, bug → debugging</li>
+        <li><code>## Workflow</code> — small change → just do it, idea → shaping, UI → design-interview, bug → debugging</li>
       </ul>
     </div>
   </div>
-  <footer>Source of truth: <code>research/graph.md</code>. Decisions DEC-007…DEC-016 in <code>research/decisions.md</code>.</footer>
+  <footer>Source of truth: <code>research/graph.md</code>. Decisions DEC-007…DEC-019 in <code>research/decisions.md</code>.</footer>
 </main>
 
 <script>
@@ -114,42 +114,42 @@ const X5 = [310, 520, 730, 940, 1150];
 const X6 = [295, 465, 635, 805, 975, 1145];
 const Y = { hook: 42, setup: 112, contract: 212, proc: 322, meth: 432, atom: 552, agent: 680 };
 const N = [
-  ['hook', 'SessionStart hook', 'no CLAUDE.md → 1 line', X5[0], Y.hook, 'meta', 0, 'Plugin hook: if the project has no CLAUDE.md, prints one line suggesting /groundwork.', 150, 40],
-  ['gw', 'groundwork', 'set up · audit', X5[0], Y.setup, C.setup, 1, 'Sets up or audits the workspace by the golden structure; writes the contract; offers hooks and agents; measures session-start token cost.'],
-  ['tidy', 'tidying', 'junk → .trash/', X5[1], Y.setup, C.setup, 1, 'Finds junk in three tiers, shows a report, removes reversibly after ok (git rm or .trash/<date>/). Never rm -rf.'],
-  ['learn', 'learning', 'lesson → smallest layer', X5[2], Y.setup, C.setup, 1, 'Turns repeated mistakes into the smallest fix (CLAUDE.md line, rule, hook, project skill) and prunes stale rules with equal weight.'],
-  ['find', 'skill-finder', 'find · vet · install', X5[3], Y.setup, C.setup, 1, 'Finds a skill for a need, shows source, license and code, installs only after ok, registers it in CLAUDE.md.'],
-  ['ws', 'writing-skills', 'meta · lite standard', X5[4], Y.setup, C.meta, 0, 'The lite standard for writing a skill: used by contributors, learning and skill-finder.'],
+  ['hook', 'SessionStart hook', 'startup | clear → 1 line', X5[0], Y.hook, 'meta', 0, 'Plugin hook, silent unless needed: no CLAUDE.md and no AGENTS.md → suggests /groundwork; a handoff note exists → prints its path.', 170, 40],
+  ['gw', 'groundwork', 'set up · audit', X6[0], Y.setup, C.setup, 1, 'Owns safety, contract and structure. Writes the contract, creates agent files, copies opt-in hooks into .claude/hooks/, measures session-start token cost.', 150],
+  ['tidy', 'tidying', 'junk → .trash/', X6[1], Y.setup, C.setup, 1, 'Owns files: junk in three tiers, stray docs, leftover plans. Report first, reversible removal after ok. Never rm -rf.', 150],
+  ['hand', 'handoff', 'note + /clear', X6[2], Y.setup, C.setup, 1, 'Session note in .claude/.scratch/, then /clear. Flags lessons for learning and junk for tidying; the plugin hook points to the note next session.', 150],
+  ['learn', 'learning', 'lesson → smallest layer', X6[3], Y.setup, C.setup, 1, 'Owns rule content: turns repeated mistakes into the smallest fix and prunes stale rules with equal weight.', 150],
+  ['find', 'skill-finder', 'find · vet · install', X6[4], Y.setup, C.setup, 1, 'Finds a skill, shows every file, never passes -y, pins a commit, installs only after ok, registers it in CLAUDE.md.', 150],
+  ['ws', 'writing-skills', 'manual · reference', X6[5], Y.setup, C.meta, 1, 'The lite standard for writing a skill. Manual for contributors; learning and skill-finder read it as a file.', 150],
   ['shape', 'shaping', 'idea → spec', X5[0], Y.proc, C.proc, 1, 'Questions a raw idea (AI asks, you write), challenges it, ends with docs/specs/<name>.md.'],
-  ['design', 'design-interview', 'Opus 5.5 · variants', X5[1], Y.proc, C.proc, 1, 'Interviews you about the look, shows 2–4 variants side by side in the browser, records the choice in docs/design/.'],
-  ['plan', 'planning', 'proportional plans', X5[2], Y.proc, C.proc, 0, 'Small → just do it; feature → check spec; multi-step → task files with model and effort per task.'],
-  ['exec', 'executing', 'tasks → done', X5[3], Y.proc, C.proc, 0, 'Runs plan tasks inline or via agents, reviews, adds a retro line, archives the finished plan.'],
-  ['route', 'routing', 'model + effort', X5[1], Y.meth, C.meth, 0, 'Assigns model and effort per task and writes them into agent files. UI always goes to Opus 5.5.'],
+  ['design', 'design-interview', 'variants · Opus agent', X5[1], Y.proc, C.proc, 1, 'Interviews you about the look; an agent called with model: opus builds 2–4 variants for a browser gallery; the choice goes to docs/design/.'],
+  ['plan', 'planning', 'proportional plans', X5[2], Y.proc, C.proc, 0, 'Small → just do it; feature → check spec; multi-step → task files with a model per task.'],
+  ['exec', 'executing', 'tasks → done', X5[3], Y.proc, C.proc, 0, 'Runs 1–2 task plans inline, larger ones via agents with the plan\'s model; review once per feature; archives the plan.'],
+  ['route', 'routing', 'model per task → plan', X5[1], Y.meth, C.meth, 0, 'Picks a model per plan task by its nature: Opus complex, Sonnet routine, Haiku light (code only behind tests). Writes it into the plan, no config files.'],
   ['dbg', 'debugging', 'loop → root cause', X5[2], Y.meth, C.meth, 0, 'Feedback loop first, reproduce, hypothesise, fix with a regression test.'],
   ['rev', 'reviewing', 'standards + spec', X5[3], Y.meth, C.meth, 0, 'Reviews against project rules and the spec; UI anti-slop list; compact verdict.'],
   ['ref', 'refactoring', 'after green', X5[4], Y.meth, C.meth, 0, 'Behaviour-preserving change after tests are green, outside the tdd loop.'],
-  ['code', 'coding', 'write code well', X6[0], Y.atom, C.atom, 0, 'Ask when unclear, simplest solution, touch only what the task needs, no swallowed errors, never edit tests to pass, check packages exist.', 150],
-  ['tdd', 'tdd', 'red → green', X6[1], Y.atom, C.atom, 0, 'Agreed seams, vertical slices, expected values from an independent source.', 150],
-  ['ver', 'verifying', 'evidence first', X6[2], Y.atom, C.atom, 0, 'Evidence per change type before "done"; only failing tests in output; a "not checked" line.', 150],
-  ['com', 'committing', 'small · confirmed', X6[3], Y.atom, C.atom, 0, 'Small commits in the style from CLAUDE.md; confirms; never pushes on its own.', 150],
-  ['doc', 'documenting', 'docs home', X6[4], Y.atom, C.atom, 0, 'Puts docs in the docs home; decision entries with status and the three-gate filter.', 150],
-  ['hand', 'handoff', 'note + /clear', X6[5], Y.atom, C.atom, 1, 'Session note in .claude/.scratch/, then /clear; flags lessons for learning and junk for tidying.', 150],
-  ['impl', 'implementer', 'Sonnet · medium', X5[1], Y.agent, C.agent, 0, 'Agent that writes code. Preloads coding, tdd, verifying. Haiku only behind tests.'],
-  ['expl', 'explorer', 'Haiku · proposed', X5[2], Y.agent, C.agent, 0, 'Proposed read-only agent for noisy search; returns at most 10 lines.'],
-  ['rvw', 'reviewer', 'Opus · high', X5[3], Y.agent, C.agent, 0, 'Agent that reviews changes. Preloads reviewing.'],
-  ['hooks', 'opt-in hooks', 'offered by groundwork', X5[4], Y.agent, 'meta', 0, 'Compact re-inject, stray docs, critical commands, test-gaming guard, swallowed-error guard, backup names, git guard.'],
+  ['code', 'coding', 'write code well', X5[0], Y.atom, C.atom, 0, 'Ask when unclear, simplest solution, touch only what the task needs, no swallowed errors, never edit tests to pass, check packages exist.'],
+  ['tdd', 'tdd', 'red → green', X5[1], Y.atom, C.atom, 0, 'Agreed seams, vertical slices, expected values from an independent source.'],
+  ['ver', 'verifying', 'evidence first', X5[2], Y.atom, C.atom, 0, 'Evidence per change type before "done"; only failing tests in output; a "not checked" line.'],
+  ['com', 'committing', 'small · confirmed', X5[3], Y.atom, C.atom, 0, 'Small commits in the style from CLAUDE.md; confirms; never pushes on its own.'],
+  ['doc', 'documenting', 'docs home', X5[4], Y.atom, C.atom, 0, 'Puts docs in the docs home; decision entries with status and the three-gate filter.'],
+  ['impl', 'implementer', 'model per call · medium', X5[1], Y.agent, C.agent, 0, 'Agent that writes code. One file, effort medium; the model comes from the plan at each call. Preloads coding, tdd, verifying.'],
+  ['expl', 'explorer', 'Haiku · read-only', X5[2], Y.agent, C.agent, 0, 'Read/Grep/Glob only — cannot change anything. Noisy search, returns at most 10 lines.'],
+  ['rvw', 'reviewer', 'Opus · medium · per feature', X5[3], Y.agent, C.agent, 0, 'Reviews once per feature; per task only for risky diffs. Preloads reviewing and verifying.'],
+  ['hooks', 'opt-in hooks', 'Bash block · Write warn', X5[4], Y.agent, 'meta', 0, 'Copied into .claude/hooks/ by groundwork. Bash hooks block; Write/Edit hooks only warn until live-tested.'],
 ];
 const E = [
-  ['hook','gw','handoff'], ['learn','ws'], ['find','ws'],
-  ['shape','plan','handoff'], ['design','plan','handoff'],
+  ['hook','gw','handoff'], ['hook','hand','handoff'],
+  ['hand','tidy','handoff'], ['hand','learn','handoff'], ['learn','ws','config'], ['find','ws','config'],
+  ['shape','plan','handoff'], ['design','plan','handoff'], ['design','impl'],
   ['plan','route'], ['plan','doc'],
   ['exec','dbg'], ['exec','rev'], ['exec','ref'],
   ['exec','code'], ['exec','tdd'], ['exec','ver'], ['exec','com'], ['exec','doc'],
   ['exec','impl'], ['exec','rvw'], ['exec','expl'],
   ['dbg','code'], ['dbg','tdd'], ['dbg','ver'], ['dbg','expl'],
   ['ref','code'], ['ref','tdd'], ['ref','ver'], ['rev','ver'],
-  ['route','impl','config'], ['route','rvw','config'], ['route','expl','config'],
-  ['impl','code'], ['impl','tdd'], ['impl','ver'], ['rvw','rev'],
+  ['impl','code'], ['impl','tdd'], ['impl','ver'], ['rvw','rev'], ['rvw','ver'],
 ];
 const ns = 'http://www.w3.org/2000/svg';
 const svg = document.getElementById('g');
@@ -195,7 +195,7 @@ const ct = el('text', { x: 730, y: Y.contract - 2, 'text-anchor': 'middle' }, cb
 const cs = el('text', { x: 730, y: Y.contract + 16, 'text-anchor': 'middle', class: 'sub' }, cb);
 cs.textContent = '## Commands  ·  ## Where things live  ·  ## Workflow   —   read by planning, executing, verifying, committing, documenting, tidying';
 nodes.contract = { id: 'contract', job: 'One section block in the root CLAUDE.md. groundwork writes it; skills read paths and commands from it. Missing line → golden default.', label: 'contract v1', x: 730, y: Y.contract, w: 1020, h: 52 };
-for (const a of ['gw', 'learn']) {
+for (const a of ['gw', 'learn']) {  // groundwork writes; learning proposes
   const s = nodes[a];
   const p = el('path', { d: `M${s.x},${s.y + s.h / 2} L${s.x},${Y.contract - 26}`, class: a === 'gw' ? 'edge writes' : 'edge handoff', 'marker-end': 'url(#ar)' }, gE);
   edgeEls.push({ p, a, b: 'contract' });
