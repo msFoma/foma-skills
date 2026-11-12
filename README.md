@@ -36,12 +36,19 @@ Manual skills run only when you call them; model skills fire on their own when t
 | Methods | `debugging` | model | Reproduce → hypothesis → fix + regression test |
 | | `reviewing` | model | Review against standards and the spec, compact verdict |
 | | `refactoring` | model | Behaviour-preserving change after tests are green |
-| Atomic | `coding` | model | Writing-code rules: simplest solution, touch only what's needed, no fake fallbacks |
-| | `tdd` | model | Test-first in vertical slices |
-| | `verifying` | model | Evidence per change type, failing tests only, "not checked" line |
+| Atomic | `tdd` | model | Test-first in vertical slices |
 | | `committing` | model | Small commits in the project's style; never pushes on its own |
 | | `documenting` | model | Keep docs and decision records in their home |
 | Meta | `writing-skills` | manual | Write a skill to the lite standard |
+
+## Dropped after tests
+
+Rules the models already follow are not skills here. Tested on Haiku and Sonnet against a no-skill and a one-line baseline (DEC-025):
+
+| Was | Result | Now |
+|-----|--------|-----|
+| `coding` (minimal scope, no fake fallbacks) | Fired on 5–6 of 10 code prompts; never fired in a long task; no gain over baseline | Rules in the `implementer` agent + one CLAUDE.md line |
+| `verifying` (evidence before "done") | Fired on 7–8 of 10; no gain on short tasks; a one-line CLAUDE.md rule did as well (6/6) on the long task | Rules in `implementer`/`reviewer` + one CLAUDE.md line |
 
 ## How it is built
 

@@ -79,8 +79,8 @@ Leave out: rationale, history, evidence, generic advice, anything the model infe
 
 | | Model-invoked | Manual (setup & upkeep, shaping, design-interview, writing-skills) |
 |-|---------------|--------------------------------------------------------------------|
-| Rules | ≤5 (`coding` ≤9, DEC-012) | ≤8 |
-| Core tokens (SKILL.md body) | target 300–500, cap 800 (`coding` ≈700 approved, DEC-012) | cap 1,200 (no listing cost, rarely run, FACT-023) |
+| Rules | ≤5 | ≤8 |
+| Core tokens (SKILL.md body) | target 300–500, cap 800 | cap 1,200 (no listing cost, rarely run, FACT-023) |
 | Each reference file | ≤600 target, cap 1,000 | same |
 
 Pack always-on (all model-invoked descriptions): ≈0.9k target, 1.2k cap.
@@ -106,7 +106,7 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 
 ## 8. Definition of done (stage 6)
 
-1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: coding/refactoring, coding/tdd, tdd/debugging, reviewing/verifying, documenting/committing, planning/executing, planning/routing — and of popular third-party packs (code-review, debug, documentation, skill-creator).
+1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: tdd/refactoring, tdd/debugging, documenting/committing, planning/executing, planning/routing — and of popular third-party packs (code-review, debug, documentation, skill-creator).
 2. **Firing detection:** `claude -p --output-format stream-json --verbose` + grep for the Skill tool call (verify in stage 6).
 3. **Task check:** one task with pass/fail. Interactive skills (shaping, design-interview, groundwork): a scripted-answer prompt, or a manual checklist when the dialog can't run headless (NOTE-110).
 4. **Baselines:** no skill and a plain one-line instruction (IDEA-045), 3 runs each, compare pass counts; keep the skill only if it wins or ties at lower tokens (IDEA-100). A change that raises tokens needs the same proof.
