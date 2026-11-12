@@ -1,0 +1,21 @@
+{
+  "fixture": "shop",
+  "prompt": "feature: an order receipt page for this shop (order lines, discount code, tax, total; web, desktop and mobile). My answers up front: feel - calm, precise, trustworthy; references - Stripe receipts and a paper bank statement; anti-reference - crypto dashboards, neon, anything that shouts; constraints - none, use the shop's real fields. I accept your specs table as is: build the variants and the gallery now and stop there, I will pick later.",
+  "command": "foma-skills:design-interview",
+  "one_line": "",
+  "allowed_tools": ["Read", "Grep", "Glob", "Write", "Edit", "Skill", "Task", "Agent", "Bash(cp *)", "Bash(mkdir *)", "Bash(grep *)", "Bash(ls*)"],
+  "checks": [
+    {"name": "gallery copied", "cmd": "ls docs/design/*/index.html"},
+    {"name": "three variants", "cmd": "test $(ls docs/design/*/[abc].html | wc -l) -ge 3"},
+    {"name": "gallery config filled", "cmd": "grep -q 'a.html' docs/design/*/index.html"},
+    {"name": "variants answer the gallery", "cmd": "test $(grep -l 'foma:get' docs/design/*/[abc].html | wc -l) -ge 3"},
+    {"name": "no external scripts", "cmd": "! grep -Eq '<script[^>]+src=' docs/design/*/[abc].html"},
+    {"name": "no purple tells", "cmd": "! grep -Eiq '#6366f1|#8b5cf6|indigo|violet' docs/design/*/[abc].html"},
+    {"name": "no product code", "cmd": "git diff --quiet HEAD -- shop tests"}
+  ],
+  "checklist": [
+    "The variants were written by subagents (Agent/Task calls with model opus), not by the main session itself.",
+    "The final answer names three variants with different lenses (safe, bold, odd), gives the gallery path, and does not pick a winner for the user."
+  ],
+  "timeout": 900
+}
