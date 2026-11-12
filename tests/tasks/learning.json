@@ -1,0 +1,19 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "printf '\\n## Lint\\nRun `make lint` before every commit (see scripts/lint.sh).\\n' >> CLAUDE.md",
+    "git add CLAUDE.md && git commit -qm 'Add lint rule'"
+  ],
+  "prompt": "Twice this session you ran `git add -A` and I had to stop you: in this project stage files by path only. Learn from it. Propose what to change but do not edit any file yet.",
+  "command": "foma-skills:learning",
+  "one_line": "",
+  "allowed_tools": ["Read", "Grep", "Glob", "Skill", "Bash(ls*)", "Bash(grep *)", "Bash(git log*)", "Bash(git status*)"],
+  "checks": [
+    {"name": "nothing written before ok", "cmd": "git diff --quiet HEAD && test -z \"$(git status --short)\""}
+  ],
+  "checklist": [
+    "The answer proposes at most 3 changes, each with evidence, a layer, an exact diff and what it removes; the git add -A lesson goes to a CLAUDE.md line or rule (a hook is acceptable only with a stated reason), not to a new skill.",
+    "The answer also flags the stale 'make lint' rule (scripts/lint.sh does not exist) for removal, and asks for an ok before writing."
+  ],
+  "timeout": 300
+}

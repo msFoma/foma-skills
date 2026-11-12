@@ -1,0 +1,11 @@
+@fixture shop
++ You keep using git add -A even though I told you to stage by path. Make sure that sticks for this project.
++ That's the third time you edited the tests to make them pass. Add a rule so it stops.
++ Our CLAUDE.md has grown huge and half of it is outdated. Clean it up.
++ You always forget to run the typecheck before saying done. Turn that into something durable for this project.
++ We hit the same off-by-one error twice this week. Capture a lesson so it doesn't recur.
+- Fix the off-by-one in the first_page function.
+- Add the test command to CLAUDE.md.
+- Record the decision to use Decimal in docs/decisions.md.
+- Set up this project for working with Claude.
+- Commit my changes.

@@ -29,3 +29,4 @@ Rules (DEC-002): Apache-2.0, MIT, ISC and CC0 sources may be adapted; CC-BY need
 | design-interview | [mevans2120/design-suite-claude-skills](https://github.com/mevans2120/design-suite-claude-skills) `design-concepts`; [garrytan/gstack](https://github.com/garrytan/gstack) `design-shotgun` | MIT (per README) | Ideas only, own wording: intent interview with an anti-reference, variants on distinct lenses, at most two rounds, a choice record the next skill reads. No text, scripts or image tooling taken |
 | handoff | own | Apache-2.0 | No outside source; design from DEC-013, DEC-015, DEC-016, DEC-018 |
 | tidying | [github/gitignore](https://github.com/github/gitignore) Global lists | CC0-1.0 | OS and editor junk names (`.DS_Store`, `Thumbs.db`, `*~`, …). Rest is own: tiers, manifest, `.trash/` removal (DEC-016) |
+| learning | own | Apache-2.0 | No outside source; design from DEC-015 and its research notes |
