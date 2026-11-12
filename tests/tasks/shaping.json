@@ -1,0 +1,29 @@
+{
+  "fixture": "shop",
+  "prompt": "idea: loyalty points for customers of this shop. Repeat buyers keep leaving after one order.",
+  "command": "foma-skills:shaping",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill"
+  ],
+  "checks": [
+    {
+      "name": "no code written",
+      "cmd": "git diff --quiet HEAD -- shop tests"
+    },
+    {
+      "name": "spec not approved",
+      "cmd": "! grep -rqsi 'Status: approved' docs"
+    }
+  ],
+  "checklist": [
+    "The final answer asks the user questions before any spec is approved: at least one open question about the problem or why (e.g. a concrete past case, what they do today, what success looks like) or a numbered decision round with a recommended answer per question.",
+    "It does not ask the user for facts it could read from the code (language, test command, existing modules), does not present a finished design as agreed, and does not start implementing."
+  ],
+  "timeout": 300
+}
