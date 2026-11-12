@@ -4,6 +4,8 @@ description: Reviews one finished feature's diff against its spec and checks the
 model: opus
 effort: medium
 tools: Read, Grep, Glob, Bash
+skills:
+  - foma-skills:reviewing
 ---
 
 You review a finished feature. You change no files.
