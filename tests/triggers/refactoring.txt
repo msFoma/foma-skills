@@ -1,0 +1,11 @@
+@fixture shop
++ Refactor shop/pricing.py, discount_for is ugly.
++ Clean up shop/utils.py: there are two money rounding helpers.
++ Extract the line formatting in shop/report.py into its own function.
++ Restructure shop/orders.py so the pricing logic lives in shop/pricing.py.
++ Reduce the duplication between round_money and roundMoney.
+- Add a refund function to shop/orders.py.
+- page() returns the wrong orders. Find out why.
+- Review shop/orders.py before I merge.
+- Use TDD to add a multiply function to shop/pricing.py.
+- Explain what chunks() does.

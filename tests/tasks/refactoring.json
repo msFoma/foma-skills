@@ -1,0 +1,15 @@
+{
+  "fixture": "shop",
+  "prompt": "Refactor shop/utils.py: there are two money rounding helpers, keep only one.",
+  "one_line": "Refactor only on green, in small steps, without changing behaviour.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Bash(python3 -m unittest*)", "Bash(python3 -c*)"],
+  "checks": [
+    {"name": "suite result unchanged (only test_first_page fails)", "cmd": "python3 -m unittest discover -s tests 2>&1 | grep -q 'failures=1)' && python3 -m unittest discover -s tests 2>&1 | grep -q '^FAIL: test_first_page'"},
+    {"name": "existing test files unchanged", "cmd": "git diff --quiet HEAD -- tests/test_pricing.py tests/test_inventory.py tests/test_orders.py"}
+  ],
+  "checklist": [
+    "The agent ran the test suite before changing code.",
+    "The agent noticed that round_money (math.floor) and roundMoney (round) behave differently and did not silently change either caller's results: it kept each caller's behaviour, or stopped and asked, or clearly reported the behaviour difference to the user."
+  ],
+  "timeout": 300
+}

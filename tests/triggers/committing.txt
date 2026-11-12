@@ -1,0 +1,11 @@
+@fixture shop
++ Commit my changes.
++ Write a commit message for what I changed.
++ Split my changes into two commits: one for pricing, one for orders.
++ Open a PR for this branch.
++ Commit this with a good message.
+- Review my last commit.
+- What changed in the last three commits?
+- Add a refund function to shop/orders.py.
+- page() returns the wrong orders. Find out why.
+- Explain how Order.total works.

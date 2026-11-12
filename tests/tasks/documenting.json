@@ -1,0 +1,26 @@
+{
+  "fixture": "shop",
+  "prompt": "Record a decision: we keep unittest instead of pytest, because the library has no dependencies.",
+  "one_line": "Record decisions in docs/decisions.md with a status; one home per fact.",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Edit",
+    "Write"
+  ],
+  "checks": [
+    {
+      "name": "decision recorded in docs/",
+      "cmd": "grep -rqi unittest docs/"
+    },
+    {
+      "name": "no new .md outside docs/",
+      "cmd": "test -z \"$(git status --porcelain --untracked-files=all | grep '^?? ' | grep '\\.md$' | grep -v '^?? docs/')\""
+    }
+  ],
+  "checklist": [
+    "The decision entry states the decision, the reason (no dependencies) and a status (e.g. accepted)."
+  ],
+  "timeout": 240
+}
