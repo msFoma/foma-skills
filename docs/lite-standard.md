@@ -80,7 +80,7 @@ Leave out: rationale, history, evidence, generic advice, anything the model infe
 | | Model-invoked | Manual (setup & upkeep, shaping, design-interview, writing-skills) |
 |-|---------------|--------------------------------------------------------------------|
 | Rules | ≤5 | ≤8 |
-| Core tokens (SKILL.md body) | target 300–500, cap 800 | cap 1,200 (no listing cost, rarely run, FACT-023) |
+| Core tokens (SKILL.md body) | target 300–800, cap 1,500 — above 800 only with a task-test win over the shorter version (DEC-028) | cap 1,500 (no listing cost, rarely run, FACT-023) |
 | Each reference file | ≤600 target, cap 1,000 | same |
 
 Pack always-on (all model-invoked descriptions): ≈0.9k target, 1.2k cap.
@@ -95,6 +95,9 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 - **Subagents:** model passed per call, self-contained brief, fresh context, answer ≤10 lines; never implement a delegated task yourself (NOTE-156, NOTE-183).
 - **Token hygiene:** grep before read, read ranges, don't re-read; show only failing output (DEC-013).
 - **Portability:** POSIX shell that also runs in Git Bash; no symlinks (NOTE-042, PROB-011).
+- **Adapts to the project (DEC-028):** first read the CLAUDE.md contract (`## Commands`, `## Where things live`, conventions) and the stack (manifest files); use the project's commands, paths and style, never generic ones.
+- **Proportional (DEC-028):** size the work to the task — a small, clear task takes the short path (the first steps marked *always*), a large or risky one the full procedure. Say which path you took in one line.
+- **Best of several sources (DEC-028):** a skill merges the behaviour-changing lines of every good source for its area (CREDITS row each); conflicts are settled by a task test, not by taste. Rare branches go to `references/`.
 
 ## 7. Rewriting an outside skill
 

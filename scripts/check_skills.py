@@ -22,7 +22,7 @@ READ_ONLY_TOOLS = {"Read", "Grep", "Glob"}
 FORBIDDEN_FILES = {"README.md", "CHANGELOG.md", "examples"}
 
 DESC_MAX_CHARS = 250
-CORE_CAP = {"model": 800, "manual": 1200}
+CORE_CAP = {"model": 1500, "manual": 1500}  # DEC-028
 REFERENCE_CAP = 1000
 PACK_CAP = 1200
 DRIFT = 0.10
@@ -223,6 +223,13 @@ def check_pack(skills_dir):
         for agent in info["agents"]:
             if agent not in agents:
                 errors.append(f"{name}: agent {agent!r} has no assets/agents/{agent}.md")
+
+    router = skills_dir.parent / "hooks/session-start.sh"
+    if router.is_file():
+        text = router.read_text(encoding="utf-8")
+        for name, info in skills.items():
+            if not info["manual"] and f"foma-skills:{name}" not in text:
+                errors.append(f"{name}: model-invoked skill missing from the router (hooks/session-start.sh)")
 
     total = sum(i["desc_tokens"] for i in skills.values() if not i["manual"])
     if total > PACK_CAP:

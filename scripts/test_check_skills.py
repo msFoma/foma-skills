@@ -64,12 +64,12 @@ class CheckSkillsTest(unittest.TestCase):
         self.assertTrue(any("drifts" in e for e in self.errors()))
 
     def test_core_cap_fails(self):
-        body = "x" * 3300
+        body = "x" * 6100
         self.add("alpha", skill_md(body=body))
-        self.assertTrue(any("cap 800" in e for e in self.errors()))
+        self.assertTrue(any("cap 1500" in e for e in self.errors()))
 
-    def test_manual_skill_has_higher_cap(self):
-        body = "x" * 3300
+    def test_core_under_cap_passes(self):
+        body = "x" * 5900
         self.add("alpha", skill_md(body=body, extra="disable-model-invocation: true\n"))
         self.assertEqual(self.errors(), [])
 
