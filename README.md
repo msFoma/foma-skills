@@ -19,7 +19,7 @@ Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported in
 
 ## Skills
 
-Manual skills run only when you call them and cost nothing until then; their one-line core goes into your CLAUDE.md via `groundwork`. Model skills fire on their own when the task fits.
+Model skills fire on their own when the task fits; manual skills (setup and upkeep) run when you call them.
 
 | Group | Skill | Trigger | What it does |
 |-------|-------|---------|--------------|
@@ -33,12 +33,12 @@ Manual skills run only when you call them and cost nothing until then; their one
 | Build | `planning` | model | Proportional plan: small change → just do it; multi-step → task files |
 | | `executing` | model | Run plan tasks, review once per feature, archive the plan |
 | | `routing` | model | Pick a model and effort per plan task |
-| Methods | `debugging` | manual | Reproduce → hypothesis → fix + regression test |
-| | `reviewing` | manual | Review against standards and the spec, compact verdict |
-| | `refactoring` | manual | Behaviour-preserving change after tests are green |
+| Methods | `debugging` | model | Reproduce → hypothesis → fix + regression test |
+| | `reviewing` | model | Review against standards and the spec, compact verdict |
+| | `refactoring` | model | Behaviour-preserving change after tests are green |
 | Atomic | `tdd` | model | Test-first in vertical slices |
-| | `committing` | manual | Small commits in the project's style; never pushes on its own |
-| | `documenting` | manual | Keep docs and decision records in their home |
+| | `committing` | model | Small commits in the project's style; never pushes on its own |
+| | `documenting` | model | Keep docs and decision records in their home |
 | Meta | `writing-skills` | manual | Write a skill to the lite standard |
 
 ## Dropped after tests

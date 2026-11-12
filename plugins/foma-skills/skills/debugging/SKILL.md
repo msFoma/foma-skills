@@ -1,8 +1,8 @@
 ---
 name: debugging
-description: Finds a bug's root cause with a repro loop and one hypothesis at a time, then fixes it with a regression test.
+description: >-
+  Finds the root cause of a bug before fixing it. Use when something behaves unexpectedly, throws, fails a test, runs slow, or the user says "find out why". Not for a precisely diagnosed fix, test runs, reviews or tests-first work.
 license: Apache-2.0
-disable-model-invocation: true
 metadata:
   level: "method"
   uses: "tdd"
