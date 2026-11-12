@@ -18,4 +18,4 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 - `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin).
 - `python3 scripts/check_skills.py` — static skill checks (lite standard §9); its tests: `python3 -m unittest scripts/test_check_skills.py`.
 - CI: `.github/workflows/validate.yml` runs all of the above on every push/PR (CLI pinned to 2.1.322).
-- Skill checks (trigger tests, Haiku runs, skill-creator evals) defined in stage 6.
+- `python3 scripts/trigger_test.py <skill> [--runs N]` — trigger test on `tests/triggers/<skill>.txt` (costs model usage; run per changed skill only).

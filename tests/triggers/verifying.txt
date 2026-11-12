@@ -1,0 +1,12 @@
+# + must fire, - must not fire (lite standard §8.1)
++ I fixed the bug in average(). Is it working now?
++ Did the tests pass after my change to calc.py?
++ I think the average bug is fixed, can you confirm it works?
++ Finished my edits to calc.py. Make sure everything still passes before I commit.
++ Is everything green? I just changed divide().
+# neighbours: reviewing, tdd, debugging, documenting; third-party: code-review, debug
+- Review the code in calc.py for bugs and style issues.
+- Write a test first for a new multiply function, then implement it.
+- average([1, 2, 3]) returns 3 instead of 2. Find out why.
+- Add a docstring to every function in calc.py.
+- What does calc.py do?
