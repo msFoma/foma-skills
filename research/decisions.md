@@ -10,3 +10,4 @@ Single decision log for the project.
 | DEC-004 | 2026-11-12 | Roles: Opus orchestrates and reviews (no web search itself), Haiku `scout` searches, Sonnet `rewriter` rewrites | Single model for everything | Cost control: cheap models for bulk work, strong model for decisions |
 | DEC-005 | 2026-11-12 | Decisions are logged only here, not duplicated in `docs/decisions.md` | Separate `docs/decisions.md` | `research/` ships with the repo as the open decision history |
 | DEC-006 | 2026-11-12 | Session bootstrap skill is named `groundwork` | `kickoff`, `project-setup` | User choice (Q-001) |
+| DEC-007 | 2026-11-12 | Workspace passport = `## Where things live` section in root CLAUDE.md with fixed English keys; consumers read it, missing keys fall back to golden defaults | Separate `.claude/groundwork.json` | Already in L0 (no extra read, no extra file); user delegated the choice. Revisit if the section grows |
