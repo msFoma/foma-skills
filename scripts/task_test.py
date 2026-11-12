@@ -6,7 +6,8 @@ Usage: python3 scripts/task_test.py <skill> [--models haiku,sonnet] [--runs N] [
 Task: tests/tasks/<skill>.json
   {"fixture": "calc", "prompt": "...", "one_line": "...",
    "allowed_tools": ["Read", "Bash(python3 -m unittest*)"],
-   "checklist": ["...", "..."], "timeout": 300}
+   "checklist": ["...", "..."], "timeout": 300, "agents": false}
+"agents": true copies docs/agents/*.md into .claude/agents/ (project after groundwork).
 Variants: skill = plugin loaded; none = no plugin; line = no plugin, one_line
 appended to the fixture CLAUDE.md. A Sonnet judge grades every run against the
 checklist; a run passes only if every item passes.
@@ -84,7 +85,7 @@ def run_variant(task, variant, model):
     with cr.new_tmp() as tmp:
         project = cr.fixture_copy(task["fixture"], tmp,
                                   claude_md_extra=task["one_line"] if variant == "line" else None,
-                                  git=True)
+                                  git=True, agents=task.get("agents", False))
         cmd = cr.base_cmd(task["prompt"], model, plugin=(variant == "skill"),
                           allowed_tools=task.get("allowed_tools"))
         events, secs, timed_out = cr.run(cmd, project, timeout=task.get("timeout", 300))

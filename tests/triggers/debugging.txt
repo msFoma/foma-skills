@@ -1,0 +1,13 @@
+# + must fire, - must not fire (lite standard §8.1)
+@fixture shop
++ Order totals are sometimes one cent too low. Find out why.
++ test_first_page is failing and I don't know why.
++ place() returns True even when we're out of stock. What's going on?
++ page() gives me the wrong orders back. Can you investigate?
++ apply_tax(0.03) returns 0.03 but I expected 0.04. Debug it.
+# neighbours: tdd, refactoring, reviewing; plain edits; precise fixes
+- Add a function that returns the number of orders.
+- Did the tests pass after my change to shop/orders.py?
+- Review shop/orders.py.
+- Use TDD to add a refund function to shop/orders.py.
+- In page(), change start = n * size to start = (n - 1) * size.

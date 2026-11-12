@@ -208,6 +208,8 @@ def check_pack(skills_dir):
             skills[result[0]] = result[1]
 
     agents = {p.stem for p in skills_dir.glob("*/assets/agents/*.md")}
+    # Agent drafts until groundwork ships them as assets (DEC-025).
+    agents |= {p.stem for p in (skills_dir.parent.parent.parent / "docs/agents").glob("*.md")}
     for name, info in skills.items():
         allowed = USES_ALLOWED.get(info["level"], set())
         for target in info["uses"]:

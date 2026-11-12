@@ -85,10 +85,19 @@ def run(cmd, project, stop=None, timeout=180):
     return events, time.time() - start, timed_out.is_set()
 
 
-def fixture_copy(name, tmp, claude_md_extra=None, git=False):
-    """Copy tests/fixtures/<name> into tmp/project; optionally append to CLAUDE.md and git-init."""
+AGENT_DRAFTS = ROOT / "docs/agents"
+
+
+def fixture_copy(name, tmp, claude_md_extra=None, git=False, agents=False):
+    """Copy tests/fixtures/<name> into tmp/project.
+
+    Optionally append to CLAUDE.md, add the pack agents to .claude/agents/
+    (the state after groundwork) and git-init.
+    """
     project = Path(tmp) / "project"
     shutil.copytree(FIXTURES / name, project)
+    if agents:
+        shutil.copytree(AGENT_DRAFTS, project / ".claude/agents")
     if claude_md_extra:
         with open(project / "CLAUDE.md", "a") as f:
             f.write("\n" + claude_md_extra.strip() + "\n")

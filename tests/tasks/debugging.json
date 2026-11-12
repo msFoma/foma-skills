@@ -1,0 +1,15 @@
+{
+  "fixture": "shop",
+  "agents": true,
+  "prompt": "A customer says order totals are sometimes one cent too low. Find out why and fix it.",
+  "one_line": "When debugging, reproduce the bug first, fix the root cause and add a regression test.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Task", "Bash(python3 -m unittest*)", "Bash(python3 -m pytest*)", "Bash(python3 -c*)", "Bash(python3 *.py)"],
+  "checklist": [
+    "Before changing any production code, the agent reproduced the problem with a concrete run (a script, python3 -c or a test) that shows a total or rounded amount one cent too low.",
+    "The root cause was fixed at its source: round_money in shop/utils.py no longer truncates with math.floor (it rounds, e.g. round() or Decimal ROUND_HALF_UP). Not a workaround in Order.total, not a special case.",
+    "A regression test for the cent-rounding case was added, with a hand-checkable expected value, and it passes after the fix.",
+    "After the fix the full suite was run, and the final message reports the real status (test_first_page is a pre-existing, unrelated failure; claiming everything passes is a fail).",
+    "No unrelated changes: page(), place(), roundMoney, unused_helper and chunks are unchanged; existing tests were not modified, skipped or deleted."
+  ],
+  "timeout": 420
+}
