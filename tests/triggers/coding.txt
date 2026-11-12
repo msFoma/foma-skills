@@ -1,0 +1,12 @@
+# + must fire, - must not fire (lite standard §8.1)
++ Add a multiply(a, b) function to calc.py.
++ Make divide() raise a ValueError when b is zero.
++ Implement a power(base, exp) function in calc.py.
++ Fix average() so it divides by the number of values.
++ Change add() to accept any number of arguments.
+# neighbours: tdd, refactoring, reviewing, verifying, documenting
+- Use TDD to add a multiply function to calc.py.
+- Review calc.py for bugs.
+- Did the tests pass after my change to calc.py?
+- What does calc.py do?
+- Add a section about running the tests to CLAUDE.md.

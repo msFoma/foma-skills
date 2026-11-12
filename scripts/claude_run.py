@@ -30,10 +30,14 @@ def plugin_snapshot():
 
 
 def base_cmd(prompt, model, plugin=True, allowed_tools=None, extra=None):
+    """model may carry an effort level: "haiku@low"."""
+    model, _, effort = model.partition("@")
     cmd = ["claude", "-p", prompt, "--model", model,
            "--setting-sources", "project",
            "--settings", json.dumps({"claudeMdExcludes": [str(Path.home() / ".claude/CLAUDE.md")]}),
            "--output-format", "stream-json", "--verbose", "--no-session-persistence"]
+    if effort:
+        cmd += ["--effort", effort]
     if plugin:
         cmd += ["--plugin-dir", str(plugin_snapshot())]
     if allowed_tools:
