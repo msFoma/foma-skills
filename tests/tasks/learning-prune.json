@@ -1,0 +1,33 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "printf '\\n## Rules\\n- Run `make lint` before every commit (2026-01-05)\\n- Keep money math in shop/pricing.py (2026-10-30)\\n- Prefer dataclasses for new models (2026-02-11)\\n' >> CLAUDE.md",
+    "mkdir -p migrations && printf 'x\\n' > migrations/001.sql",
+    "git add -A . && git commit -qm 'Add rules and migrations'"
+  ],
+  "prompt": "Twice this session you edited files under migrations/ and I had to revert you. Those files must never be edited by you, no exceptions. Learn from it and also prune old rules. Propose only, do not edit files.",
+  "command": "foma-skills:learning",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Skill",
+    "Bash(ls*)",
+    "Bash(grep *)",
+    "Bash(git log*)",
+    "Bash(git status*)",
+    "Bash(date*)"
+  ],
+  "checks": [
+    {
+      "name": "nothing written",
+      "cmd": "git diff --quiet HEAD && test -z \"$(git status --short)\""
+    }
+  ],
+  "checklist": [
+    "The migrations lesson is proposed as a permissions.deny entry or a hook (a rule that must hold with no exceptions), with a stated reason and a plan to check it on one input that must trigger and one that must not; a prose CLAUDE.md line alone fails; it is not a new skill.",
+    "The pruning part flags the 2026-01-05 'make lint' rule (more than 90 days old and no make/lint target exists) and the 2026-02-11 rule (older than 90 days) for re-check or removal, keeps the 2026-10-30 rule, proposes at most 3 changes in total, and asks for ok before writing."
+  ],
+  "timeout": 300
+}

@@ -1,0 +1,38 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "mkdir -p junk && i=0; while [ $i -lt 40 ]; do printf 'x\\n' > junk/f$i.bak; i=$((i+1)); done",
+    "printf 'print(1)\\n' > scratch_a.py",
+    "printf 'x\\n' > shop/notes.md"
+  ],
+  "prompt": "Tidy up this project. Report only: do not remove anything yet.",
+  "command": "foma-skills:tidying",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Skill",
+    "Bash(git status*)",
+    "Bash(git ls-files*)",
+    "Bash(find *)",
+    "Bash(ls*)",
+    "Bash(grep *)",
+    "Bash(mkdir *)"
+  ],
+  "checks": [
+    {
+      "name": "nothing removed",
+      "cmd": "test -f junk/f0.bak && test -f scratch_a.py && test -f shop/notes.md && test ! -e .trash"
+    },
+    {
+      "name": "tracked code intact",
+      "cmd": "git diff --quiet HEAD -- shop tests"
+    }
+  ],
+  "checklist": [
+    "The report is compact: the 40 .bak files appear as a count, a directory or glob summary, or at most about 10 example paths (not 40 separate lines); scratch_a.py and shop/notes.md are listed as review (T2) items; it asks for an ok per group and removed nothing."
+  ],
+  "timeout": 300
+}
