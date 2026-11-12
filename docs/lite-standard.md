@@ -99,10 +99,10 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 ## 7. Rewriting an outside skill
 
 - Keep every behaviour-changing line: as Rules up to the cap, then merged lines or Steps; branch-only lines go to a reference. Drop rationale and examples. The PR lists merges.
-- Original scripts: drop or summarise as steps; note it in `CREDITS.md`.
+- Original scripts: drop or summarise as steps; note it in `CREDITS.md`. Attribution files live in the plugin folder (they ship with the install, DEC-022): `CREDITS.md`, `NOTICE`, `LICENSE`, `licenses/`.
 - Each rewrite PR lists the dropped behaviours and why.
-- If an Apache-2.0 source ships a NOTICE, copy its text into root `NOTICE`.
-- Attribution: `CREDITS.md` row with source pinned to a commit sha, license, what was taken. Apache-2.0/MIT/ISC/CC0 fine; CC-BY needs visible credit; no license → ideas only, own wording (DEC-002).
+- If an Apache-2.0 source ships a NOTICE, copy its text into the plugin `NOTICE`.
+- Attribution: `CREDITS.md` row with source pinned to a commit sha, license, what was taken. Apache-2.0/MIT/ISC/CC0 fine; CC-BY needs visible credit; no license → ideas only, own wording (DEC-002). Copy the source license text to `licenses/<owner>-<repo>.txt`.
 
 ## 8. Definition of done (stage 6)
 

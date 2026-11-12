@@ -47,7 +47,7 @@ Manual skills run only when you call them; model skills fire on their own when t
 
 - Every skill follows the [lite standard](docs/lite-standard.md): short core, details in references read only when needed, token caps checked in CI.
 - The whole research history is open in [`research/`](research/): sources, facts, candidates, decisions (`research/decisions.md`) and the log.
-- Third-party work is credited in [`CREDITS.md`](CREDITS.md).
+- Third-party work is credited in [`CREDITS.md`](plugins/foma-skills/CREDITS.md).
 
 ## Contributing
 
@@ -55,4 +55,4 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
-[Apache-2.0](LICENSE). Copyright 2026 Vladislav Fomin (foma); see [`NOTICE`](NOTICE).
+[Apache-2.0](LICENSE). Copyright 2026 Vladislav Fomin (foma); see [`NOTICE`](plugins/foma-skills/NOTICE).

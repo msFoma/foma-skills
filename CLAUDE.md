@@ -5,7 +5,7 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 ## Layout
 - `research/` — open research history: facts, sources, candidates, ideas, decisions (ADR), questions, log.
 - `.claude/agents/` — `scout` (Haiku, web research), `rewriter` (Sonnet, skill rewrites).
-- `plugins/foma-skills/` — the plugin users install (`.claude-plugin/plugin.json`, `skills/`); repo root holds the marketplace (`.claude-plugin/marketplace.json`).
+- `plugins/foma-skills/` — the plugin users install (`.claude-plugin/plugin.json`, `skills/`, attribution: `CREDITS.md`, `NOTICE`, `LICENSE` copy, `licenses/`); repo root holds the marketplace (`.claude-plugin/marketplace.json`).
 
 ## Workflow
 - IDs: `SRC-NNN`, `FACT-NNN`, `CAND-NNN`, `IDEA-NNN`, `DEC-NNN`, `Q-NNN`. Cross-link by ID (`CAND-007 ← SRC-003`).

@@ -12,7 +12,7 @@ Thanks for helping. foma-skills stays small on purpose: a skill earns its place 
 
 1. Run `/foma-skills:writing-skills` (or follow the standard by hand).
 2. Keep one skill per pull request.
-3. If you adapt someone else's work, add a row to `CREDITS.md`: source repo pinned to a commit sha, license, what was taken. No license means ideas only, in your own words.
+3. If you adapt someone else's work, add a row to `plugins/foma-skills/CREDITS.md` (source repo pinned to a commit sha, license, what was taken) and copy the source's license text to `plugins/foma-skills/licenses/<owner>-<repo>.txt`. No license means ideas only, in your own words.
 4. Check before you push:
 
    ```
