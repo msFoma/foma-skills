@@ -58,7 +58,7 @@ def transcript(events):
                         c = " ".join(x.get("text", "") for x in c if isinstance(x, dict))
                     out.append(f"RESULT: {clip(c, 600)}")
         elif e.get("type") == "result":
-            out.append(f"FINAL: {clip(e.get('result'))}")
+            out.append(f"FINAL: {clip(e.get('result'), 8000)}")  # the judge must see the whole answer
     return "\n".join(out)
 
 
