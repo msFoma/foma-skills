@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>foma-skills graph</title>
+<style>
+  :root {
+    --bg: #f6f3ee; --panel: #fffdf9; --ink: #1f1d1a; --muted: #6f6a62; --line: #d9d2c7; --edge: #8a8377;
+    --setup: #b7791f; --proc: #2f5d8a; --meth: #2c7a6b; --atom: #55606e; --agent: #9a4a5c; --contract: #4d7c3a; --meta: #8a8377;
+    --setup-bg: #fbf1df; --proc-bg: #e6eef6; --meth-bg: #e3f1ed; --atom-bg: #eef0f2; --agent-bg: #f6e8eb; --contract-bg: #e9f2e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17161a; --panel: #1f1e23; --ink: #ece8e1; --muted: #a29c92; --line: #34323a; --edge: #7d776d;
+      --setup: #e0a54a; --proc: #7fa9d6; --meth: #6cc0ad; --atom: #a3adba; --agent: #d98a9c; --contract: #92c27a; --meta: #8d877d;
+      --setup-bg: #2c2418; --proc-bg: #1b2633; --meth-bg: #182b27; --atom-bg: #23262b; --agent-bg: #2e1d22; --contract-bg: #1d2a18;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17161a; --panel: #1f1e23; --ink: #ece8e1; --muted: #a29c92; --line: #34323a; --edge: #7d776d;
+    --setup: #e0a54a; --proc: #7fa9d6; --meth: #6cc0ad; --atom: #a3adba; --agent: #d98a9c; --contract: #92c27a; --meta: #8d877d;
+    --setup-bg: #2c2418; --proc-bg: #1b2633; --meth-bg: #182b27; --atom-bg: #23262b; --agent-bg: #2e1d22; --contract-bg: #1d2a18;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 ui-sans-serif, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  main { max-width: 1320px; margin: 0 auto; padding: 32px 16px 48px; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 18px; }
+  h1 { font: 600 28px/1.2 ui-serif, Georgia, "Times New Roman", serif; margin: 0; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); }
+  .stats { margin-left: auto; display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
+  .stats b { color: var(--ink); font-size: 18px; margin-right: 4px; }
+  .board { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 980px; height: auto; }
+  .band-label { font: 600 11px/1 ui-sans-serif, Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; fill: var(--muted); }
+  .band { fill: none; stroke: var(--line); stroke-dasharray: 2 6; }
+  .node rect, .node polygon { stroke-width: 1.5; }
+  .node text { font: 600 14px/1 ui-sans-serif, Arial, sans-serif; fill: var(--ink); }
+  .node .sub { font: 400 11.5px/1 ui-sans-serif, Arial, sans-serif; fill: var(--muted); }
+  .node { cursor: default; transition: opacity .15s; }
+  .edge { fill: none; stroke: var(--edge); stroke-width: 1.3; opacity: .45; transition: opacity .15s, stroke-width .15s; }
+  .edge.handoff { stroke-dasharray: 6 5; }
+  .edge.config { stroke-dasharray: 2 4; }
+  .edge.writes { stroke: var(--contract); stroke-width: 2.6; opacity: .9; }
+  svg.focus .node:not(.hot) { opacity: .25; }
+  svg.focus .edge { opacity: .08; }
+  svg.focus .edge.hot { opacity: 1; stroke-width: 2.2; stroke: var(--ink); }
+  .info { margin-top: 12px; min-height: 48px; padding: 12px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  .info b { font-size: 16px; }
+  .info span { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .card h2 { font: 600 13px/1.2 ui-sans-serif, Arial, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card li { margin: 3px 0; }
+  .key { display: inline-flex; align-items: center; gap: 8px; margin: 3px 14px 3px 0; color: var(--muted); font-size: 13.5px; }
+  .key i { display: inline-block; width: 26px; border-top: 2px solid var(--edge); }
+  .key i.d { border-top-style: dashed; } .key i.o { border-top-style: dotted; } .key i.w { border-top: 3px solid var(--contract); }
+  .key s { text-decoration: none; display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; }
+  code { font: 13px ui-monospace, Menlo, Consolas, monospace; background: var(--bg); padding: 1px 5px; border-radius: 4px; }
+  footer { margin-top: 18px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>foma-skills · skill graph v1</h1>
+    <p>Lite Claude Code skills linked by levels. Edges only point down.</p>
+    <div class="stats"><span><b>19</b>skills</span><span><b>3</b>agents</span><span><b>7</b>manual</span><span><b>≈1k</b>always-on tokens</span></div>
+  </header>
+
+  <div class="board"><svg id="g" viewBox="0 0 1280 770" role="img" aria-label="Skill dependency graph"></svg></div>
+  <div class="info" id="info"><b>Hover a skill</b> <span>to see what it does and what it connects to.</span></div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Legend</h2>
+      <span class="key"><i></i>uses</span>
+      <span class="key"><i class="d"></i>hand-off (tell the user)</span>
+      <span class="key"><i class="o"></i>configures</span>
+      <span class="key"><i class="w"></i>writes contract</span><br>
+      <span class="key"><s style="border-color:var(--setup);background:var(--setup-bg)"></s>setup &amp; upkeep</span>
+      <span class="key"><s style="border-color:var(--proc);background:var(--proc-bg)"></s>process</span>
+      <span class="key"><s style="border-color:var(--meth);background:var(--meth-bg)"></s>method</span>
+      <span class="key"><s style="border-color:var(--atom);background:var(--atom-bg)"></s>atomic</span>
+      <span class="key"><s style="border-color:var(--agent);background:var(--agent-bg)"></s>agent</span>
+      <p style="margin:8px 0 0;color:var(--muted);font-size:13.5px">Dashed outline = manual only: costs no listing tokens, reached by a hand-off line.</p>
+    </div>
+    <div class="card">
+      <h2>Maintenance loop</h2>
+      <ul>
+        <li><code>handoff</code> sees signals → <code>learning</code> adds or prunes one rule</li>
+        <li><code>handoff</code> sees junk → <code>tidying</code> cleans reversibly</li>
+        <li>after big changes → <code>groundwork</code> audit checks the contract stamp</li>
+        <li>prose advises, hooks enforce</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Contract v1 in CLAUDE.md</h2>
+      <ul>
+        <li><code>## Commands</code> — test, typecheck</li>
+        <li><code>## Where things live</code> — docs, decisions, specs, plans, design, rules, scratch, trash</li>
+        <li><code>## Workflow</code> — idea → shaping, UI → design-interview, bug → debugging</li>
+      </ul>
+    </div>
+  </div>
+  <footer>Source of truth: <code>research/graph.md</code>. Decisions DEC-007…DEC-016 in <code>research/decisions.md</code>.</footer>
+</main>
+
+<script>
+const C = { setup: 'setup', proc: 'proc', meth: 'meth', atom: 'atom', agent: 'agent', meta: 'meta' };
+const X5 = [310, 520, 730, 940, 1150];
+const X6 = [295, 465, 635, 805, 975, 1145];
+const Y = { hook: 42, setup: 112, contract: 212, proc: 322, meth: 432, atom: 552, agent: 680 };
+const N = [
+  ['hook', 'SessionStart hook', 'no CLAUDE.md → 1 line', X5[0], Y.hook, 'meta', 0, 'Plugin hook: if the project has no CLAUDE.md, prints one line suggesting /groundwork.', 150, 40],
+  ['gw', 'groundwork', 'set up · audit', X5[0], Y.setup, C.setup, 1, 'Sets up or audits the workspace by the golden structure; writes the contract; offers hooks and agents; measures session-start token cost.'],
+  ['tidy', 'tidying', 'junk → .trash/', X5[1], Y.setup, C.setup, 1, 'Finds junk in three tiers, shows a report, removes reversibly after ok (git rm or .trash/<date>/). Never rm -rf.'],
+  ['learn', 'learning', 'lesson → smallest layer', X5[2], Y.setup, C.setup, 1, 'Turns repeated mistakes into the smallest fix (CLAUDE.md line, rule, hook, project skill) and prunes stale rules with equal weight.'],
+  ['find', 'skill-finder', 'find · vet · install', X5[3], Y.setup, C.setup, 1, 'Finds a skill for a need, shows source, license and code, installs only after ok, registers it in CLAUDE.md.'],
+  ['ws', 'writing-skills', 'meta · lite standard', X5[4], Y.setup, C.meta, 0, 'The lite standard for writing a skill: used by contributors, learning and skill-finder.'],
+  ['shape', 'shaping', 'idea → spec', X5[0], Y.proc, C.proc, 1, 'Questions a raw idea (AI asks, you write), challenges it, ends with docs/specs/<name>.md.'],
+  ['design', 'design-interview', 'Opus 5.5 · variants', X5[1], Y.proc, C.proc, 1, 'Interviews you about the look, shows 2–4 variants side by side in the browser, records the choice in docs/design/.'],
+  ['plan', 'planning', 'proportional plans', X5[2], Y.proc, C.proc, 0, 'Small → just do it; feature → check spec; multi-step → task files with model and effort per task.'],
+  ['exec', 'executing', 'tasks → done', X5[3], Y.proc, C.proc, 0, 'Runs plan tasks inline or via agents, reviews, adds a retro line, archives the finished plan.'],
+  ['route', 'routing', 'model + effort', X5[1], Y.meth, C.meth, 0, 'Assigns model and effort per task and writes them into agent files. UI always goes to Opus 5.5.'],
+  ['dbg', 'debugging', 'loop → root cause', X5[2], Y.meth, C.meth, 0, 'Feedback loop first, reproduce, hypothesise, fix with a regression test.'],
+  ['rev', 'reviewing', 'standards + spec', X5[3], Y.meth, C.meth, 0, 'Reviews against project rules and the spec; UI anti-slop list; compact verdict.'],
+  ['ref', 'refactoring', 'after green', X5[4], Y.meth, C.meth, 0, 'Behaviour-preserving change after tests are green, outside the tdd loop.'],
+  ['code', 'coding', 'write code well', X6[0], Y.atom, C.atom, 0, 'Ask when unclear, simplest solution, touch only what the task needs, no swallowed errors, never edit tests to pass, check packages exist.', 150],
+  ['tdd', 'tdd', 'red → green', X6[1], Y.atom, C.atom, 0, 'Agreed seams, vertical slices, expected values from an independent source.', 150],
+  ['ver', 'verifying', 'evidence first', X6[2], Y.atom, C.atom, 0, 'Evidence per change type before "done"; only failing tests in output; a "not checked" line.', 150],
+  ['com', 'committing', 'small · confirmed', X6[3], Y.atom, C.atom, 0, 'Small commits in the style from CLAUDE.md; confirms; never pushes on its own.', 150],
+  ['doc', 'documenting', 'docs home', X6[4], Y.atom, C.atom, 0, 'Puts docs in the docs home; decision entries with status and the three-gate filter.', 150],
+  ['hand', 'handoff', 'note + /clear', X6[5], Y.atom, C.atom, 1, 'Session note in .claude/.scratch/, then /clear; flags lessons for learning and junk for tidying.', 150],
+  ['impl', 'implementer', 'Sonnet · medium', X5[1], Y.agent, C.agent, 0, 'Agent that writes code. Preloads coding, tdd, verifying. Haiku only behind tests.'],
+  ['expl', 'explorer', 'Haiku · proposed', X5[2], Y.agent, C.agent, 0, 'Proposed read-only agent for noisy search; returns at most 10 lines.'],
+  ['rvw', 'reviewer', 'Opus · high', X5[3], Y.agent, C.agent, 0, 'Agent that reviews changes. Preloads reviewing.'],
+  ['hooks', 'opt-in hooks', 'offered by groundwork', X5[4], Y.agent, 'meta', 0, 'Compact re-inject, stray docs, critical commands, test-gaming guard, swallowed-error guard, backup names, git guard.'],
+];
+const E = [
+  ['hook','gw','handoff'], ['learn','ws'], ['find','ws'],
+  ['shape','plan','handoff'], ['design','plan','handoff'],
+  ['plan','route'], ['plan','doc'],
+  ['exec','dbg'], ['exec','rev'], ['exec','ref'],
+  ['exec','code'], ['exec','tdd'], ['exec','ver'], ['exec','com'], ['exec','doc'],
+  ['exec','impl'], ['exec','rvw'], ['exec','expl'],
+  ['dbg','code'], ['dbg','tdd'], ['dbg','ver'], ['dbg','expl'],
+  ['ref','code'], ['ref','tdd'], ['ref','ver'], ['rev','ver'],
+  ['route','impl','config'], ['route','rvw','config'], ['route','expl','config'],
+  ['impl','code'], ['impl','tdd'], ['impl','ver'], ['rvw','rev'],
+];
+const ns = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('g');
+const el = (t, a, p = svg) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+const css = v => `var(--${v})`;
+
+el('defs', {}).innerHTML = '<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--edge)"/></marker>';
+
+const bands = [['setup & upkeep', Y.setup], ['contract', Y.contract], ['processes', Y.proc], ['methods', Y.meth], ['atomic', Y.atom], ['agents', Y.agent]];
+for (const [t, y] of bands) {
+  el('line', { x1: 20, x2: 1260, y1: y + 52, y2: y + 52, class: 'band' });
+  el('text', { x: 24, y: y + 4, class: 'band-label' }).textContent = t;
+}
+
+const nodes = {};
+for (const [id, label, sub, x, y, lvl, manual, job, w = 176, h = 58] of N) nodes[id] = { id, label, sub, x, y, lvl, manual, job, w, h };
+
+const edgeEls = [];
+const gE = el('g', {});
+for (const [a, b, type = 'uses'] of E) {
+  const s = nodes[a], t = nodes[b];
+  let d;
+  if (Math.abs(s.y - t.y) < 5) {
+    const x1 = s.x + (t.x > s.x ? s.w / 2 : -s.w / 2), x2 = t.x + (t.x > s.x ? -t.w / 2 : t.w / 2);
+    const far = Math.abs(t.x - s.x) > 250, lift = far ? 62 : 0;
+    d = far ? `M${s.x},${s.y - s.h / 2} C${s.x},${s.y - s.h / 2 - lift} ${t.x},${t.y - t.h / 2 - lift} ${t.x},${t.y - t.h / 2}`
+            : `M${x1},${s.y} L${x2},${t.y}`;
+  } else if (t.y > s.y) {
+    const y1 = s.y + s.h / 2, y2 = t.y - t.h / 2, m = (y1 + y2) / 2;
+    d = `M${s.x},${y1} C${s.x},${m} ${t.x},${m} ${t.x},${y2}`;
+  } else {
+    const y1 = s.y - s.h / 2, y2 = t.y + t.h / 2, m = (y1 + y2) / 2;
+    d = `M${s.x},${y1} C${s.x},${m} ${t.x},${m} ${t.x},${y2}`;
+  }
+  const p = el('path', { d, class: `edge ${type}`, 'marker-end': 'url(#ar)' }, gE);
+  edgeEls.push({ p, a, b });
+}
+
+// contract bar + writes edges
+const cb = el('g', { class: 'node', 'data-id': 'contract' });
+el('rect', { x: 220, y: Y.contract - 26, width: 1020, height: 52, rx: 8, fill: css('contract-bg'), stroke: css('contract') }, cb);
+const ct = el('text', { x: 730, y: Y.contract - 2, 'text-anchor': 'middle' }, cb); ct.textContent = 'CLAUDE.md  ·  contract v1';
+const cs = el('text', { x: 730, y: Y.contract + 16, 'text-anchor': 'middle', class: 'sub' }, cb);
+cs.textContent = '## Commands  ·  ## Where things live  ·  ## Workflow   —   read by planning, executing, verifying, committing, documenting, tidying';
+nodes.contract = { id: 'contract', job: 'One section block in the root CLAUDE.md. groundwork writes it; skills read paths and commands from it. Missing line → golden default.', label: 'contract v1', x: 730, y: Y.contract, w: 1020, h: 52 };
+for (const a of ['gw', 'learn']) {
+  const s = nodes[a];
+  const p = el('path', { d: `M${s.x},${s.y + s.h / 2} L${s.x},${Y.contract - 26}`, class: a === 'gw' ? 'edge writes' : 'edge handoff', 'marker-end': 'url(#ar)' }, gE);
+  edgeEls.push({ p, a, b: 'contract' });
+}
+
+const fill = { setup: 'setup-bg', proc: 'proc-bg', meth: 'meth-bg', atom: 'atom-bg', agent: 'agent-bg', meta: 'bg' };
+for (const n of Object.values(nodes)) {
+  if (n.id === 'contract') continue;
+  const g = el('g', { class: 'node', 'data-id': n.id });
+  const stroke = css(n.lvl === 'meta' ? 'meta' : n.lvl);
+  if (n.lvl === 'agent') {
+    const { x, y, w, h } = n, k = 14;
+    el('polygon', { points: `${x - w/2 + k},${y - h/2} ${x + w/2 - k},${y - h/2} ${x + w/2},${y} ${x + w/2 - k},${y + h/2} ${x - w/2 + k},${y + h/2} ${x - w/2},${y}`,
+      fill: css(fill[n.lvl]), stroke, 'stroke-dasharray': n.id === 'expl' ? '5 4' : '' }, g);
+  } else {
+    el('rect', { x: n.x - n.w / 2, y: n.y - n.h / 2, width: n.w, height: n.h, rx: n.id === 'hook' ? 20 : 8,
+      fill: css(fill[n.lvl]), stroke, 'stroke-dasharray': n.manual || n.lvl === 'meta' ? '5 4' : '' }, g);
+  }
+  const t = el('text', { x: n.x, y: n.sub ? n.y - 3 : n.y + 5, 'text-anchor': 'middle' }, g); t.textContent = n.label;
+  if (n.sub) { const s = el('text', { x: n.x, y: n.y + 15, 'text-anchor': 'middle', class: 'sub' }, g); s.textContent = n.sub; }
+  n.g = g;
+}
+cb.parentNode.appendChild(cb);
+nodes.contract.g = cb;
+
+const info = document.getElementById('info');
+const def = info.innerHTML;
+for (const n of Object.values(nodes)) {
+  n.g.addEventListener('mouseenter', () => {
+    svg.classList.add('focus');
+    n.g.classList.add('hot');
+    for (const e of edgeEls) if (e.a === n.id || e.b === n.id) {
+      e.p.classList.add('hot');
+      nodes[e.a].g.classList.add('hot'); nodes[e.b].g.classList.add('hot');
+    }
+    info.innerHTML = `<b>${n.label}</b> <span>${n.manual ? '(manual) ' : ''}— ${n.job}</span>`;
+  });
+  n.g.addEventListener('mouseleave', () => {
+    svg.classList.remove('focus');
+    document.querySelectorAll('.hot').forEach(x => x.classList.remove('hot'));
+    info.innerHTML = def;
+  });
+}
+</script>
+</body>
+</html>
