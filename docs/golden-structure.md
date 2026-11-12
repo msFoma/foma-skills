@@ -79,6 +79,8 @@ A conclusion that changes how code is written also becomes a line in CLAUDE.md o
 | Re-inject critical rules (≤10 lines) | `SessionStart`, matcher `compact` | Rules survive compaction | PROB-002, FACT-057 |
 | Block stray docs | `PreToolUse` on Write | No new `*.md` outside the docs home (allowlist README, CLAUDE, AGENTS, CHANGELOG) | PROB-012 |
 | Block critical commands | `PreToolUse` on Bash | Hard stops the user names (e.g. force-push) | PROB-001, PROB-028 |
+| Test-gaming guard | `PreToolUse` on Edit/Write | Ask when an edit adds skip/xit/@ts-ignore/eslint-disable/`type: ignore` | NOTE-214, NOTE-220 |
+| Swallowed-error guard | `PreToolUse` on Edit/Write | Warn on empty catch, `except: pass`, `\|\| true` | NOTE-216, NOTE-220 |
 
 Hooks use shell builtins only and are tested on Git Bash (NOTE-042). Off by default; `groundwork` offers them.
 
