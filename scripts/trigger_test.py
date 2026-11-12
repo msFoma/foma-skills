@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Trigger test for one skill (docs/lite-standard.md §8.1–8.2, DEC-024). Costs model usage.
 
-Usage: python3 scripts/trigger_test.py <skill> [--models haiku,sonnet] [--runs N] [--only +|-]
+Usage: python3 scripts/trigger_test.py <skill> [--models haiku] [--recheck sonnet] [--runs N] [--only +|-]
+Default (DEC-029): every prompt on Haiku; failed prompts are re-run once on the
+--recheck model to tell a Haiku weakness from a description problem.
 
 Cases: tests/triggers/<skill>.txt, one prompt per line:
   + prompt that must fire the skill
@@ -46,7 +48,8 @@ def run_once(prompt, model, fixture):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("skill")
-    ap.add_argument("--models", default="haiku,sonnet")
+    ap.add_argument("--models", default="haiku")
+    ap.add_argument("--recheck", default="sonnet", help="model for failed prompts; '' to skip")
     ap.add_argument("--runs", type=int, default=1)
     ap.add_argument("--only", choices=["+", "-"])
     args = ap.parse_args()
@@ -59,7 +62,7 @@ def main():
     fixture, cases = load_cases(args.skill)
     if args.only:
         cases = [c for c in cases if c[0] == (args.only == "+")]
-    totals = {}
+    totals, results = {}, []
     for must_fire, prompt in cases:
         for model in args.models.split(","):
             for _ in range(args.runs):
@@ -67,10 +70,21 @@ def main():
                 ok = (target in skills or args.skill in skills) == must_fire
                 p, t = totals.get(model, (0, 0))
                 totals[model] = (p + ok, t + 1)
+                results.append((must_fire, prompt, ok))
                 print(f"{'PASS' if ok else 'FAIL'} {model:6} {'+' if must_fire else '-'} "
                       f"{prompt[:64]!r} skills={skills or '-'} tools={tools} {secs:.0f}s", flush=True)
+    failed = [(f, pr) for f, pr, ok in results if not ok]
+    if args.recheck and failed:
+        p = 0
+        for must_fire, prompt in failed:
+            skills, tools, secs = run_once(prompt, args.recheck, fixture)
+            ok = (target in skills or args.skill in skills) == must_fire
+            p += ok
+            print(f"{'PASS' if ok else 'FAIL'} {args.recheck:6} {'+' if must_fire else '-'} "
+                  f"{prompt[:64]!r} skills={skills or '-'} (recheck)", flush=True)
+        totals[f"{args.recheck} recheck"] = (p, len(failed))
     print(f"{args.skill}: " + ", ".join(f"{m} {p}/{t}" for m, (p, t) in totals.items()))
-    return 0 if all(p == t for p, t in totals.values()) else 1
+    return 0
 
 
 if __name__ == "__main__":

@@ -113,8 +113,9 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: tdd/refactoring, tdd/debugging, documenting/committing, planning/executing, planning/routing — and of popular third-party packs (code-review, debug, documentation, skill-creator).
 2. **Firing detection:** `claude -p --output-format stream-json --verbose` + grep for the Skill tool call (verify in stage 6).
 3. **Task check:** one task with pass/fail. Interactive skills (shaping, design-interview, groundwork): a scripted-answer prompt, or a manual checklist when the dialog can't run headless (NOTE-110).
-4. **Baseline:** the skill vs its own one line (`scripts/task_test.py`, default `skill,line`), Sonnet ×5 and Opus ×3, early stop once the gap can't change. Objective items are script `checks`; the Sonnet judge grades only judgement items. Manual skills are called as `/foma-skills:<name>` (task `command`). A change that raises tokens needs the same proof.
-5. **Cost cap:** re-run only changed skills; ≤60 runs per stage-6 session.
+4. **Test budget (DEC-029):** per skill = static checks + trigger set on Haiku (Sonnet re-checks misses only) + one smoke task run (skill, Sonnet ×1). The baseline below runs only when a core grows past 800 tokens (DEC-028) or a change claims a quality gain; the whole pack gets one final eval vs no pack on 2–3 hard tasks (Sonnet, Opus ×2).
+5. **Baseline (on demand):** the skill vs its own one line (`scripts/task_test.py`, default `skill,line`), Sonnet ×5 and Opus ×3, early stop once the gap can't change. Objective items are script `checks`; the Sonnet judge grades only judgement items. Manual skills are called as `/foma-skills:<name>` (task `command`). A change that raises tokens needs the same proof.
+6. **Cost cap:** re-run only changed skills; ≤60 runs per stage-6 session.
 
 ## 9. CI checks (static, free)
 
