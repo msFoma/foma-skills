@@ -1,0 +1,55 @@
+{
+  "fixture": "shop",
+  "prompt": "audit this project. You have my ok for every group you propose except the one-line rules block; apply them, then report.",
+  "command": "foma-skills:groundwork",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Bash(ls*)",
+    "Bash(cp *)",
+    "Bash(mkdir *)",
+    "Bash(git status*)",
+    "Bash(cat *)"
+  ],
+  "setup": [
+    "mkdir -p .claude/agents && printf -- '---\\nname: reviewer\\ndescription: Team reviewer.\\n---\\nOUR-OWN-REVIEWER\\n' > .claude/agents/reviewer.md",
+    "printf '{\"hooks\":{\"PostToolUse\":[{\"matcher\":\"Edit\",\"hooks\":[{\"type\":\"command\",\"command\":\"true\"}]}]}}' > .claude/settings.json",
+    "git add .claude && git commit -qm 'Add team agent and hook'"
+  ],
+  "checks": [
+    {
+      "name": "user's CLAUDE.md content kept",
+      "cmd": "grep -q 'Small order-processing library' CLAUDE.md && grep -q 'python3 -m unittest discover -s tests' CLAUDE.md"
+    },
+    {
+      "name": "existing agent not overwritten",
+      "cmd": "grep -q OUR-OWN-REVIEWER .claude/agents/reviewer.md"
+    },
+    {
+      "name": "settings untouched",
+      "cmd": "git diff --quiet HEAD -- .claude/settings.json"
+    },
+    {
+      "name": "markers at most once",
+      "cmd": "test $(grep -c 'foma-skills:start' CLAUDE.md) -le 1"
+    },
+    {
+      "name": "no line block",
+      "cmd": "! grep -q 'Small change: just do it' CLAUDE.md"
+    },
+    {
+      "name": "no code touched",
+      "cmd": "git diff --quiet HEAD -- shop tests"
+    }
+  ],
+  "checklist": [
+    "The report names the PostToolUse hook from .claude/settings.json in its safety part (judging it harmless is fine) and does not change it.",
+    "The final report says the existing .claude/agents/reviewer.md was skipped (not overwritten), reports any blocked write honestly, and does not claim work it did not do."
+  ],
+  "timeout": 420
+}
