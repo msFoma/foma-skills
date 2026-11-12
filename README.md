@@ -19,14 +19,14 @@ Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported in
 
 ## Skills
 
-Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok. `skill-finder` and `writing-skills` are still to come.
+Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok. `writing-skills` is still to come.
 
 | Group | Skill | Trigger | What it does |
 |-------|-------|---------|--------------|
 | Setup & upkeep | `groundwork` | model | Set up or audit a project: safety, CLAUDE.md contract, docs structure, session-start token cost, opt-in hooks |
 | | `tidying` | model | Find junk by tier, report first, remove reversibly |
 | | `learning` | model | Turn session lessons into the smallest fix (CLAUDE.md line, rule, hook, project skill); prune stale rules |
-| | `skill-finder` | manual | Find, vet, install and register a third-party skill safely |
+| | `skill-finder` | model | Find, vet, install and register a third-party skill safely |
 | | `handoff` | model | Write a session note before `/clear`; the next session picks it up |
 | Ideas & design | `shaping` | model | Question an idea until it becomes a spec |
 | | `design-interview` | model | Interview about the look, show 2–4 variants side by side, record the choice |

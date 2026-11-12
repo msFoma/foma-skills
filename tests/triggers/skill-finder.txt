@@ -1,0 +1,11 @@
+@fixture shop
++ Is there a Claude skill for generating changelogs? Find one.
++ I saw a skill on GitHub for database migrations. Can you check it's safe and add it to this project?
++ Find me a good skill for Playwright testing and install it.
++ Is this skill safe to install? https://github.com/someone/pdf-skill
++ Search for a skill that writes release notes and tell me which one is best to add.
+- Write release notes for the last three commits.
+- Add a changelog entry for the refund feature.
+- Explain what the planning skill does.
+- Plan adding partial refunds to the shop.
+- Set up this project for working with Claude.
