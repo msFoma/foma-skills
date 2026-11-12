@@ -8,6 +8,8 @@ Shared by planning (writes), routing (fills `Model:`), executing (reads, updates
 Spec: <path to docs/specs/<name>.md, or "none — <one-line goal>">
 Base commit: <short sha from git rev-parse --short HEAD>
 Constraints: <project-wide limits copied verbatim from the spec, one line; omit if none>
+Appetite: <time budget and "cut first: …" copied from the spec; omit if none>
+Started: <YYYY-MM-DD HH:MM, set by executing>
 
 ## T1 — <title: the behaviour this slice delivers>
 Files: <real paths, `path:lines` for edits; mark new files "(new)">

@@ -7,7 +7,7 @@ metadata:
   level: "atomic"
   uses: ""
   agents: ""
-  tokens: "508"
+  tokens: "546"
 ---
 
 Commit only your own finished changes, in small focused commits, in the message style the project already uses.
@@ -19,7 +19,7 @@ Path: one obvious change → steps 1, 3, 5 and one commit, no ceremony; mixed ch
 2. Mixed or unrelated changes: propose the split (one logical change per commit, with file lists and messages) and wait for the user's ok.
 3. Find the message style: the project's CLAUDE.md first (Workflow, Conventions, git section), else `git log --oneline -10`. Match language, tense, prefix and length. Add a trailer (Co-Authored-By etc.) only if the project's rules or the session's attribution instructions call for one.
 4. Check the files to stage for secrets (`.env`, keys, tokens, credentials) and junk (build output, logs, scratch files, debug lines). Leave them out and tell the user.
-5. Stage by path (`git add <path>…`), then commit.
+5. Stage by path (`git add <path>…`). Run `git diff --cached -G'\[DEBUG-' --name-only`; a listed file still holds temporary debug lines (foma-skills:debugging tags them): remove them, restage, then commit.
 6. Commit now only if the user asked to commit or the project's CLAUDE.md says to commit after each finished task. Otherwise show the proposed message and staged files and ask first.
 7. Run `git status` to confirm what was committed and what remains.
 

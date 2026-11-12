@@ -1,0 +1,19 @@
+{
+  "fixture": "shop-plan",
+  "agents": true,
+  "setup": [
+    "python3 -c \"p='docs/plans/refunds/plan.md'; t=open(p).read(); t=t.replace('Base: initial commit', 'Base: initial commit\\nAppetite: one hour (cut first: T2, the rename)\\nStarted: 2026-11-09 10:00', 1).replace('Status: todo', 'Status: done', 1); open(p,'w').write(t)\"",
+    "git add docs && git commit -qm 'Mark T1 done'"
+  ],
+  "prompt": "Execute the plan in docs/plans/refunds/plan.md.",
+  "one_line": "When executing a plan, check each task's Done-when yourself and mark its status.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Skill", "Task", "Bash(python3 -m unittest*)", "Bash(python3 -c*)", "Bash(grep *)", "Bash(date*)", "Bash(git status*)", "Bash(git diff*)", "Bash(git log*)"],
+  "checks": [
+    {"name": "rename not started", "cmd": "grep -rqw get_inv shop"},
+    {"name": "no code touched", "cmd": "git diff --quiet HEAD -- shop tests"}
+  ],
+  "checklist": [
+    "The agent stopped before running T2, said the plan is past its one-hour appetite (started days ago), offered cutting T2 as the plan's 'cut first' item, and left the choice (cut, extend or continue) to the user."
+  ],
+  "timeout": 300
+}
