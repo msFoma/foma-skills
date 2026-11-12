@@ -3,8 +3,9 @@
 
 Usage: python3 scripts/fires.py [log ...] [--days N]
 Default log: .scratch/fires.jsonl in the current project; pass several logs to merge projects.
-Log lines are written by plugins/foma-skills/hooks/fire-log.sh: {"t": ISO UTC, "skill": ..., "session": ...}.
-Pack skills with zero fires are listed last: candidates for pruning once the log spans enough sessions.
+Log lines are written by plugins/foma-skills/hooks/fire-log.sh: a fire {"t", "skill", "session"} or a
+session start {"t", "event": "start", "session"}; the starts are the denominator ("fired in 9 of 24 sessions").
+Pack skills with zero fires are listed last: candidates for pruning once the log spans about 20 sessions.
 """
 import argparse
 import json
@@ -16,10 +17,10 @@ from pathlib import Path
 SKILLS = Path(__file__).resolve().parent.parent / "plugins/foma-skills/skills"
 
 
-def read_fires(paths, days=None):
-    """Return [(time, skill, session)] from the logs, newest window only if days is set; bad lines skipped."""
+def read_log(paths, days=None):
+    """Return (fires [(time, skill, session)], started session ids); only the last `days` if set; bad lines skipped."""
     cutoff = datetime.now(timezone.utc) - timedelta(days=days) if days else None
-    rows = []
+    rows, started = [], set()
     for path in paths:
         if not Path(path).is_file():
             continue
@@ -27,20 +28,28 @@ def read_fires(paths, days=None):
             try:
                 row = json.loads(line)
                 when = datetime.strptime(row["t"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-                skill = row["skill"].removeprefix("foma-skills:")
+                if row.get("event") == "start":
+                    skill = None
+                else:
+                    skill = row["skill"].removeprefix("foma-skills:")
             except (ValueError, KeyError, AttributeError):
                 continue
-            if cutoff is None or when >= cutoff:
+            if cutoff is not None and when < cutoff:
+                continue
+            if skill is None:
+                started.add(row.get("session", ""))
+            else:
                 rows.append((when, skill, row.get("session", "")))
-    return rows
+    return rows, started
 
 
-def summary(rows, pack):
-    """Lines: skill, fires, sessions, last fire; pack skills never fired at the end."""
+def summary(rows, pack, total=None):
+    """Lines: skill, fires, sessions it fired in (of `total` started), last fire; unfired pack skills at the end."""
     counts = Counter(s for _, s, _ in rows)
     sessions = {s: {sess for _, sk, sess in rows if sk == s} for s in counts}
     last = {s: max(t for t, sk, _ in rows if sk == s) for s in counts}
-    lines = [f"{s:18} {n:4} fires {len(sessions[s]):3} sessions  last {last[s]:%Y-%m-%d}"
+    of = f" of {total}" if total else ""
+    lines = [f"{s:18} {n:4} fires in {len(sessions[s]):3}{of} sessions  last {last[s]:%Y-%m-%d}"
              for s, n in counts.most_common() if s in pack]
     lines += [f"{s:18}    0 fires" for s in sorted(pack - set(counts))]
     return lines
@@ -51,9 +60,10 @@ def main():
     ap.add_argument("logs", nargs="*", default=[".scratch/fires.jsonl"])
     ap.add_argument("--days", type=int)
     args = ap.parse_args()
-    rows = read_fires(args.logs, args.days)
-    print(f"{len(rows)} fires, {len({r[2] for r in rows})} sessions")
-    print("\n".join(summary(rows, {p.name for p in SKILLS.iterdir() if p.is_dir()})))
+    rows, started = read_log(args.logs, args.days)
+    total = len(started | {r[2] for r in rows})  # a log from before the start events still counts fired sessions
+    print(f"{len(rows)} fires, {total} sessions" + ("" if total >= 20 else " (under 20: too few to judge a zero)"))
+    print("\n".join(summary(rows, {p.name for p in SKILLS.iterdir() if p.is_dir()}, total)))
     return 0
 
 

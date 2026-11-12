@@ -1,0 +1,34 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "mkdir -p .scratch && python3 -c \"import json; n=24; rows=[{'t':'2026-10-%02dT09:00:00Z'%(1+i%28),'event':'start','session':'s%02d'%i} for i in range(n)]; fires=[('planning',range(0,9)),('committing',range(2,9)),('tdd',range(5,9)),('debugging',range(10,12))]; rows+=[{'t':'2026-10-%02dT10:00:00Z'%(1+i%28),'skill':'foma-skills:'+s,'session':'s%02d'%i} for s,r in fires for i in r if i<n]; open('.scratch/fires.jsonl','w').write(''.join(json.dumps(r)+'\\\\n' for r in rows))\"",
+    "git add -A . && git commit -qm 'Add fire log'"
+  ],
+  "prompt": "Which parts of the foma-skills pack are not earning their place in this project? Use what the project's own usage log says. Propose only, do not edit files.",
+  "command": "foma-skills:learning",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Skill",
+    "Bash(ls*)",
+    "Bash(grep *)",
+    "Bash(wc *)",
+    "Bash(sort *)",
+    "Bash(git log*)",
+    "Bash(git status*)",
+    "Bash(date*)"
+  ],
+  "checks": [
+    {
+      "name": "nothing written",
+      "cmd": "git diff --quiet HEAD && test -z \"$(git status --short)\""
+    }
+  ],
+  "checklist": [
+    "The answer states that the log covers 24 sessions and names at least three pack skills that never fired (for example design-interview, tidying, groundwork, handoff or skill-finder) as ONE proposal for the user to disable or keep.",
+    "It does not call planning, committing, tdd or debugging unused (they fired), does not edit or offer to edit foma-skills files itself, and asks for the user's decision before anything is written."
+  ],
+  "timeout": 300
+}

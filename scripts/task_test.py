@@ -95,7 +95,9 @@ def judge_once(task, log, diff):
         text = ""
         for line in res.stdout.splitlines():
             try:
-                text = json.loads(line).get("result", "") or text
+                obj = json.loads(line)
+                text = obj.get("result", "") or text
+                cr.add_cost(obj)
             except (json.JSONDecodeError, AttributeError):
                 continue
         if cr.limit_text(text):
@@ -226,6 +228,15 @@ def run_matrix(name, task, variants, models, runs, all_runs, retries=0, score=No
 
 
 def main():
+    try:
+        return run_all()
+    finally:
+        line = cr.receipt("task_test " + " ".join(sys.argv[1:]))
+        if line:
+            print(line, flush=True)
+
+
+def run_all():
     ap = argparse.ArgumentParser()
     ap.add_argument("skill")
     ap.add_argument("--models", default="haiku,sonnet")

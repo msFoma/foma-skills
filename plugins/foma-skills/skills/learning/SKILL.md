@@ -7,7 +7,7 @@ metadata:
   level: "setup"
   uses: ""
   agents: ""
-  tokens: "662"
+  tokens: "740"
 ---
 
 Finds what this session taught about the project, puts each lesson in the smallest layer that fixes it, and removes rules that no longer earn their place. Propose, then write after the user's ok.
@@ -18,6 +18,7 @@ Finds what this session taught about the project, puts each lesson in the smalle
 3. Gate each lesson; drop it if any answer is no: a concrete event backs it; the agent cannot infer it from the code; no rule or hook already covers it.
 4. Pick the smallest layer that works: nothing (one-off) → a CLAUDE.md line (one sentence, "Claude gets this wrong: …") → a path rule in `.claude/rules/` → for a rule that must hold with no exceptions, a `permissions.deny` entry ("never touch this path") or a hook (Bash hooks block, Write/Edit hooks only warn) → a project skill (a recurring multi-step procedure only). A change bigger than that: add a `proposed` entry to the decisions file and name `/foma-skills:groundwork` or foma-skills:shaping; do not do it here.
 5. Prune in the same pass: rules naming files, commands or tools that no longer exist (check with grep), duplicates, contradictions, prose a hook already enforces, rules that failed to prevent a repeat (escalate one layer or delete), stamps older than 90 days. CLAUDE.md over 200 lines: one in, one out.
+   If `.scratch/fires.jsonl` exists, count sessions as distinct session ids on its `"event":"start"` rows. At 20 or more, pack skills with no fire row in that log become one proposal (names and the session count; the user disables or keeps them). Under 20: say the log is too short and propose nothing from it.
 6. Present at most 3 proposals: evidence, layer, the exact diff (removed lines quoted), what it removes. Ask per item; write only approved ones; end new rule lines with the date `(YYYY-MM-DD)` so the next run can re-check them.
 7. A new hook or project skill is kept only after one check: the hook on one input that must trigger it and one that must not; the skill on one prompt that must fire it.
 

@@ -86,7 +86,7 @@ Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported in
 
 Skills fire on their own when the task fits (a session hook routes them, DEC-031); you can always call one as `/foma-skills:<skill>`. Skills that change files only propose first and write after your ok.
 
-A small hook counts skill calls locally: skill name, UTC time and session id go to `.scratch/fires.jsonl` in your project (never prompt text, nothing is sent anywhere). See which skills earn their place: `cut -d'"' -f8 .scratch/fires.jsonl | sort | uniq -c | sort -rn`; delete the file to reset.
+A small hook counts skill calls and session starts locally: skill name, UTC time and session id go to `.scratch/fires.jsonl` in your project (never prompt text, nothing is sent anywhere). See which skills earn their place: `grep -o '"skill":"[^"]*"' .scratch/fires.jsonl | sort | uniq -c | sort -rn`; after about 20 sessions `learning` can propose disabling the skills that never fired. Set `FOMA_FIRE_LOG=off` to turn the log off; delete the file to reset.
 
 | Group | Skill | Trigger | What it does |
 |-------|-------|---------|--------------|

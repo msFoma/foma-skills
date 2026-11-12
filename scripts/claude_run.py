@@ -30,6 +30,35 @@ def plugin_snapshot():
     return Path(_SNAPSHOT.name) / "foma-skills"
 
 
+TALLY = {"usd": 0.0, "tokens": 0, "reported": 0, "runs": 0}
+
+
+def add_cost(obj):
+    """Add one result object (stream event or judge JSON) to the batch total."""
+    usage = obj.get("usage") or {}
+    TALLY["usd"] += obj.get("total_cost_usd") or 0
+    TALLY["tokens"] += sum(usage.get(k) or 0 for k in
+                           ("input_tokens", "cache_creation_input_tokens", "output_tokens"))
+    TALLY["reported"] += 1
+
+
+def receipt(label):
+    """One line for the end of a batch; also appended to tests/.runs/cost.jsonl (ignored by git).
+
+    A run that was stopped early (trigger tests) reports no cost, so the line says how many reported.
+    """
+    if not TALLY["reported"]:
+        return ""
+    row = {"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "what": label, "usd": round(TALLY["usd"], 2),
+           "tokens": TALLY["tokens"], "reported": TALLY["reported"], "runs": TALLY["runs"]}
+    log = ROOT / "tests/.runs/cost.jsonl"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with open(log, "a") as f:
+        f.write(json.dumps(row) + "\n")
+    return (f"cost: ${row['usd']:.2f} at list price, {row['tokens'] / 1000:.0f}k tokens "
+            f"(cache reads excluded), {row['reported']} calls reported of {row['runs']} agent runs + judge")
+
+
 class LimitHit(Exception):
     """The account's usage limit stopped the session; the run says nothing about the skill."""
 
@@ -74,13 +103,15 @@ def base_cmd(prompt, model, plugin=True, allowed_tools=None, extra=None):
     return cmd + (extra or [])
 
 
-def run(cmd, project, stop=None, timeout=180):
+def run(cmd, project, stop=None, timeout=180, env=None):
     """Run cmd in project; return (events, seconds, timed_out).
 
     stop(events) -> bool ends the run early.
     """
     start = time.time()
-    proc = subprocess.Popen(cmd, cwd=project, stdin=subprocess.DEVNULL,
+    TALLY["runs"] += 1
+    env = {**os.environ, "FOMA_FIRE_LOG": "off", **(env or {})}  # tests must not write the user-facing fire log
+    proc = subprocess.Popen(cmd, cwd=project, env=env, stdin=subprocess.DEVNULL,
                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                             text=True, start_new_session=True)
     timed_out = threading.Event()
@@ -111,6 +142,9 @@ def run(cmd, project, stop=None, timeout=180):
         watchdog.cancel()
         kill_group()
         proc.wait()
+    for e in events:
+        if e.get("type") == "result":
+            add_cost(e)
     return events, time.time() - start, timed_out.is_set()
 
 

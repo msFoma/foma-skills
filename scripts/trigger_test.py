@@ -54,6 +54,10 @@ def main():
     except cr.LimitHit as e:
         print(f"LIMIT: {e}\nStopped: the interrupted prompt is not scored. Rerun after the reset.", file=sys.stderr)
         return 2
+    finally:
+        line = cr.receipt("trigger_test " + " ".join(sys.argv[1:]))
+        if line:
+            print(line, flush=True)
 
 
 def run_all():

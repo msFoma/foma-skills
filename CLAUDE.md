@@ -17,7 +17,7 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 ## Checks
 - `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin).
 - `python3 scripts/check_skills.py` — static skill checks (lite standard §9); its tests and the harness tests: `python3 -m unittest scripts/test_check_skills.py scripts/test_harness.py`.
-- `python3 scripts/fires.py [log ...] [--days N]` — free: fire counts per pack skill from `.scratch/fires.jsonl` (written by `hooks/fire-log.sh`), unfired skills listed last.
+- `python3 scripts/fires.py [log ...] [--days N]` — free: fire counts per pack skill from `.scratch/fires.jsonl` (written by `hooks/fire-log.sh`), unfired skills listed last. Test batches end with a cost line (list-price USD, tokens) and append it to `tests/.runs/cost.jsonl`; the harness sets `FOMA_FIRE_LOG=off`.
 - CI: `.github/workflows/validate.yml` runs all of the above on every push/PR (CLI pinned to 2.1.322).
 - Per new/changed skill (DEC-029, costs model usage): `python3 scripts/trigger_test.py <skill>` (Haiku, Sonnet re-checks misses) and a smoke run `python3 scripts/task_test.py <skill> --variants skill --models sonnet --runs 1` (a FAIL is retried twice, majority decides, `--retries 0` off; a usage-limit notice stops the batch with exit code 2 and is never scored).
 - Skill vs its one line only on demand (core >800 tokens or a quality claim): `python3 scripts/task_test.py <skill> --models sonnet --runs 5`; re-grade saved runs with `--rejudge` / `--rejudge-all`.
