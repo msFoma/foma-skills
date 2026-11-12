@@ -1,0 +1,5 @@
+@fixture shop
++ The report summary prints the wrong total, figure out why.
++ Pagination returns one item too few on the last page. Track down the cause.
++ Tests pass for a teammate but test_first_page fails for me. What is happening?
+- Add a function that lists orders by customer.

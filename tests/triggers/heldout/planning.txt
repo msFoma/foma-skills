@@ -1,0 +1,5 @@
+@fixture shop
++ Break the CSV export feature into steps before we start.
++ Outline the tasks for adding an inventory low-stock alert.
++ I want a step-by-step implementation plan for audit logging.
+- Implement the rollback TODO in shop/orders.py.

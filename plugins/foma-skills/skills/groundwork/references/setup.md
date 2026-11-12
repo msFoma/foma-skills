@@ -19,7 +19,7 @@ Sections in this order, drop empty ones; fill from manifests, ask for what canno
 2. `## Commands`: only non-standard build / test / lint / run / typecheck, with a single-test form. Verify each command runs.
 3. Conventions: only those that differ from defaults.
 4. Claude gets this wrong: leave the heading out until there are real lines.
-5. `## Where things live`: backticked paths for the chosen docs home, decisions, specs, plans (archive under `plans/archive/`), design, rules, scratch (`.claude/.scratch/`), trash (`.trash/`).
+5. `## Where things live`: backticked paths for the chosen docs home, decisions, specs, plans (archive under `plans/archive/`), design, rules, scratch (`.scratch/`), trash (`.trash/`).
 6. `## Workflow`: verifiable rules; the one-line block only if chosen.
 
 Wrap the contract sections in the marked block, first line `<!-- foma-skills contract v1 -->`.
@@ -36,7 +36,7 @@ Create only the chosen paths. Decision log entry: `| DEC-NNN | date | Decision |
 # foma-skills
 CLAUDE.local.md
 .claude/settings.local.json
-.claude/.scratch/
+.scratch/
 .trash/
 tmpclaude-*-cwd
 .DS_Store

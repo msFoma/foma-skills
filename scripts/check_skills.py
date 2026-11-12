@@ -5,7 +5,9 @@ Usage: python3 scripts/check_skills.py [skills_dir]
 Exit 1 on any failure.
 """
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 DEFAULT_DIR = Path(__file__).resolve().parent.parent / "plugins/foma-skills/skills"
@@ -24,7 +26,8 @@ FORBIDDEN_FILES = {"README.md", "CHANGELOG.md", "examples"}
 DESC_MAX_CHARS = 250
 CORE_CAP = {"model": 1500, "manual": 1500}  # DEC-028
 REFERENCE_CAP = 1000
-PACK_CAP = 1200
+PACK_CAP = 1200  # descriptions + the session-start router output (DEC-032)
+RULE_CAP = {"atomic": 5, "method": 5, "meta": 5, "process": 8, "setup": 8}  # DEC-032
 DRIFT = 0.10
 
 
@@ -131,6 +134,8 @@ def check_skill(folder, errors):
         err(f"description {len(desc)} chars > {DESC_MAX_CHARS}")
     if re.search(r"<[A-Za-z/]", desc):
         err("description contains XML-like tags")
+    if not manual and "Use when" not in desc:
+        err("model-invoked description needs a 'Use when' clause")
 
     tools = fm.get("allowed-tools")
     if tools is not None:
@@ -158,6 +163,16 @@ def check_skill(folder, errors):
     cap = CORE_CAP["manual" if manual else "model"]
     if core > cap:
         err(f"core {core} tokens > cap {cap}")
+    rules = []
+    in_rules = False
+    for line in body.splitlines():
+        if line.startswith("## "):
+            in_rules = line.strip() == "## Rules"
+        elif in_rules and line.startswith("- "):
+            rules.append(line)
+    rule_cap = RULE_CAP.get(level, 5)
+    if len(rules) > rule_cap:
+        err(f"{len(rules)} rules > cap {rule_cap} for level {level}")
     declared = meta.get("tokens", "")
     if not declared.isdigit():
         err(f"metadata.tokens {declared!r} is not a number")
@@ -198,6 +213,16 @@ def check_skill(folder, errors):
     }
 
 
+def router_tokens(script):
+    """Tokens the SessionStart hook prints in an empty project (the always-on router)."""
+    if not script.is_file():
+        return 0
+    with tempfile.TemporaryDirectory() as tmp:
+        out = subprocess.run(["sh", str(script)], cwd=tmp, stdin=subprocess.DEVNULL,
+                             capture_output=True, text=True, timeout=10).stdout
+    return tokens(out)
+
+
 def check_pack(skills_dir):
     errors = []
     skills = {}
@@ -225,13 +250,8 @@ def check_pack(skills_dir):
                 errors.append(f"{name}: agent {agent!r} has no assets/agents/{agent}.md")
 
     router = skills_dir.parent / "hooks/session-start.sh"
-    if router.is_file():
-        text = router.read_text(encoding="utf-8")
-        for name, info in skills.items():
-            if not info["manual"] and f"foma-skills:{name}" not in text:
-                errors.append(f"{name}: model-invoked skill missing from the router (hooks/session-start.sh)")
-
     total = sum(i["desc_tokens"] for i in skills.values() if not i["manual"])
+    total += router_tokens(router)
     if total > PACK_CAP:
         errors.append(f"pack always-on {total} tokens > cap {PACK_CAP}")
     return errors, len(skills), total

@@ -1,0 +1,5 @@
+@fixture shop
++ Is this repo ready for AI-assisted work? Check the CLAUDE.md and docs layout.
++ Bootstrap CLAUDE.md and a docs folder for this new project.
++ My Claude sessions start slowly. Check what this project loads at session start.
+- Record the decision to use unittest in docs/decisions.md.

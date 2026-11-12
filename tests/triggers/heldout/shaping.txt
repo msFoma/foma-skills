@@ -1,0 +1,5 @@
+@fixture shop
++ I have an idea for a referral program but have not thought it through.
++ Let us work out what a gift-card feature should even do.
++ Help me figure out whether the shop needs an admin area.
+- Add a note attribute to the Order class.

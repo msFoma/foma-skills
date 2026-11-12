@@ -1,0 +1,5 @@
+@fixture shop
++ Draft a SKILL.md for running our database backup check.
++ This skill description never triggers. Improve it.
++ Make my skill shorter without losing its rules.
+- Install the pdf skill from the registry.

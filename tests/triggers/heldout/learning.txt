@@ -1,0 +1,5 @@
+@fixture shop
++ You made the same mistake again and edited tests to make them pass. Make it stop for good in this repo.
++ Our CLAUDE.md rules are stale. Remove what no longer applies.
++ Learn from this session: what should become a project rule?
+- Fix the stale rollback TODO in shop/orders.py.

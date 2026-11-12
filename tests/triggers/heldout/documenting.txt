@@ -1,0 +1,5 @@
+@fixture shop
++ Write up how the pricing module works for new contributors.
++ Log the decision that tax stays a module constant, with the alternatives we rejected.
++ The README does not mention the report module. Fix the docs.
+- Add a type hint to apply_tax.

@@ -1,0 +1,5 @@
+@fixture shop
++ Does a skill exist for generating OpenAPI docs? Find the best one.
++ Vet this third-party skill before I install it: candidates/foo/SKILL.md
++ Look for an existing skill for commit message linting. Do not write one.
+- Create a new skill for our release process.

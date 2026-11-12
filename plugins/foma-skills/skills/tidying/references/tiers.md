@@ -10,7 +10,7 @@ Match by name only; confirm with the checks in the steps. Patterns that apply to
 - Zero-byte files that are not `__init__.py`, `.gitkeep`, `.keep`; empty directories.
 
 ## T2: look first
-- Untracked throwaway-looking files: names like `scratch*`, `debug*`, `tmp*`, `try*`, `test_*.py` outside the tests dir, `*.log`, `*.png`/`*.jpg` outside an assets dir, `*.md` outside the docs home (README, CLAUDE.md, AGENTS.md, CHANGELOG, LICENSE, CONTRIBUTING excepted). An untracked file with a normal source name (`promo.py`) is T3.
+- Untracked throwaway-looking files: names like `scratch*`, `debug*`, `tmp*`, `try*`, `test_*.py` outside the tests dir, `*.log`, `*.png`/`*.jpg` outside an assets dir, `*.md` outside the docs home (README, CLAUDE.md, AGENTS.md, CHANGELOG, LICENSE, CONTRIBUTING, DESIGN.md excepted). An untracked file with a normal source name (`promo.py`) is T3.
 - Untracked files over 1 MB.
 - Plans in the plans folder whose tasks are all `Status: done`: archive, never delete.
 - Unused files: no reference found with `grep -rIl "<name without extension>"` over the project.

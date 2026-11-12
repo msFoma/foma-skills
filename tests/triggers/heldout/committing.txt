@@ -1,0 +1,5 @@
+@fixture shop
++ Save my work to git with a good message.
++ Split what I changed into two logical commits.
++ Open a PR for this branch with a proper description.
+- Explain what the last commit in git log changed.

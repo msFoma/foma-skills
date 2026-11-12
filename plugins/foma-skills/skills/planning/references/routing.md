@@ -1,16 +1,6 @@
----
-name: routing
-description: >-
-  Assigns a model and effort to each task in a plan. Use when a plan's tasks need a model or effort, or the user asks which model should do a task. Not for writing plans or doing the tasks.
-license: Apache-2.0
-metadata:
-  level: "method"
-  uses: ""
-  agents: ""
-  tokens: "352"
----
+# Model and effort per task
 
-Choose model and effort for each task in `docs/plans/<feature>/plan.md` and write its `Model:` line with a one-line reason.
+Choose model and effort for each task of the plan and write its `Model:` line with a one-line reason. Also used on its own when the user asks which model should do a task or to fill the `Model:` lines of an existing plan.
 
 ## Steps
 1. Read the plan and the project CLAUDE.md. A stated routing preference or model limit (e.g. "no Opus", plan limits) overrides the defaults below.
@@ -27,7 +17,3 @@ Choose model and effort for each task in `docs/plans/<feature>/plan.md` and writ
 - Routing applies to delegated agent calls only; never switch the main session's model mid-session (breaks the prompt cache).
 - Edit only `Model:` lines in the plan; never write config or agent files.
 - Judge the task's nature, not its size: a short security fix is Opus.
-
-## Report
-- Assignments (table or line) and the plan path.
-- Not checked: <…>

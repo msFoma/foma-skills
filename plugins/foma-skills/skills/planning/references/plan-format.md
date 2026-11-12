@@ -1,6 +1,6 @@
 # plan.md format
 
-Shared by planning (writes), routing (fills `Model:`), executing (reads, updates `Status:`). Keep the headings and field names exactly.
+Shared by planning (writes, fills `Model:`) and executing (reads, updates `Status:`). Keep the headings and field names exactly.
 
 ```markdown
 # Plan: <feature>
@@ -28,7 +28,7 @@ Status: todo
 Fields
 - `Status:` is one of `todo`, `doing`, `done`, `blocked`. Executing changes it in place; add `— <reason>` after `blocked`.
 - `Done when:` names the project's real command (from `## Commands`), scoped to the task's tests.
-- `Model:` is chosen with foma-skills:routing; planning only writes the line.
+- `Model:` is chosen by planning's routing rules (model and effort per task).
 - Steps name files, signatures and test names. No code bodies, no restating the spec.
 - Order tasks so every `Blocked by:` points to an earlier task. A task that cannot be verified alone is merged into its neighbour.
 - Extra tasks found during execution are appended as the next `T<n>`; existing ids never change.

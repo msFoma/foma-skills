@@ -1,0 +1,5 @@
+@fixture shop
++ Get rid of the leftover files from earlier sessions.
++ Find and remove stray backups and temp files in the repo.
++ The folder is cluttered. Clean house.
+- Delete the unused helper function in utils.py.

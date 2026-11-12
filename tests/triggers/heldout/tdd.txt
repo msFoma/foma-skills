@@ -1,0 +1,5 @@
+@fixture shop
++ Test-drive a discount cap: a discount may never exceed 50 percent.
++ Write the failing test first for the refund edge case, then fix it.
++ Add a regression test for the first_page bug and fix it test-first.
+- Add a function that returns the order count.

@@ -1,0 +1,5 @@
+@fixture shop-plan
++ Go ahead and implement the refunds plan.
++ Start working through docs/plans/refunds/plan.md.
++ The plan is approved, build it.
+- Rewrite the refunds plan so it has three tasks.

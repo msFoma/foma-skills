@@ -28,7 +28,7 @@ description: >-
 license: Apache-2.0
 metadata:
   level: "process"
-  uses: "routing documenting"
+  uses: "documenting"
   agents: ""
   tokens: "420"
 ---
@@ -54,7 +54,7 @@ metadata:
 - `metadata` values are strings until nested values are verified (stage 6 / scout): `uses` and `agents` = space-separated bare names; `tokens` = number as string. Credits live in `CREDITS.md` / `NOTICE`, never in frontmatter.
 - `level` is one of `setup`, `process`, `method`, `atomic`, `meta`. Allowed `uses`: process → method, atomic; method → atomic; setup, atomic, meta → none (graph levels table). Agents may be used by process and method skills.
 - `allowed-tools` may list read-only tools only (Read, Grep, Glob). Never `AskUserQuestion` (NOTE-111), never Bash patterns that pre-approve side effects (NOTE-032).
-- Names: bare in metadata (`routing`), namespaced in the body (`foma-skills:routing`). Agent names in the body: `foma-skills:<agent>`; whether a project copy overrides it is a stage-6 check (FACT-038).
+- Names: bare in metadata (`documenting`), namespaced in the body (`foma-skills:documenting`). Agents ship as project copies (`groundwork` assets), so the body calls them by bare name (`implementer`); a namespaced name does not resolve (review R-01).
 
 ## 3. Description
 
@@ -70,22 +70,22 @@ metadata:
 3. **Steps** — numbered, imperative, each verifiable (P6). Read paths and commands from the CLAUDE.md contract; inline the default the skill uses when a line is missing (`docs/golden-structure.md` doesn't ship).
 4. **Rules** — hard never/always lines with a short reason when not obvious; no capitals shouting. Text that changes behaviour (e.g. red-flag or rationalisation tables) is kept here, compressed.
 5. **Branches** — "If <condition>, read `references/<x>.md`." (FACT-011, FACT-013)
-6. **Report** — ≤5-line summary, last line "Not checked: …" (IDEA-044). Decision payloads — question rounds, proposals, manifests — are not the report; long lists go to `.claude/.scratch/` and are linked.
+6. **Report** — ≤5-line summary, last line "Not checked: …" (IDEA-044). Decision payloads — question rounds, proposals, manifests — are not the report; long lists go to `.scratch/` and are linked.
 7. **Next** — name the command when the next step is a process or manual skill (those can't be called by skills).
 
 Leave out: rationale, history, evidence, generic advice, anything the model infers from code (NOTE-067). Rationale lives in `research/`.
 
 ## 5. Caps per skill
 
-| | Model-invoked | Manual (setup & upkeep, shaping, design-interview, writing-skills) |
-|-|---------------|--------------------------------------------------------------------|
+| | Method, atomic, meta | Setup and process (interview, setup or orchestration flows) |
+|-|----------------------|----------------------------------------------------------------|
 | Rules | ≤5 | ≤8 |
-| Core tokens (SKILL.md body) | target 300–800, cap 1,500 — above 800 only with a task-test win over the shorter version (DEC-028) | cap 1,500 (no listing cost, rarely run, FACT-023) |
+| Core tokens (SKILL.md body) | target 300–800, cap 1,500 | target 500–1,000, cap 1,500 |
 | Each reference file | ≤600 target, cap 1,000 | same |
 
-Pack always-on (all model-invoked descriptions): ≈0.9k target, 1.2k cap.
+DEC-032: a core above 800 tokens is accepted with a passing trigger set and smoke run (DEC-029); a task-test win over the shorter version is required only when the skill claims a quality gain. All 17 skills are model-invoked (DEC-031); a skill sets `disable-model-invocation` only by explicit decision, and then the description rules of §3 (manual) apply.
 
-DEC-031: setup, shaping and design-interview skills are model-invoked too. They use the model-invoked description rules (§3) and the propose-only rule for side effects (§6); the manual column applies only to skills that still set `disable-model-invocation`.
+Pack always-on = all model-invoked descriptions plus the text the SessionStart hook prints in an empty project: ≈0.9k target, 1.2k cap.
 
 ## 6. Behaviour rules every skill follows
 
@@ -111,8 +111,8 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 
 ## 8. Definition of done (stage 6)
 
-0. **Form (DEC-027):** process and method skills are model-invoked (user choice: automatic like superpowers). Each also has a one-line core for the optional CLAUDE.md block `groundwork` offers (insurance for cheap models).
-1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: tdd/refactoring, tdd/debugging, documenting/committing, planning/executing, planning/routing — and of popular third-party packs (code-review, debug, documentation, skill-creator).
+0. **Form (DEC-031):** every skill is model-invoked (user choice: automatic like superpowers); skills that change files only propose and write after the user's ok. Each also has a one-line core for the optional CLAUDE.md block `groundwork` offers (insurance for cheap models).
+1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: tdd/refactoring, tdd/debugging, documenting/committing, planning/executing — and, where installed, of popular third-party packs (code-review, debug, documentation, skill-creator). A one-line edit (add a line to CLAUDE.md) is never a must-fire prompt. Sets are frozen once a skill passes: a prompt that fails is a result, not a defect; it is replaced only when it contradicts the standard, and the replacement is logged. `tests/triggers/heldout/` holds unseen prompts that are never edited after the first run (`--set heldout`).
 2. **Firing detection:** `claude -p --output-format stream-json --verbose` + grep for the Skill tool call (verify in stage 6).
 3. **Task check:** one task with pass/fail. Interactive skills (shaping, design-interview, groundwork): a scripted-answer prompt, or a manual checklist when the dialog can't run headless (NOTE-110).
 4. **Test budget (DEC-029):** per skill = static checks + trigger set on Haiku (Sonnet re-checks misses only) + one smoke task run (skill, Sonnet ×1). The baseline below runs only when a core grows past 800 tokens (DEC-028) or a change claims a quality gain; the whole pack gets one final eval vs no pack on 2–3 hard tasks (Sonnet, Opus ×2).
@@ -125,7 +125,8 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 - Every file in `references/` is linked by an "If …" line; no reference links another reference.
 - `metadata.uses` / `agents` targets exist; levels only point down; no cycles (IDEA-020).
 - Token count = SKILL.md body chars ÷ 4, frontmatter excluded (descriptions count only in the pack total): fail above the cap (§5) or when `metadata.tokens` drifts >10%.
-- Pack always-on total ≤1.2k.
+- Model-invoked description contains "Use when"; rule count within the cap of its level (§5).
+- Pack always-on (descriptions + the hook's output in an empty project) ≤1.2k.
 - `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin) (FACT-029, DEC-021).
 
 ## Template

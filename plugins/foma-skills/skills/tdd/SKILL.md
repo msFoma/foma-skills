@@ -1,7 +1,7 @@
 ---
 name: tdd
 description: >-
-  Builds a change test-first in red-green slices. Use only when the user asks for tests first, TDD, a test-driven change, or a regression test for a bug fix. Not for plain "add a function", review or debugging.
+  Builds a change test-first in red-green slices. Use when the user asks for tests first, TDD, a test-driven change, or a regression test for a bug fix. Not for plain "add a function", review or debugging.
 license: Apache-2.0
 metadata:
   level: "atomic"

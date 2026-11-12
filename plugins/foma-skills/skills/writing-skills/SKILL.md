@@ -23,7 +23,7 @@ Writes a skill that is short, fires when it should, and changes behaviour the mo
 8. A fire count that stays low, or a task result no better than a one-line CLAUDE.md rule: recommend the one-line rule instead.
 
 ## Rules
-- Never put side effects (delete, install, push, settings) in a skill without a confirm step or the manual flag.
+- Never put side effects (delete, install, settings) in a skill without a confirm step or the manual flag; for commit and push the manual flag is not enough, add an explicit "ask before committing" step.
 - Never copy text from a source without checking its license; keep a credit line.
 - Never add rules the model already follows; test before adding.
 - One skill, one job; a skill that needs "and" in its description is two skills.

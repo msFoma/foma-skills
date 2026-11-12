@@ -1,0 +1,5 @@
+@fixture shop
++ Look over my last commit for problems before I merge.
++ Can you check this branch against our standards?
++ Give me a code review of shop/inventory.py.
+- Run the test suite and show the result.

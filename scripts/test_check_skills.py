@@ -113,6 +113,34 @@ class CheckSkillsTest(unittest.TestCase):
             self.add(n, skill_md(name=n, desc=long_desc))
         self.assertTrue(any("pack always-on" in e for e in self.errors()))
 
+    def test_model_description_needs_use_when(self):
+        self.add("alpha", skill_md(desc="Does alpha things."))
+        self.assertTrue(any("Use when" in e for e in self.errors()))
+
+    def test_manual_description_needs_no_use_when(self):
+        self.add("alpha", skill_md(desc="Does alpha things.", extra="disable-model-invocation: true\n"))
+        self.assertEqual(self.errors(), [])
+
+    def test_rule_cap_by_level(self):
+        rules = "".join(f"- Rule {i}.\n" for i in range(6))
+        body = "Checks things.\n\n## Rules\n" + rules
+        self.add("alpha", skill_md(level="atomic", body=body))
+        self.add("beta", skill_md(name="beta", level="setup", body=body))
+        errs = self.errors()
+        self.assertTrue(any(e.startswith("alpha") and "rules" in e for e in errs))
+        self.assertFalse(any(e.startswith("beta") and "rules" in e for e in errs))
+
+    def test_router_output_counts_toward_pack_cap(self):
+        self.add("alpha", skill_md())
+        hooks = self.dir.parent / "hooks"
+        hooks.mkdir(exist_ok=True)
+        (hooks / "session-start.sh").write_text("printf '%s' \"" + "x" * 5000 + "\"\n")
+        try:
+            self.assertTrue(any("pack always-on" in e for e in self.errors()))
+        finally:
+            (hooks / "session-start.sh").unlink()
+            hooks.rmdir()
+
     def test_broken_frontmatter_fails(self):
         self.add("alpha", "no frontmatter here")
         self.assertTrue(any("frontmatter" in e for e in self.errors()))

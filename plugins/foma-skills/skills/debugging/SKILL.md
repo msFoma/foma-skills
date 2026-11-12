@@ -7,12 +7,12 @@ metadata:
   level: "method"
   uses: "tdd"
   agents: "explorer"
-  tokens: "638"
+  tokens: "635"
 ---
 
 Reproduce the bug with a fast check, find the root cause by testing one hypothesis at a time, then fix it and lock it with a test.
 
-Uses: foma-skills:tdd (regression test), agent foma-skills:explorer (wide code search, model haiku; self-contained brief, answer ≤10 lines).
+Uses: foma-skills:tdd (regression test), agent `explorer` (wide code search, model haiku; self-contained brief, answer ≤10 lines).
 
 Path: a clear error with one suspect place → a one-command repro, fix, regression test, suite (skip shrinking and the hypothesis log); unclear, flaky, cross-module or after a failed fix → all steps. Say which path in one line.
 

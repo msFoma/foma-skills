@@ -3,7 +3,7 @@
 + Update the README to explain how to run the tests.
 + Write an ADR for switching money math to Decimal.
 + Document the shop package's public functions in docs/.
-+ Add the new test command to CLAUDE.md.
+- Add the new test command to CLAUDE.md.
 - Add docstrings to every function in shop/orders.py.
 - Commit my changes.
 - Review shop/report.py.

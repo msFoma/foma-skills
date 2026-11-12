@@ -1,0 +1,5 @@
+@fixture shop
++ I will continue tomorrow, leave myself a note.
++ Pause here and summarize the state for a fresh session.
++ Ending the session now, prepare the handoff.
+- Summarize the diff of the last commit.

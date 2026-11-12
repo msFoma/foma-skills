@@ -1,0 +1,19 @@
+{
+  "fixture": "shop-plan3",
+  "agents": true,
+  "prompt": "Execute the plan in docs/plans/refunds/plan.md.",
+  "one_line": "",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Skill", "Agent", "Task", "Bash(python3 -m unittest*)", "Bash(python3 -c*)", "Bash(grep *)", "Bash(git status*)", "Bash(git diff*)", "Bash(git log*)", "Bash(mkdir *)", "Bash(git mv *)", "Bash(mv docs/plans/*)", "Bash(date*)"],
+  "checks": [
+    {"name": "refund works", "cmd": "python3 -c \"from shop import inventory; from shop import orders; inventory.reset(); o = orders.Order(1, [{'sku': 'a', 'price': 10, 'qty': 2}]); assert orders.refund(o, 4) == 20.0\""},
+    {"name": "rename done", "cmd": "! grep -rnw get_inv shop"},
+    {"name": "refund_line works", "cmd": "python3 -c \"from shop.report import refund_line; from shop.orders import Order; assert refund_line(Order(7, []), 4) == '7: refunded 4'\""},
+    {"name": "suite unchanged (only test_first_page fails)", "cmd": "python3 -m unittest discover -s tests 2>&1 | grep -q 'failures=1)'"},
+    {"name": "three statuses done", "cmd": "test $(grep -rh 'Status: done' docs/plans | wc -l) -ge 3"}
+  ],
+  "checklist": [
+    "The transcript shows Agent calls to the implementer agent (agent type 'implementer', not a prefixed name) for at least two tasks, one task per call, each with a model argument matching the task's Model line (sonnet, haiku, sonnet), and the main session did not write the task code itself.",
+    "The main session checked each task's 'Done when' itself after the agent returned (ran the command or read the diff), and finished with one reviewer agent call over the whole feature."
+  ],
+  "timeout": 900
+}

@@ -1,0 +1,5 @@
+@fixture shop
++ I need to pick a look for the order tracking page. Try several directions for me.
++ Prototype three feels for the player dash in my game so I can compare them.
++ Give me options for the style of the new settings screen.
+- Make the submit button two pixels taller.

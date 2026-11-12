@@ -6,4 +6,4 @@ Offer only on request or as an explicit choice. Helps weaker models (Haiku); str
 - Run the tests before saying done; report failures as they are.
 - When debugging: reproduce the bug first, fix the root cause, add a regression test (full procedure: `/foma-skills:debugging`).
 - New idea: `/foma-skills:shaping`. UI look: `/foma-skills:design-interview`. Plan exists: `/foma-skills:executing`.
-- Scratch goes to `.claude/.scratch/`; never create `_old`, `_v2` or `.bak` copies, edit in place and commit before risky edits.
+- Scratch goes to `.scratch/`; never create `_old`, `_v2` or `.bak` copies, edit in place and commit before risky edits.

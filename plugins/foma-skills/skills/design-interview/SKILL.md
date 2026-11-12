@@ -7,7 +7,7 @@ metadata:
   level: "process"
   uses: ""
   agents: ""
-  tokens: "976"
+  tokens: "994"
 ---
 
 Turns "make it look good" into a visual choice: a short interview, 3 variants that differ in direction, a gallery in the browser, and the user's pick or mix written down as tokens. Builds no product code.
@@ -22,7 +22,7 @@ Turns "make it look good" into a visual choice: a short interview, 3 variants th
    - hard constraints: brand colours, fonts, platform, real content and data to use.
 4. Turn every adjective into specs and play them back as one table for ok: type (families, scale), colour (base, text, one accent and where it may appear), spacing scale, radius, motion (what moves, how long), layout idea. "Calm" is not a spec; "16px base, 1.25 scale, one accent on primary buttons only" is.
 5. Write 3 briefs from the same specs with different lenses: **safe** (the best-practice answer closest to the references), **bold** (one strong idea pushed hard), **odd** (an unexpected reference from another domain). Lenses differ in layout, hierarchy and type, not only colour.
-6. Build: one fresh subagent per variant, `model: opus`, all started in one message. Each writes `docs/design/<feature>/<a|b|c>.html` and answers in ≤10 lines.
+6. Build: one fresh subagent per variant, all started in one message, `model: opus` unless CLAUDE.md or the user states a model or plan limit (then `sonnet`). Each writes `docs/design/<feature>/<a|b|c>.html` and answers in ≤10 lines.
 7. Check each file before showing: no `src`/`href` to anything except Google Fonts, no lorem, John Doe, Acme or round fake stats, no avoid-list tell (grep). Fix by re-briefing that agent once.
 8. Gallery: copy `${CLAUDE_SKILL_DIR}/assets/gallery.html` to `docs/design/<feature>/index.html` and fill the config block at the top (feature, mode, variants, parts). Open it (`open`, `xdg-open` or `start ""`); if that fails or the session is remote, print the path.
 9. The user picks or mixes and pastes the gallery's "Copy choice" text. A mix → one more Opus agent builds `d.html` from the picked parts, then pick again. Stop after 2 rounds: the user picks from what exists.

@@ -20,9 +20,9 @@ import claude_run as cr
 MAX_TOOL_CALLS = 4
 
 
-def load_cases(skill):
+def load_cases(skill, subdir=""):
     fixture, cases = "calc", []
-    for line in (cr.ROOT / f"tests/triggers/{skill}.txt").read_text().splitlines():
+    for line in (cr.ROOT / "tests/triggers" / subdir / f"{skill}.txt").read_text().splitlines():
         line = line.strip()
         if line.startswith("@fixture "):
             fixture = line.split(None, 1)[1]
@@ -52,6 +52,7 @@ def main():
     ap.add_argument("--recheck", default="sonnet", help="model for failed prompts; '' to skip")
     ap.add_argument("--runs", type=int, default=1)
     ap.add_argument("--only", choices=["+", "-"])
+    ap.add_argument("--set", default="", help="subfolder of tests/triggers, e.g. heldout (frozen unseen prompts)")
     args = ap.parse_args()
 
     skill_md = cr.PLUGIN / f"skills/{args.skill}/SKILL.md"
@@ -59,7 +60,7 @@ def main():
         print(f"{args.skill}: manual skill, no trigger test (DEC-026)")
         return 0
     target = f"foma-skills:{args.skill}"
-    fixture, cases = load_cases(args.skill)
+    fixture, cases = load_cases(args.skill, args.set)
     if args.only:
         cases = [c for c in cases if c[0] == (args.only == "+")]
     totals, results = {}, []

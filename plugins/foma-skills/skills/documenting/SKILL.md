@@ -7,7 +7,7 @@ metadata:
   level: "atomic"
   uses: ""
   agents: ""
-  tokens: "545"
+  tokens: "548"
 ---
 
 Put each fact in its one home, in the project's existing format, sized to the change.
@@ -32,7 +32,7 @@ Entry: date, decision, alternatives, reason, status `proposed`, `accepted` or `s
 
 ## Rules
 - One home per fact: link to it, never copy it.
-- No new `*.md` outside the docs home (README, CLAUDE.md, AGENTS.md, CHANGELOG excepted).
+- No new `*.md` outside the docs home (README, CLAUDE.md, AGENTS.md, CHANGELOG, DESIGN.md excepted).
 - Never put trees, dependency lists, overviews or generic advice into CLAUDE.md; only what code cannot show.
 - README changes only for what users see; internals go to the docs home.
 - Say which size you took (line, edit or new doc) in one line.

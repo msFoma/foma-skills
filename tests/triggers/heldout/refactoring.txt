@@ -1,0 +1,5 @@
+@fixture shop
++ Extract the duplicated tax logic into one helper.
++ Restructure shop/orders.py into smaller functions without changing behaviour.
++ Rename roundMoney to round_money across the project.
+- Fix the off-by-one bug in first_page.
