@@ -51,6 +51,10 @@ def main():
     ap.add_argument("--only", choices=["+", "-"])
     args = ap.parse_args()
 
+    skill_md = cr.PLUGIN / f"skills/{args.skill}/SKILL.md"
+    if "disable-model-invocation: true" in skill_md.read_text():
+        print(f"{args.skill}: manual skill, no trigger test (DEC-026)")
+        return 0
     target = f"foma-skills:{args.skill}"
     fixture, cases = load_cases(args.skill)
     if args.only:

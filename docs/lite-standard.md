@@ -106,10 +106,11 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 
 ## 8. Definition of done (stage 6)
 
+0. **Form (DEC-026):** every skill also has its core as 1 line for the CLAUDE.md block `groundwork` installs. A skill is model-invoked only if an explicit request fires it reliably and it beats its own line; otherwise it is manual (no always-on cost) and the line covers the default.
 1. **Trigger set** (model-invoked only): ≥5 must-fire and ≥5 must-not-fire prompts. Must-not-fire includes the must-fire prompts of the nearest in-pack neighbour — pairs: tdd/refactoring, tdd/debugging, documenting/committing, planning/executing, planning/routing — and of popular third-party packs (code-review, debug, documentation, skill-creator).
 2. **Firing detection:** `claude -p --output-format stream-json --verbose` + grep for the Skill tool call (verify in stage 6).
 3. **Task check:** one task with pass/fail. Interactive skills (shaping, design-interview, groundwork): a scripted-answer prompt, or a manual checklist when the dialog can't run headless (NOTE-110).
-4. **Baselines:** no skill and a plain one-line instruction (IDEA-045), 3 runs each, compare pass counts; keep the skill only if it wins or ties at lower tokens (IDEA-100). A change that raises tokens needs the same proof.
+4. **Baseline:** the skill vs its own one line (`scripts/task_test.py`, default `skill,line`), Sonnet ×5 and Opus ×3, early stop once the gap can't change. Objective items are script `checks`; the Sonnet judge grades only judgement items. Manual skills are called as `/foma-skills:<name>` (task `command`). A change that raises tokens needs the same proof.
 5. **Cost cap:** re-run only changed skills; ≤60 runs per stage-6 session.
 
 ## 9. CI checks (static, free)

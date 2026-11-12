@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """Task check vs baselines (docs/lite-standard.md §8.3–8.4, DEC-024). Costs model usage.
 
-Usage: python3 scripts/task_test.py <task> [--models haiku,sonnet] [--runs N] [--variants skill,none,line]
+Usage: python3 scripts/task_test.py <task> [--models haiku,sonnet] [--runs N] [--variants skill,line] [--all-runs]
        python3 scripts/task_test.py <task> --rejudge   (re-grade saved runs that have no verdict)
 
 Task: tests/tasks/<skill>.json
   {"fixture": "calc", "prompt": "...", "one_line": "...",
    "allowed_tools": ["Read", "Bash(python3 -m unittest*)"],
+   "checks": [{"name": "...", "cmd": "shell, run in the project, exit 0 = pass"}],
    "checklist": ["...", "..."], "timeout": 300, "agents": false}
+Objective items go to "checks" (free, repeatable); only judgement items
+(e.g. is the final message honest) go to "checklist" for the Sonnet judge.
+"command": "foma-skills:x" calls a manual skill as a slash command in the skill variant.
 "agents": true copies docs/agents/*.md into .claude/agents/ (project after groundwork).
 Variants: skill = plugin loaded; none = no plugin; line = no plugin, one_line
-appended to the fixture CLAUDE.md. A Sonnet judge grades every run against the
-checklist; a run passes only if every item passes.
+appended to the fixture CLAUDE.md. Default: skill vs line (DEC-026). A run passes
+only if every check and checklist item passes. Runs go round-robin per model and
+stop early once the variant gap can no longer change (--all-runs to disable).
 Every run is saved to tests/.runs/<task>/ (transcript + diff + verdict), so a
 failed judge call is re-graded with --rejudge instead of re-running the agent.
 A run with no agent output (limit, network) is NORUN: not judged, not scored.
@@ -102,16 +107,24 @@ def run_variant(name, task, variant, model):
         project = cr.fixture_copy(task["fixture"], tmp,
                                   claude_md_extra=task["one_line"] if variant == "line" else None,
                                   git=True, agents=task.get("agents", False))
-        cmd = cr.base_cmd(task["prompt"], model, plugin=(variant == "skill"),
+        prompt = task["prompt"]
+        if variant == "skill" and task.get("command"):  # manual skill: called as the user would
+            prompt = f"/{task['command']} {prompt}"
+        cmd = cr.base_cmd(prompt, model, plugin=(variant == "skill"),
                           allowed_tools=task.get("allowed_tools"))
         events, secs, timed_out = cr.run(cmd, project, timeout=task.get("timeout", 300))
         diff = subprocess.run(["git", "diff"], cwd=project, capture_output=True, text=True).stdout
+        checks = [subprocess.run(c["cmd"], shell=True, cwd=project, capture_output=True).returncode == 0
+                  for c in task.get("checks", [])]
     skills = [u.get("input", {}).get("skill") for u in cr.tool_uses(events) if u.get("name") == "Skill"]
     log = transcript(events)
     record = {"variant": variant, "model": model, "skills": skills, "secs": round(secs),
-              "timed_out": timed_out, "transcript": log, "diff": diff, "marks": None, "reason": ""}
+              "timed_out": timed_out, "transcript": log, "diff": diff, "checks": checks,
+              "marks": None, "reason": ""}
     if not any(e.get("type") == "assistant" for e in events):
         record["reason"] = "NORUN: no agent output"
+    elif not task.get("checklist"):
+        record["marks"] = []
     else:
         record["marks"], record["reason"] = judge(task, log, diff)
     out = RUNS / name
@@ -122,7 +135,7 @@ def run_variant(name, task, variant, model):
 
 
 def show(record, score):
-    marks = record["marks"]
+    marks = None if record["marks"] is None else record.get("checks", []) + record["marks"]
     key = (record["variant"], record["model"])
     if record["reason"].startswith("NORUN"):
         status = "NORUN"
@@ -148,12 +161,26 @@ def rejudge(name, task):
     return score
 
 
+def run_matrix(name, task, variants, models, runs, all_runs):
+    score = {}
+    for model in models:
+        for i in range(runs):
+            for variant in variants:
+                show(run_variant(name, task, variant, model), score)
+            passed = [score.get((v, model), (0, 0))[0] for v in variants]
+            if not all_runs and len(variants) == 2 and abs(passed[0] - passed[1]) > runs - i - 1:
+                print(f"-- {model}: decided after {i + 1} round(s)", flush=True)
+                break
+    return score
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("skill")
     ap.add_argument("--models", default="haiku,sonnet")
     ap.add_argument("--runs", type=int, default=2)
-    ap.add_argument("--variants", default="skill,none,line")
+    ap.add_argument("--variants", default="skill,line")
+    ap.add_argument("--all-runs", action="store_true")
     ap.add_argument("--rejudge", action="store_true")
     args = ap.parse_args()
 
@@ -161,11 +188,8 @@ def main():
     if args.rejudge:
         score = rejudge(args.skill, task)
     else:
-        score = {}
-        for variant in args.variants.split(","):
-            for model in args.models.split(","):
-                for _ in range(args.runs):
-                    show(run_variant(args.skill, task, variant, model), score)
+        score = run_matrix(args.skill, task, args.variants.split(","), args.models.split(","),
+                           args.runs, args.all_runs)
     print(f"{args.skill}: " + ", ".join(f"{v}/{m} {p}/{t}" for (v, m), (p, t) in score.items()))
     return 0
 

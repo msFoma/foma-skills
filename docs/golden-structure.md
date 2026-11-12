@@ -59,7 +59,7 @@ Sections in this order; drop empty ones.
 3. **Conventions** — only those that differ from defaults.
 4. **Claude gets this wrong** — "don't X → do Y" lines learned from real mistakes (PROB-005).
 5. **Where things live** — backticked paths: docs home, decisions, specs, plans, rules (P3).
-6. **Workflow** — verifiable rules: how to verify, commit style, when to ask. `groundwork` offers two default lines (DEC-025): "Change only what the task needs; mention unrelated issues, don't fix them." and "Run the tests before saying done; report failures as they are."
+6. **Workflow** — verifiable rules: how to verify, commit style, when to ask. `groundwork` offers the pack's line block (DEC-025, DEC-026), one line per skill core, e.g. "Change only what the task needs; mention unrelated issues, don't fix them.", "Run the tests before saying done; report failures as they are.", "When debugging: reproduce the bug first, fix the root cause, add a regression test." (full procedure: `/foma-skills:debugging`).
 
 Never include: directory trees, dependency lists, architecture overviews, generic advice, README/config duplicates.
 Maintainer notes and `<!-- verified YYYY-MM-DD -->` stamps go in HTML comments — free (FACT-046, PROB-004).
