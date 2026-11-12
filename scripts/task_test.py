@@ -154,11 +154,11 @@ def show(record, score):
           f"{' TIMEOUT' if record['timed_out'] else ''} | {record['reason']}", flush=True)
 
 
-def rejudge(name, task):
+def rejudge(name, task, force=False):
     score = {}
     for path in sorted((RUNS / name).glob("*.json")):
         record = json.loads(path.read_text())
-        if record["marks"] is None and not record["reason"].startswith("NORUN"):
+        if (force or record["marks"] is None) and not record["reason"].startswith("NORUN"):
             record["marks"], record["reason"] = judge(task, record["transcript"], record["diff"])
             path.write_text(json.dumps(record))
         show(record, score)
@@ -186,11 +186,12 @@ def main():
     ap.add_argument("--variants", default="skill,line")
     ap.add_argument("--all-runs", action="store_true")
     ap.add_argument("--rejudge", action="store_true")
+    ap.add_argument("--rejudge-all", action="store_true", help="re-grade every saved run (after a checklist fix)")
     args = ap.parse_args()
 
     task = json.loads((cr.ROOT / f"tests/tasks/{args.skill}.json").read_text())
-    if args.rejudge:
-        score = rejudge(args.skill, task)
+    if args.rejudge or args.rejudge_all:
+        score = rejudge(args.skill, task, force=args.rejudge_all)
     else:
         score = run_matrix(args.skill, task, args.variants.split(","), args.models.split(","),
                            args.runs, args.all_runs)

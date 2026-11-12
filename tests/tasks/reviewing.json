@@ -23,7 +23,7 @@
     "The review flags as must-fix that refund() calls inventory.add_stock with a negative quantity, so a refund removes stock instead of restoring it (cites shop/orders.py and the line or the call).",
     "The review flags the try/except Exception: pass around the restock as a swallowed error.",
     "The verdict says the change is not ready / fix first (not 'ship' or 'looks good').",
-    "Correctness findings come before any style or naming remarks (e.g. refundTotal camelCase), and style is not presented as must-fix."
+    "Style or naming remarks (e.g. refundTotal camelCase), if any, come after the correctness findings and are not presented as must-fix. Leaving style out entirely passes this item."
   ],
   "timeout": 300
 }
