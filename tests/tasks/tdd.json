@@ -1,0 +1,13 @@
+{
+  "fixture": "calc",
+  "prompt": "Add a median(values) function to calc.py, test-first.",
+  "one_line": "Write a failing test first, then the code.",
+  "allowed_tools": ["Read", "Grep", "Glob", "Edit", "Write", "Bash(python3 -m unittest*)", "Bash(python3 -m pytest*)"],
+  "checklist": [
+    "A test for median() was written and run before median() was implemented, and that run shows the median test failing (error or failure).",
+    "median() was implemented and the median tests were run again afterwards and pass.",
+    "Expected values in the median tests are independent of the implementation (simple literals a person can check by hand), and cover both an odd-length and an even-length list.",
+    "Existing tests in test_calc.py were not deleted, skipped or weakened."
+  ],
+  "timeout": 300
+}

@@ -1,0 +1,12 @@
+# + must fire, - must not fire (lite standard §8.1)
++ Let's do this test-first: add a median() function to calc.py.
++ Use TDD to add a multiply function to calc.py.
++ Write a failing test for the average() bug first, then fix it.
++ I want a regression test for the average() bug before you touch the code.
++ Red-green please: make average() handle an empty list.
+# neighbours: coding, verifying, debugging, reviewing, refactoring
+- Add a multiply function to calc.py.
+- Did the tests pass after my change to calc.py?
+- average([1, 2, 3]) returns 3 instead of 2. Find out why.
+- Review calc.py for bugs.
+- Rename divide to safe_divide everywhere.
