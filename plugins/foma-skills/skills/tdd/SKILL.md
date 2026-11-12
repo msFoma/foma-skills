@@ -7,10 +7,12 @@ metadata:
   level: "atomic"
   uses: ""
   agents: ""
-  tokens: "434"
+  tokens: "476"
 ---
 
 Write a failing test, see it fail for the right reason, add the minimum code to pass it, repeat one behaviour at a time.
+
+Path: one small behaviour on a named function → steps 1, 3–5 once; several behaviours, a bug fix or an unclear interface → the full loop. Say which path in one line.
 
 ## Steps
 1. Test command: `## Commands` in the project's CLAUDE.md. If missing, detect it (package.json, Makefile, pyproject.toml, Cargo.toml); if none, say so and ask how to run tests.
