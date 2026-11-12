@@ -1,0 +1,13 @@
+# + must fire, - must not fire (lite standard §8.1)
+@fixture shop
++ Review shop/orders.py before I merge it.
++ Can you do a code review of my last commit?
++ Is this branch ready to merge?
++ Give me feedback on the changes in shop/pricing.py.
++ Look over shop/report.py and tell me what's wrong with it as code.
+# neighbours: debugging, tdd, plain edits, explanations
+- page() gives me the wrong orders back. Find out why.
+- Use TDD to add a refund function to shop/orders.py.
+- Did the tests pass after my change to shop/orders.py?
+- Add a function that returns the number of orders.
+- Explain how Order.total() works.

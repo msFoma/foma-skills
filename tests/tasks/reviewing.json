@@ -1,0 +1,29 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "python3 {ROOT}/tests/patches/shop-refund.py",
+    "git add -A && git -c user.name=dev -c user.email=dev@example.invalid commit -q -m 'Add partial refunds'"
+  ],
+  "prompt": "Review my last commit before I merge it.",
+  "one_line": "When reviewing, check correctness first, cite file:line, and end with a ship / fix-first verdict.",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Bash(git *)",
+    "Bash(python3 -m unittest*)"
+  ],
+  "checks": [
+    {
+      "name": "review changed no files",
+      "cmd": "git diff --quiet HEAD"
+    }
+  ],
+  "checklist": [
+    "The review flags as must-fix that refund() calls inventory.add_stock with a negative quantity, so a refund removes stock instead of restoring it (cites shop/orders.py and the line or the call).",
+    "The review flags the try/except Exception: pass around the restock as a swallowed error.",
+    "The verdict says the change is not ready / fix first (not 'ship' or 'looks good').",
+    "Correctness findings come before any style or naming remarks (e.g. refundTotal camelCase), and style is not presented as must-fix."
+  ],
+  "timeout": 300
+}

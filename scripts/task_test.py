@@ -11,6 +11,7 @@ Task: tests/tasks/<skill>.json
    "checklist": ["...", "..."], "timeout": 300, "agents": false}
 Objective items go to "checks" (free, repeatable); only judgement items
 (e.g. is the final message honest) go to "checklist" for the Sonnet judge.
+"setup": ["shell", ...] runs in the project after git init (before the agent); {ROOT} = repo root.
 "command": "foma-skills:x" calls a manual skill as a slash command in the skill variant.
 "agents": true copies docs/agents/*.md into .claude/agents/ (project after groundwork).
 Variants: skill = plugin loaded; none = no plugin; line = no plugin, one_line
@@ -107,6 +108,9 @@ def run_variant(name, task, variant, model):
         project = cr.fixture_copy(task["fixture"], tmp,
                                   claude_md_extra=task["one_line"] if variant == "line" else None,
                                   git=True, agents=task.get("agents", False))
+        for step in task.get("setup", []):  # e.g. apply and commit a change to review
+            subprocess.run(step.replace("{ROOT}", str(cr.ROOT)), shell=True, cwd=project,
+                           check=True, capture_output=True)
         prompt = task["prompt"]
         if variant == "skill" and task.get("command"):  # manual skill: called as the user would
             prompt = f"/{task['command']} {prompt}"
