@@ -5,7 +5,7 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 ## Layout
 - `research/` — open research history: facts, sources, candidates, ideas, decisions (ADR), questions, log.
 - `.claude/agents/` — `scout` (Haiku, web research), `rewriter` (Sonnet, skill rewrites).
-- `skills/` — the pack (from stage 5).
+- `plugins/foma-skills/` — the plugin users install (`.claude-plugin/plugin.json`, `skills/`); repo root holds the marketplace (`.claude-plugin/marketplace.json`).
 
 ## Workflow
 - IDs: `SRC-NNN`, `FACT-NNN`, `CAND-NNN`, `IDEA-NNN`, `DEC-NNN`, `Q-NNN`. Cross-link by ID (`CAND-007 ← SRC-003`).
@@ -15,4 +15,5 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 - Orchestrator does not search the web; delegate to `scout`.
 
 ## Checks
-None yet (no code). To be defined in stage 6 (trigger tests, Haiku runs, skill-creator evals).
+- `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin).
+- Skill checks (trigger tests, Haiku runs, skill-creator evals) defined in stage 6.

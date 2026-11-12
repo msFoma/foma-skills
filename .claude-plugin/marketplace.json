@@ -1,0 +1,14 @@
+{
+  "name": "foma",
+  "description": "foma's Claude Code plugins: basic, lightweight skills.",
+  "owner": {
+    "name": "Vladislav Fomin (foma)"
+  },
+  "plugins": [
+    {
+      "name": "foma-skills",
+      "source": "./plugins/foma-skills",
+      "description": "Basic, lightweight Claude Code skills."
+    }
+  ]
+}

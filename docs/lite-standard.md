@@ -6,7 +6,7 @@ Evidence IDs refer to `research/`. Graph and levels: `research/graph.md` (v1.1).
 ## 1. Files
 
 ```
-skills/<name>/
+plugins/foma-skills/skills/<name>/
 ├── SKILL.md            # core: frontmatter + body (body cap §5)
 ├── references/*.md     # branch details, read only on a stated condition (one level deep, FACT-013)
 └── assets/             # verbatim files that are copied, never read: templates, hook scripts, agent files, gallery page
@@ -119,7 +119,7 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 - `metadata.uses` / `agents` targets exist; levels only point down; no cycles (IDEA-020).
 - Token count = SKILL.md body chars ÷ 4, frontmatter excluded (descriptions count only in the pack total): fail above the cap (§5) or when `metadata.tokens` drifts >10%.
 - Pack always-on total ≤1.2k.
-- `claude plugin validate . --strict` (FACT-029).
+- `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin) (FACT-029, DEC-021).
 
 ## Template
 

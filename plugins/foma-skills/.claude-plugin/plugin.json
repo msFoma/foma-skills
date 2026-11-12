@@ -1,0 +1,19 @@
+{
+  "name": "foma-skills",
+  "version": "0.1.0",
+  "description": "Basic, lightweight Claude Code skills: shape an idea, plan, execute, test, review, commit, and keep the workspace clean.",
+  "author": {
+    "name": "Vladislav Fomin (foma)"
+  },
+  "homepage": "https://github.com/foma/foma-skills",
+  "repository": "https://github.com/foma/foma-skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "skills",
+    "workflow",
+    "planning",
+    "tdd",
+    "code-review",
+    "lightweight"
+  ]
+}
