@@ -93,6 +93,7 @@ def fixture_copy(name, tmp, claude_md_extra=None, git=False):
         with open(project / "CLAUDE.md", "a") as f:
             f.write("\n" + claude_md_extra.strip() + "\n")
     if git:
+        (project / ".gitignore").write_text("__pycache__/\n*.pyc\n")
         for args in (["init", "-q"], ["add", "-A"],
                      ["-c", "user.name=test", "-c", "user.email=test@example.invalid",
                       "commit", "-q", "-m", "fixture"]):

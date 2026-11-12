@@ -65,7 +65,12 @@ def judge(task, log, diff):
         res = subprocess.run(cmd, cwd=tmp, stdin=subprocess.DEVNULL, capture_output=True,
                              text=True, timeout=300)
     try:
-        text = json.loads(res.stdout).get("result", "")
+        text = ""
+        for line in res.stdout.splitlines():
+            try:
+                text = json.loads(line).get("result", "") or text
+            except (json.JSONDecodeError, AttributeError):
+                continue
         verdict = json.loads(text[text.find("{"):text.rfind("}") + 1])
         marks = [bool(x) for x in verdict["items"]]
         if len(marks) != len(task["checklist"]):
