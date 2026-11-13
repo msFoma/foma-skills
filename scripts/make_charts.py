@@ -8,8 +8,7 @@ Token numbers come from docs/assets/charts/tokens.json, captured from Claude Cod
 `claude plugin details foma-skills` (run in a project where the plugin is installed):
 --refresh PROJECT_DIR re-captures them. The skill map mirrors docs/graph.html.
 
-Style follows the brand art (docs/assets/banner.jpg): black space, a glowing Mars limb along the
-bottom edge, a four-point star flare. Everything is pure vector and
+Style follows the brand art (docs/assets/banner.jpg): black space, a nebula glow, a four-point star flare. Everything is pure vector and
 self-contained (GitHub serves README SVGs through <img>: no fonts, scripts or external refs).
 Motion is CSS @keyframes in an inline <style> (works inside <img>): it only animates transform, opacity
 and stroke-dashoffset, every animation rests on the static design, and prefers-reduced-motion turns it off.
@@ -137,7 +136,7 @@ def n(v):
     return f"{v:.1f}".rstrip("0").rstrip(".")
 
 
-# --- shared frame: space background, nebula, stars, comet arc, star flare, Mars limb, header ---
+# --- shared frame: space background, nebula, stars, comet arc, star flare, header ---
 MARKER_COLOURS = sorted(set(COL.values()) | {BRAND, "#8d847d"})
 
 
@@ -195,9 +194,6 @@ def plen(d):
 
 def frame(w, h, title, sub, seed, keep_out=()):
     rnd = random.Random(seed)
-    pcx, R = w * 0.56, w * 1.4
-    crest = h - 46
-    pcy = crest + R
     fx, fy = w - 118, 60
     l1, l2, up, down = 330, 118, 60, 58
     s = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-label="{esc(title)}">\n'
@@ -206,9 +202,6 @@ def frame(w, h, title, sub, seed, keep_out=()):
          f'<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c0a12"/><stop offset="1" stop-color="#050508"/></linearGradient>'
          f'<radialGradient id="neb"><stop offset="0" stop-color="{BRAND}" stop-opacity="0.2"/><stop offset="0.5" stop-color="{BRAND}" stop-opacity="0.06"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></radialGradient>'
          f'<radialGradient id="neb2"><stop offset="0" stop-color="#6f74b8" stop-opacity="0.13"/><stop offset="1" stop-color="#6f74b8" stop-opacity="0"/></radialGradient>'
-         f'<radialGradient id="planet" gradientUnits="userSpaceOnUse" cx="{n(w*0.74)}" cy="{crest}" r="{n(w*0.5)}"><stop offset="0" stop-color="#5a2410"/><stop offset="0.45" stop-color="#2a120a"/><stop offset="1" stop-color="#0d0807"/></radialGradient>'
-         f'<linearGradient id="limb" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="0"><stop offset="0.2" stop-color="{BRAND}" stop-opacity="0"/><stop offset="0.42" stop-color="{BRAND}" stop-opacity="0.7"/><stop offset="0.74" stop-color="#ffd2ad"/><stop offset="0.9" stop-color="{HOT}" stop-opacity="0.6"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></linearGradient>'
-         f'<radialGradient id="glint"><stop offset="0" stop-color="#ffe2c8" stop-opacity="0.95"/><stop offset="0.3" stop-color="{HOT}" stop-opacity="0.45"/><stop offset="1" stop-color="{HOT}" stop-opacity="0"/></radialGradient>'
          f'<linearGradient id="rayh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd2b0" stop-opacity="0"/><stop offset="{n(l1/(l1+l2))}" stop-color="#fff1e4"/><stop offset="1" stop-color="#ffd2b0" stop-opacity="0"/></linearGradient>'
          f'<linearGradient id="rayv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd2b0" stop-opacity="0"/><stop offset="{n(up/(up+down))}" stop-color="#fff1e4"/><stop offset="1" stop-color="#ffd2b0" stop-opacity="0"/></linearGradient>'
          f'<radialGradient id="core"><stop offset="0" stop-color="#fff8f0"/><stop offset="0.18" stop-color="#ffc08f" stop-opacity="0.85"/><stop offset="0.5" stop-color="{BRAND}" stop-opacity="0.25"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></radialGradient>'
@@ -222,14 +215,11 @@ def frame(w, h, title, sub, seed, keep_out=()):
     s += '</defs>' + motion(
         ".t1,.t2,.t3{animation:tw 6s ease-in-out 1s infinite}.t2{animation-duration:8s;animation-delay:2.6s}"
         ".t3{animation-duration:11s;animation-delay:4.2s}@keyframes tw{50%{opacity:.2}}"
-        + flare_css(fx, fy) + SHIMMER +
-        ".gl{transform-box:fill-box;transform-origin:center;animation:gl 8s ease-in-out 1s infinite}"
-        "@keyframes gl{50%{opacity:.6;transform:scaleX(1.15)}}")
+        + flare_css(fx, fy) + SHIMMER)
     s += '\n<g clip-path="url(#card)">'
     s += (f'<rect width="{w}" height="{h}" fill="url(#bg)"/>'
           f'<ellipse cx="{n(w*0.05)}" cy="0" rx="{n(w*0.42)}" ry="{n(h*0.32)}" fill="url(#neb)"/>'
-          f'<ellipse cx="{n(w*0.86)}" cy="{n(h*0.08)}" rx="{n(w*0.34)}" ry="{n(h*0.3)}" fill="url(#neb2)"/>'
-          f'<ellipse cx="{n(w*0.66)}" cy="{h}" rx="{n(w*0.62)}" ry="{n(min(h*0.3, 220))}" fill="url(#neb)"/>')
+          f'<ellipse cx="{n(w*0.86)}" cy="{n(h*0.08)}" rx="{n(w*0.34)}" ry="{n(h*0.3)}" fill="url(#neb2)"/>')
     # star field (deterministic), thinned out behind the data
     stars = []
     for i in range(int(w * h / 6500)):
@@ -249,13 +239,6 @@ def frame(w, h, title, sub, seed, keep_out=()):
           f'<g class="fr"><polygon points="{fx-l1},{fy} {fx},{fy-1.4} {fx+l2},{fy} {fx},{fy+1.4}" fill="url(#rayh)"/>'
           f'<polygon points="{fx},{fy-up} {fx+1.4},{fy} {fx},{fy+down} {fx-1.4},{fy}" fill="url(#rayv)"/></g>'
           f'<g class="fc"><circle cx="{fx}" cy="{fy}" r="9" fill="url(#core)"/><circle cx="{fx}" cy="{fy}" r="2.2" fill="#fffaf4"/></g>')
-    # Mars limb along the bottom edge
-    gx = w * 0.74
-    gy = pcy - math.sqrt(R * R - (gx - pcx) ** 2)
-    s += (f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="url(#planet)"/>'
-          f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="none" stroke="{HOT}" stroke-width="16" stroke-opacity="0.42" filter="url(#soft)"/>'
-          f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="none" stroke="url(#limb)" stroke-width="2"/>'
-          f'<ellipse class="gl" cx="{n(gx)}" cy="{n(gy)}" rx="230" ry="22" fill="url(#glint)"/>')
     s += (f'</g><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="21.5" fill="none" stroke="{INK}" stroke-opacity="0.1"/>\n'
           f'<g font-family="{FONT}">\n')
     # header: eyebrow, title, subtitle
@@ -292,7 +275,7 @@ def token_cost(lang):
     rows = sorted(d["skills"].items(), key=lambda kv: -kv[1]["invoke"])
     w, row_h, y0, bx, scale = 1280, 34, 222, 300, 840 / 1500
     y1 = y0 + row_h * len(rows)
-    h = y1 + 146
+    h = y1 + 100
     s = frame(w, h, t["cost_title"], t["cost_sub"], 11, keep_out=[(40, y0 - 10, w - 40, y1 + 30)])
     s += ('<defs><linearGradient id="gal" x1="0" y1="0" x2="1" y2="0">'
           f'<stop offset="0" stop-color="{EMBER}"/><stop offset="0.5" stop-color="{BRAND}"/><stop offset="1" stop-color="{HOT}"/></linearGradient>'
@@ -430,7 +413,7 @@ def node(nd, t, i=0):
 
 def skill_map(lang):
     t = T[lang]
-    w, h = 1280, 990
+    w, h = 1280, 940
     nd = {i: dict(name=nm, x=x, y=ROWS[r], g=g, w=wd) for i, nm, x, r, g, wd in NODES}
     s = frame(w, h, t["map_title"], t["map_sub"], 23, keep_out=[(200, 140, w - 30, PANEL[3] + 10)])
     s += "<defs>" + "".join(
@@ -503,7 +486,7 @@ def propose_first(lang):
     subs = [wrap(b, 14, col_w - 14) for _, b in steps]
     ty = cy + 88
     sy = ty + 21 * (max(map(len, titles)) - 1) + 25
-    h = int(sy + 18 * (max(map(len, subs)) - 1) + 108)
+    h = int(sy + 18 * (max(map(len, subs)) - 1) + 62)
     s = frame(w, h, t["flow_title"], t["flow_sub"], 37, keep_out=[(32, cy - 70, w - 32, sy + 30)])
     cols = [COL["atom"], COL["proc"], COL["setup"], BRAND, COL["meth"], COL["meta"]]
     s += "<defs>" + "".join(
