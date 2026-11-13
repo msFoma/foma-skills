@@ -2,18 +2,15 @@
 
 <img src="docs/assets/banner.jpg" alt="Foma Skills: lightweight skills for Claude Code" width="100%">
 
-**English** · [Русский](README.ru.md)
+<p><img src="docs/assets/header/lang-en.on.svg" height="34" alt="English"> <a href="README.ru.md"><img src="docs/assets/header/lang-ru.off.svg" height="34" alt="Русский"></a></p>
+
+<img src="docs/assets/header/stats.en.svg" width="860" alt="17 skills, about 1.4k tokens always on, 3 helper agents, Apache-2.0, version 0.1.0 pre-release">
 
 [![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
-![skills](https://img.shields.io/badge/skills-17-e8714a?style=flat-square)
-![always-on](https://img.shields.io/badge/always--on-%E2%89%881.4k_tokens-f0a06a?style=flat-square)
-![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-7d5a4a?style=flat-square)
-![version](https://img.shields.io/badge/version-0.1.0_pre--release-3a3a44?style=flat-square)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-a3adba?style=flat-square)](LICENSE)
 
 ### Say what you want. The right skill wakes up, asks first, and does the careful part.
 
-[<img src="docs/assets/icons/install.svg" width="16" height="16" align="absmiddle" alt=""> Install](#install) · [<img src="docs/assets/icons/what-you-get.svg" width="16" height="16" align="absmiddle" alt=""> What you get](#what-you-get) · [<img src="docs/assets/icons/first-5-minutes.svg" width="16" height="16" align="absmiddle" alt=""> First 5 minutes](#first-5-minutes) · [<img src="docs/assets/icons/all-skills.svg" width="16" height="16" align="absmiddle" alt=""> All skills](#skills) · [<img src="docs/assets/icons/lang.svg" width="16" height="16" align="absmiddle" alt=""> Документация на русском](docs/ru/quickstart.md)
+<p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="40" alt="Install"></a> <a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.en.svg" height="40" alt="What you get"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.en.svg" height="40" alt="First 5 minutes"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.en.svg" height="40" alt="All skills"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.en.svg" height="40" alt="Документация на русском"></a></p>
 
 </div>
 
@@ -49,19 +46,7 @@ Then **restart Claude Code in your project** (the plugin loads when a session st
 
 You do not call skills by name. You describe the work, and the matching skill wakes up (illustrative session):
 
-```text
-You:     I want to build a loyalty points system for the shop.
-Claude:  [shaping] Before I write anything: how do customers earn points, and can they expire?
-You:     ...answers...                      -> an approved spec in docs/specs/
-You:     Make a plan.
-Claude:  [planning] 4 tasks in docs/plans/loyalty/plan.md, each with a check and a model.
-You:     Execute the plan.
-Claude:  [executing] runs the tasks, checks each one, one review at the end.
-You:     Commit my changes.
-Claude:  [committing] small commits in your style, only the files it changed. It does not push.
-You:     Wrap up, I'll continue tomorrow.
-Claude:  [handoff] saves a short note; the next session starts with "Next: ...".
-```
+![A terminal session: you describe a loyalty points system and the shaping skill asks questions; planning makes a plan; executing runs it; committing makes small commits; handoff saves a note for tomorrow](docs/assets/charts/first-5-minutes.en.svg)
 
 You can also call any skill by hand: `/foma-skills:planning`, `/foma-skills:tidying`, ...
 

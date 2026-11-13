@@ -2,18 +2,15 @@
 
 <img src="docs/assets/banner.jpg" alt="Foma Skills: лёгкие скиллы для Claude Code" width="100%">
 
-[English](README.md) · **Русский**
+<p><a href="README.md"><img src="docs/assets/header/lang-en.off.svg" height="34" alt="English"></a> <img src="docs/assets/header/lang-ru.on.svg" height="34" alt="Русский"></p>
+
+<img src="docs/assets/header/stats.ru.svg" width="860" alt="17 скиллов, около 1,4k токенов всегда в контексте, 3 агента-помощника, Apache-2.0, версия 0.1.0 пре-релиз">
 
 [![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
-![skills](https://img.shields.io/badge/%D1%81%D0%BA%D0%B8%D0%BB%D0%BB%D0%BE%D0%B2-17-e8714a?style=flat-square)
-![always-on](https://img.shields.io/badge/%D0%B2%D1%81%D0%B5%D0%B3%D0%B4%D0%B0_%D0%B2_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B5-%E2%89%881.4k_%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%B2-f0a06a?style=flat-square)
-![Claude Code](https://img.shields.io/badge/Claude_Code-%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD-7d5a4a?style=flat-square)
-![version](https://img.shields.io/badge/%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F-0.1.0_pre--release-3a3a44?style=flat-square)
-[![Лицензия: Apache-2.0](https://img.shields.io/badge/%D0%BB%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-Apache--2.0-a3adba?style=flat-square)](LICENSE)
 
 ### Скажите, что нужно. Нужный скилл включится сам, сначала спросит и аккуратно сделает работу.
 
-[<img src="docs/assets/icons/install.svg" width="16" height="16" align="absmiddle" alt=""> Установка](#install) · [<img src="docs/assets/icons/what-you-get.svg" width="16" height="16" align="absmiddle" alt=""> Что вы получаете](#what-you-get) · [<img src="docs/assets/icons/first-5-minutes.svg" width="16" height="16" align="absmiddle" alt=""> Первые 5 минут](#first-5-minutes) · [<img src="docs/assets/icons/all-skills.svg" width="16" height="16" align="absmiddle" alt=""> Все скиллы](#skills) · [<img src="docs/assets/icons/docs.svg" width="16" height="16" align="absmiddle" alt=""> Подробная документация](docs/ru/quickstart.md)
+<p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="40" alt="Установка"></a> <a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.ru.svg" height="40" alt="Что вы получаете"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.ru.svg" height="40" alt="Первые 5 минут"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.ru.svg" height="40" alt="Все скиллы"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.ru.svg" height="40" alt="Подробная документация"></a></p>
 
 </div>
 
@@ -49,19 +46,7 @@
 
 Скиллы не нужно вызывать по имени. Вы описываете работу, и подходящий скилл просыпается (пример сессии, приблизительный):
 
-```text
-Вы:      Хочу сделать систему бонусных баллов для магазина.
-Claude:  [shaping] Прежде чем писать код: как покупатели получают баллы, и сгорают ли они?
-Вы:      ...отвечаете...                    -> утверждённая спека в docs/specs/
-Вы:      Составь план.
-Claude:  [planning] 4 задачи в docs/plans/loyalty/plan.md, у каждой проверка и модель.
-Вы:      Выполняй план.
-Claude:  [executing] делает задачи по одной, проверяет каждую, в конце одно ревью.
-Вы:      Закоммить мои изменения.
-Claude:  [committing] маленькие коммиты в стиле проекта, только свои файлы. Не пушит.
-Вы:      Завершаем, продолжу завтра.
-Claude:  [handoff] сохраняет короткую заметку; новая сессия начнётся с «Next: ...».
-```
+![Сессия в терминале: вы описываете систему бонусных баллов, shaping задаёт вопросы; planning составляет план; executing выполняет его; committing делает маленькие коммиты; handoff сохраняет заметку на завтра](docs/assets/charts/first-5-minutes.ru.svg)
 
 Любой скилл можно вызвать и вручную: `/foma-skills:planning`, `/foma-skills:tidying` и так далее.
 

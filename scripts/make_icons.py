@@ -23,7 +23,7 @@ HEADINGS = {"install": "rocket", "what-you-get": "gift", "first-5-minutes": "com
             # small inline icons: feature table, docs table, callouts
             "f-light": "feather", "f-tested": "circle-check", "f-open": "lock-open", "lang": "languages",
             "standard": "ruler", "research": "microscope", "credits": "heart", "how-it-works": "cog",
-            "faq": "circle-question-mark", "report": "target"}
+            "faq": "circle-question-mark", "report": "target", "agents": "bot", "version": "tag"}
 # skill groups
 GROUPS = {"setup": ("setup", "settings"), "proc": ("proc", "route"), "meth": ("meth", "hammer"),
           "atom": ("atom", "atom"), "meta": ("meta", "puzzle")}

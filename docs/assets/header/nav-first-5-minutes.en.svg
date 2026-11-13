@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="181" height="40" viewBox="0 0 181 40" role="img" aria-label="First 5 minutes">
+<title>First 5 minutes</title>
+<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#e8714a"/></linearGradient><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient></defs><rect x="0.75" y="0.75" width="179.5" height="38.5" rx="19.25" fill="url(#gh)" stroke="#e8714a" stroke-opacity="0.55" stroke-width="1.5"/><g transform="translate(16,11) scale(0.8)" fill="none" stroke="#e8714a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10" />
+  <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
+</g><text x="43" y="25.4" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#f4ece6">First 5 minutes</text></svg>
