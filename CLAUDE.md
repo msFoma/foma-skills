@@ -3,16 +3,13 @@
 Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo content in English, except the user-facing docs that are also kept in Russian: `README.ru.md` and `docs/ru/` (DEC-037); change `README.md` and the Russian pages together.
 
 ## Layout
-- `research/` — open research history: facts, sources, candidates, ideas, decisions (ADR), questions, log.
-- `.claude/agents/` — `scout` (Haiku, web research), `rewriter` (Sonnet, skill rewrites).
-- `plugins/foma-skills/` — the plugin users install (`.claude-plugin/plugin.json`, `skills/`, attribution: `CREDITS.md`, `NOTICE`, `LICENSE` copy, `licenses/`); repo root holds the marketplace (`.claude-plugin/marketplace.json`).
+- `plugins/foma-skills/` — the plugin users install (`.claude-plugin/plugin.json`, `skills/`, `hooks/`, attribution: `CREDITS.md`, `NOTICE`, `LICENSE` copy, `licenses/`); repo root holds the marketplace (`.claude-plugin/marketplace.json`).
+- `docs/` — user docs: `lite-standard.md`, `golden-structure.md`, `ru/` (Russian pages), `engineering/` (decisions `DEC-NNN` and the test ledger), `assets/` (generated art), `graph.html` (generated live skill map, served by GitHub Pages).
+- `tests/` — trigger prompt sets, task fixtures, saved runs (`tests/.runs/`, ignored).
+- `scripts/` — static checks, the test harness and the art generators `make_*.py`.
 
-## Workflow
-- IDs: `SRC-NNN`, `FACT-NNN`, `CAND-NNN`, `IDEA-NNN`, `DEC-NNN`, `Q-NNN`. Cross-link by ID (`CAND-007 ← SRC-003`).
-- No conclusion without a source. New ideas go straight to `research/ideas.md`.
-- Decisions go only to `research/decisions.md`.
-- End every stage with a summary in `research/log.md`.
-- Orchestrator does not search the web; delegate to `scout`.
+## Decisions
+- Decisions go only to `docs/engineering/decisions.md` (`DEC-NNN`, newest last).
 
 ## Checks
 - `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin).
@@ -21,6 +18,6 @@ Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo con
 - `python3 scripts/make_charts.py` — redraws the README infographics in `docs/assets/charts/` (EN+RU SVGs, stdlib only); after skills change run `python3 scripts/make_charts.py --refresh <project with the plugin installed>` first to re-capture the token numbers from `claude plugin details`.
 - `python3 scripts/make_header.py` — redraws the README header SVGs (stats strip, nav and language pills) in `docs/assets/header/`; `python3 scripts/make_install.py` — the three install step bars (`docs/assets/install/`); `python3 scripts/make_graph_preview.py` — the live-map teaser cards `docs/assets/graph-teaser.{en,ru}.svg` (headless Chrome screenshot of `docs/graph.html`, needs Chrome and macOS `sips`; rerun after `make_graph.py`); `python3 scripts/make_terminal.py` — redraws the animated "first 5 minutes" terminal card (`docs/assets/charts/first-5-minutes.{en,ru}.svg`). Both are stdlib only and reuse `make_charts.py`; icons come from `make_icons.py`.
 - `python3 scripts/make_graph.py` — regenerates `docs/graph.html` (the live skill map, served by GitHub Pages from `/docs`) from the `SKILL.md` frontmatter and `docs/assets/charts/tokens.json`; it exits if a skill lacks EN or RU copy. Rerun it after any skill change.
-- CI: `.github/workflows/validate.yml` runs all of the above on every push/PR (CLI pinned to 2.1.322).
+- CI: `.github/workflows/validate.yml` runs both plugin validations, the unit tests and `check_skills.py` on every push/PR (CLI pinned to 2.1.322). Generators and model-backed tests are run by hand.
 - Per new/changed skill (DEC-029, costs model usage): `python3 scripts/trigger_test.py <skill>` (Haiku, Sonnet re-checks misses) and a smoke run `python3 scripts/task_test.py <skill> --variants skill --models sonnet --runs 1` (a FAIL is retried twice, majority decides, `--retries 0` off; a usage-limit notice stops the batch with exit code 2 and is never scored).
 - Skill vs its one line only on demand (core >800 tokens or a quality claim): `python3 scripts/task_test.py <skill> --models sonnet --runs 5`; re-grade saved runs with `--rejudge` / `--rejudge-all`.
