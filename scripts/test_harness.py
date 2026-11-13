@@ -11,7 +11,9 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "plugins/foma-skills/skills/tuning/scripts"))
 import claude_run as cr  # noqa: E402
+import evidence  # noqa: E402
 import fires  # noqa: E402
 import task_test  # noqa: E402
 
@@ -148,6 +150,54 @@ class FireLogTest(unittest.TestCase):
         self.assertIn("$0.50", line)
         self.assertIn("1k tokens", line)
         self.assertIn("1 calls reported of 3", line)
+
+
+def run_record(ok, reason="r"):
+    return {"checks": [ok], "marks": [True], "reason": reason}
+
+
+class EvidenceTest(unittest.TestCase):
+    def test_verdict_ignores_limit_norun_and_unjudged(self):
+        self.assertTrue(evidence.verdict(run_record(True)))
+        self.assertFalse(evidence.verdict(run_record(False)))
+        self.assertTrue(evidence.verdict({"marks": [True, True], "reason": "old record without checks"}))
+        self.assertIsNone(evidence.verdict({"checks": [], "marks": None, "reason": "LIMIT: x"}))
+        self.assertIsNone(evidence.verdict({"checks": [], "marks": None, "reason": "judge error"}))
+        self.assertIsNone(evidence.verdict({"checks": [], "marks": [], "reason": "NORUN: no agent output"}))
+
+    def test_run_history_flags_failing_and_flaky_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for task, oks in {"good": [True, True], "flaky": [True, False, True], "broken": [True, False]}.items():
+                (Path(tmp) / task).mkdir()
+                for i, ok in enumerate(oks):
+                    (Path(tmp) / task / f"2026111{i}-000000-skill-sonnet.json").write_text(
+                        json.dumps(run_record(ok, f"{task} reason")))
+            lines = evidence.run_history(tmp)
+        self.assertEqual(len(lines), 2)
+        self.assertTrue(lines[0].startswith("FAILING now broken 1/2"))  # failing now sorts before flaky
+        self.assertTrue(lines[1].startswith("flaky flaky 2/3") and "flaky reason" not in lines[0])
+
+    def test_run_history_says_when_nothing_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertIn("none failing", evidence.run_history(tmp)[0])
+
+    def test_fire_lines_threshold_and_never_list(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            log = Path(tmp) / "f.jsonl"
+            rows = [{"t": "2026-11-01T00:00:00Z", "event": "start", "session": f"s{i}"} for i in range(20)]
+            rows += [{"t": "2026-11-01T01:00:00Z", "skill": "foma-skills:tdd", "session": "s1"}]
+            log.write_text("\n".join(json.dumps(r) for r in rows))
+            lines = evidence.fire_lines(log, None, {"tdd", "tidying"})
+            self.assertIn("tdd 1/20", lines[0])
+            self.assertEqual(lines[1], "NEVER fired (1): tidying")
+            log.write_text("\n".join(json.dumps(r) for r in rows[:5]))
+            self.assertIn("too short", evidence.fire_lines(log, None, {"tdd", "tidying"})[1])
+            self.assertIn("none", evidence.fire_lines(Path(tmp) / "missing", None, {"tdd"})[0])
+
+    def test_repo_mode_needs_both_markers(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertFalse(evidence.is_repo(tmp))
+        self.assertTrue(evidence.is_repo(Path(__file__).resolve().parent.parent))
 
 
 if __name__ == "__main__":

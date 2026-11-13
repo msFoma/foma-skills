@@ -1,0 +1,32 @@
+{
+  "fixture": "shop",
+  "setup": [
+    "mkdir -p .scratch && python3 -c \"import json; n=24; rows=[{'t':'2026-10-%02dT09:00:00Z'%(1+i%28),'event':'start','session':'s%02d'%i} for i in range(n)]; fires=[('planning',range(0,9)),('committing',range(2,9)),('tdd',range(5,9)),('debugging',range(10,12))]; rows+=[{'t':'2026-10-%02dT10:00:00Z'%(1+i%28),'skill':'foma-skills:'+s,'session':'s%02d'%i} for s,r in fires for i in r if i<n]; open('.scratch/fires.jsonl','w').write(''.join(json.dumps(r)+'\\\\n' for r in rows))\"",
+    "git add -A . && git commit -qm 'Add fire log'"
+  ],
+  "prompt": "Tune the pack for this project: which skills should change, and how? Propose only, do not edit files.",
+  "command": "foma-skills:tuning",
+  "one_line": "",
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Skill",
+    "Bash(ls*)",
+    "Bash(grep *)",
+    "Bash(python3 *)",
+    "Bash(git log*)",
+    "Bash(git status*)"
+  ],
+  "checks": [
+    {
+      "name": "nothing written",
+      "cmd": "git diff --quiet HEAD && test -z \"$(git status --short)\""
+    }
+  ],
+  "checklist": [
+    "The answer is based on the evidence script's output: it states the 24-session log, names at least three pack skills that never fired, and examines at most 3 skills in detail (it did not read every skill body).",
+    "For a never-fired skill it asks the user for a prompt that should have fired it instead of inventing one, offers only project-side options (switch off, CLAUDE.md line, issue text) because the pack files are read-only here, runs no trigger or smoke tests, edits nothing, and asks before writing anything."
+  ],
+  "timeout": 300
+}

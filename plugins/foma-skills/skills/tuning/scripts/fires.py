@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Count how often each pack skill fired (IDEA-128). Free: reads a local log only.
 
-Usage: python3 scripts/fires.py [log ...] [--days N]
+Usage: python3 plugins/foma-skills/skills/tuning/scripts/fires.py [log ...] [--days N]
 Default log: .scratch/fires.jsonl in the current project; pass several logs to merge projects.
 Log lines are written by plugins/foma-skills/hooks/fire-log.sh: a fire {"t", "skill", "session"} or a
 session start {"t", "event": "start", "session"}; the starts are the denominator ("fired in 9 of 24 sessions").
@@ -14,7 +14,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-SKILLS = Path(__file__).resolve().parent.parent / "plugins/foma-skills/skills"
+SKILLS = Path(__file__).resolve().parents[2]  # the pack's skills/ folder
 
 
 def read_log(paths, days=None):

@@ -67,7 +67,7 @@
   <header>
     <h1>foma-skills · skill graph v2.0</h1>
     <p>Lite Claude Code skills linked by levels. Edges only point down.</p>
-    <div class="stats"><span><b>16</b>skills</span><span><b>3</b>agents</span><span><b>16</b>automatic</span><span><b>≈1.1k</b>always-on tokens</span></div>
+    <div class="stats"><span><b>17</b>skills</span><span><b>3</b>agents</span><span><b>16</b>automatic</span><span><b>≈0.9k</b>always-on tokens</span></div>
   </header>
 
   <div class="board"><svg id="g" viewBox="0 0 1280 770" role="img" aria-label="Skill dependency graph"></svg></div>
@@ -85,7 +85,7 @@
       <span class="key"><s style="border-color:var(--meth);background:var(--meth-bg)"></s>method</span>
       <span class="key"><s style="border-color:var(--atom);background:var(--atom-bg)"></s>atomic</span>
       <span class="key"><s style="border-color:var(--agent);background:var(--agent-bg)"></s>agent</span>
-      <p style="margin:8px 0 0;color:var(--muted);font-size:13.5px">Dashed outline = meta or hook. Every skill fires on its own; skills that change files only propose first.</p>
+      <p style="margin:8px 0 0;color:var(--muted);font-size:13.5px">Dashed outline = meta or hook. Every skill fires on its own except tuning (manual); skills that change files only propose first.</p>
     </div>
     <div class="card">
       <h2>Maintenance loop</h2>
@@ -122,6 +122,7 @@ const N = [
   ['hand', 'handoff', 'note + /clear', X6[2], Y.setup, C.setup, 0, 'Session note in .scratch/ with the next action first, then /clear. Flags lessons for learning and junk for tidying.', 150],
   ['learn', 'learning', 'lesson → smallest layer', X6[3], Y.setup, C.setup, 0, 'Owns rule content: turns repeated mistakes into the smallest fix and prunes stale rules with equal weight. Proposes, writes after ok.', 150],
   ['find', 'skill-finder', 'find · vet · install', X6[4], Y.setup, C.setup, 0, 'Finds a skill, vets every file through a read-only agent, never passes -y, pins a commit, copies it in only after ok.', 150],
+  ['tune', 'tuning', 'manual · fires + runs → fixes', X5[4], Y.hook, 'meta', 0, 'Manual. Reads the fire log and saved test runs for free, flags skills that never fire or keep failing, proposes the smallest fix, applies it after ok. In the pack repo it checks the fix with the held-out triggers.', 150],
   ['ws', 'writing-skills', 'meta', X6[5], Y.setup, C.meta, 0, 'Writes or tightens a skill in the lite style: layer check, short description, trigger test.', 150],
   ['shape', 'shaping', 'idea → spec', X4[0], Y.proc, C.proc, 0, 'Questions a raw idea (AI asks, you write), challenges it, ends with docs/specs/<name>.md.'],
   ['design', 'design-interview', 'variants · gallery', X4[1], Y.proc, C.proc, 0, 'Interviews you about the look; fresh agents build 3 different variants for a browser gallery; the choice goes to docs/design/ and DESIGN.md.'],

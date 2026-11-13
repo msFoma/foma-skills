@@ -2,7 +2,7 @@
 
 Basic, lightweight skills for Claude Code. They take an idea from first question to merged commit and keep the workspace clean, with as little always-on token cost as possible.
 
-> **Status: pre-release (0.1.0).** All 16 skills are written and pass static checks, trigger tests and one smoke run each. Not yet done: the final eval against a no-pack baseline, and a first CI run (the repo has no remote yet). Treat the numbers below as unproven until then.
+> **Status: pre-release (0.1.0).** All 17 skills are written and pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not yet done: the final eval against a no-pack baseline, and a first CI run (the repo has no remote yet). Treat the numbers below as unproven until then.
 
 ```mermaid
 flowchart TD
@@ -17,6 +17,8 @@ flowchart TD
       hand["handoff"]:::root
     end
     ws["writing-skills"]:::meta
+    tune["tuning<br/>(manual)"]:::meta
+    hook -. "fire log" .-> tune
 
     subgraph PROC["Processes"]
       shape["shaping"]:::orch
@@ -106,6 +108,7 @@ A small hook counts skill calls and session starts locally: skill name, UTC time
 | | `committing` | model | Small commits in the project's style; never pushes on its own |
 | | `documenting` | model | Keep docs and decision records in their home |
 | Meta | `writing-skills` | model | Write a skill to the lite standard |
+| | `tuning` | manual | Read the fire log and saved test runs, flag skills that never fire or keep failing, propose the smallest fix; spends tokens only on flagged skills |
 
 ## Dropped after tests
 
