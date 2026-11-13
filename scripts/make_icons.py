@@ -19,7 +19,11 @@ STROKE = "1.75"
 # README section headings (brand orange): file name -> Lucide icon
 HEADINGS = {"install": "rocket", "what-you-get": "gift", "first-5-minutes": "compass", "task-flow": "workflow",
             "all-skills": "toolbox", "skill-map": "network", "usage-log": "activity", "cost": "gauge",
-            "dropped": "archive", "docs": "book-open", "contributing": "handshake", "license": "scale"}
+            "dropped": "archive", "docs": "book-open", "contributing": "handshake", "license": "scale",
+            # small inline icons: feature table, docs table, callouts
+            "f-light": "feather", "f-tested": "circle-check", "f-open": "lock-open", "lang": "languages",
+            "standard": "ruler", "research": "microscope", "credits": "heart", "how-it-works": "cog",
+            "faq": "circle-question-mark", "report": "target"}
 # skill groups
 GROUPS = {"setup": ("setup", "settings"), "proc": ("proc", "route"), "meth": ("meth", "hammer"),
           "atom": ("atom", "atom"), "meta": ("meta", "puzzle")}
@@ -61,11 +65,12 @@ def main():
         if not f.is_file():
             sys.exit(f"missing Lucide icon: {icon}.svg")
         (OUT / f"{name}.svg").write_text(paint(body(f.read_text()), colour))
-    (OUT / "safe.svg").write_text(paint(OK_GATE, BRAND))
+    for name in ("safe", "f-careful"):
+        (OUT / f"{name}.svg").write_text(paint(OK_GATE, BRAND))
     licence = src.parent / "LICENSE"
     if licence.is_file():
         (OUT / "LICENSE-lucide.txt").write_text(licence.read_text())
-    print(f"wrote {len(jobs) + 1} icons to {OUT}")
+    print(f"wrote {len(jobs) + 2} icons to {OUT}")
 
 
 if __name__ == "__main__":

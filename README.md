@@ -13,7 +13,7 @@
 
 ### Say what you want. The right skill wakes up, asks first, and does the careful part.
 
-[🚀 Install](#install) · [✨ What you get](#what-you-get) · [🧭 First 5 minutes](#first-5-minutes) · [🧰 All skills](#skills) · [🇷🇺 Документация на русском](docs/ru/quickstart.md)
+[<img src="docs/assets/icons/install.svg" width="16" height="16" align="absmiddle" alt=""> Install](#install) · [<img src="docs/assets/icons/what-you-get.svg" width="16" height="16" align="absmiddle" alt=""> What you get](#what-you-get) · [<img src="docs/assets/icons/first-5-minutes.svg" width="16" height="16" align="absmiddle" alt=""> First 5 minutes](#first-5-minutes) · [<img src="docs/assets/icons/all-skills.svg" width="16" height="16" align="absmiddle" alt=""> All skills](#skills) · [<img src="docs/assets/icons/lang.svg" width="16" height="16" align="absmiddle" alt=""> Документация на русском](docs/ru/quickstart.md)
 
 </div>
 
@@ -38,10 +38,10 @@ Then **restart Claude Code in your project** (the plugin loads when a session st
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> What you get
 
-| 🪶 **Light** | 🛡️ **Careful** |
+| <img src="docs/assets/icons/f-light.svg" width="18" height="18" align="absmiddle" alt=""> **Light** | <img src="docs/assets/icons/f-careful.svg" width="18" height="18" align="absmiddle" alt=""> **Careful** |
 |---|---|
 | Only short skill descriptions (≈1.4k tokens) are always in context. A skill's full text loads only when it fires, so your limits go to your work. | Skills **propose first and write after your ok**. Nothing is pushed on its own, files are removed reversibly, third-party skills are vetted before install. |
-| 🧪 **Tested** | 🔓 **Open** |
+| <img src="docs/assets/icons/f-tested.svg" width="18" height="18" align="absmiddle" alt=""> **Tested** | <img src="docs/assets/icons/f-open.svg" width="18" height="18" align="absmiddle" alt=""> **Open** |
 | Every skill passes static checks, trigger tests and a smoke run. Failures and fixes are logged honestly in [`research/`](research/). | Apache-2.0. The whole research history, decisions and test ledger are public. |
 
 <a id="first-5-minutes"></a>
@@ -70,7 +70,7 @@ You can also call any skill by hand: `/foma-skills:planning`, `/foma-skills:tidy
 
 ```mermaid
 flowchart LR
-    A(["💡 your idea"]) --> B["<b>shaping</b><br/>questions → spec"]
+    A(["your idea"]) --> B["<b>shaping</b><br/>questions → spec"]
     B --> C["<b>planning</b><br/>tasks + a model each"]
     C --> D["<b>executing</b><br/>build · check · review"]
     D --> E["<b>committing</b><br/>small commits"]
@@ -179,17 +179,17 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 
 | | |
 |---|---|
-| 🇷🇺 **Русская документация** | [Быстрый старт](docs/ru/quickstart.md) · [Справочник по скиллам](docs/ru/skills.md) · [Как это работает](docs/ru/how-it-works.md) · [FAQ](docs/ru/faq.md) |
-| 📐 **Lite standard** | How every skill is written and checked: [`docs/lite-standard.md`](docs/lite-standard.md) |
-| 🔬 **Research** | Sources, decisions and the test ledger: [`research/`](research/) |
-| 🙏 **Credits** | Third-party work: [`CREDITS.md`](plugins/foma-skills/CREDITS.md) |
+| <img src="docs/assets/icons/lang.svg" width="18" height="18" align="absmiddle" alt=""> **Русская документация** | [Быстрый старт](docs/ru/quickstart.md) · [Справочник по скиллам](docs/ru/skills.md) · [Как это работает](docs/ru/how-it-works.md) · [FAQ](docs/ru/faq.md) |
+| <img src="docs/assets/icons/standard.svg" width="18" height="18" align="absmiddle" alt=""> **Lite standard** | How every skill is written and checked: [`docs/lite-standard.md`](docs/lite-standard.md) |
+| <img src="docs/assets/icons/research.svg" width="18" height="18" align="absmiddle" alt=""> **Research** | Sources, decisions and the test ledger: [`research/`](research/) |
+| <img src="docs/assets/icons/credits.svg" width="18" height="18" align="absmiddle" alt=""> **Credits** | Third-party work: [`CREDITS.md`](plugins/foma-skills/CREDITS.md) |
 
 > [!IMPORTANT]
 > **Status: pre-release (0.1.0).** All 17 skills pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not done yet: the final eval against a no-pack baseline. The numbers in `research/` come from small samples; treat them as indicative, not proven.
 
 ## <img src="docs/assets/icons/contributing.svg" width="28" height="28" align="absmiddle" alt=""> Contributing
 
-> 🎯 **A skill did not fire?** That is the most useful report you can send: [tell us the exact words you said](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
+> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **A skill did not fire?** That is the most useful report you can send: [tell us the exact words you said](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
 
 Issues and pull requests are welcome; see [`CONTRIBUTING.md`](CONTRIBUTING.md). The pack stays small on purpose: a skill earns its place only if it beats a plain one-line instruction in tests.
 

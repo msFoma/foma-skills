@@ -13,7 +13,7 @@
 
 ### Скажите, что нужно. Нужный скилл включится сам, сначала спросит и аккуратно сделает работу.
 
-[🚀 Установка](#install) · [✨ Что вы получаете](#what-you-get) · [🧭 Первые 5 минут](#first-5-minutes) · [🧰 Все скиллы](#skills) · [📚 Подробная документация](docs/ru/quickstart.md)
+[<img src="docs/assets/icons/install.svg" width="16" height="16" align="absmiddle" alt=""> Установка](#install) · [<img src="docs/assets/icons/what-you-get.svg" width="16" height="16" align="absmiddle" alt=""> Что вы получаете](#what-you-get) · [<img src="docs/assets/icons/first-5-minutes.svg" width="16" height="16" align="absmiddle" alt=""> Первые 5 минут](#first-5-minutes) · [<img src="docs/assets/icons/all-skills.svg" width="16" height="16" align="absmiddle" alt=""> Все скиллы](#skills) · [<img src="docs/assets/icons/docs.svg" width="16" height="16" align="absmiddle" alt=""> Подробная документация](docs/ru/quickstart.md)
 
 </div>
 
@@ -38,10 +38,10 @@
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> Что вы получаете
 
-| 🪶 **Лёгкость** | 🛡️ **Аккуратность** |
+| <img src="docs/assets/icons/f-light.svg" width="18" height="18" align="absmiddle" alt=""> **Лёгкость** | <img src="docs/assets/icons/f-careful.svg" width="18" height="18" align="absmiddle" alt=""> **Аккуратность** |
 |---|---|
 | В контексте постоянно лежат только короткие описания скиллов (≈1,4k токенов). Полный текст скилла загружается, только когда он срабатывает, так что лимиты уходят на вашу работу. | Скиллы **сначала предлагают и пишут после вашего «ок»**. Ничего не пушится само, файлы удаляются обратимо, чужие скиллы проверяются перед установкой. |
-| 🧪 **Проверенность** | 🔓 **Открытость** |
+| <img src="docs/assets/icons/f-tested.svg" width="18" height="18" align="absmiddle" alt=""> **Проверенность** | <img src="docs/assets/icons/f-open.svg" width="18" height="18" align="absmiddle" alt=""> **Открытость** |
 | Каждый скилл прошёл статические проверки, тесты срабатывания и смоук-прогон. Провалы и исправления честно записаны в [`research/`](research/). | Лицензия Apache-2.0. Вся история исследования, решения и журнал тестов публичны. |
 
 <a id="first-5-minutes"></a>
@@ -69,7 +69,7 @@ Claude:  [handoff] сохраняет короткую заметку; нова�
 
 ```mermaid
 flowchart LR
-    A(["💡 ваша идея"]) --> B["<b>shaping</b><br/>вопросы → спека"]
+    A(["ваша идея"]) --> B["<b>shaping</b><br/>вопросы → спека"]
     B --> C["<b>planning</b><br/>задачи + модель на каждую"]
     C --> D["<b>executing</b><br/>сделать · проверить · ревью"]
     D --> E["<b>committing</b><br/>маленькие коммиты"]
@@ -174,18 +174,18 @@ Claude держит в контексте название и абзац-опи�
 
 | | |
 |---|---|
-| 🚀 **Быстрый старт** | [Установка, первый запуск, обновление, удаление](docs/ru/quickstart.md) |
-| 🧰 **Справочник по скиллам** | [Все 17 скиллов с примерами и тем, что они меняют](docs/ru/skills.md) |
-| ⚙️ **Как это работает** | [Маршрутизатор, заметка handoff, журнал, токены](docs/ru/how-it-works.md) |
-| ❓ **FAQ** | [Частые вопросы новичков](docs/ru/faq.md) |
-| 🔬 **Исследование** | Источники, решения и журнал тестов (на английском): [`research/`](research/) |
+| <img src="docs/assets/icons/install.svg" width="18" height="18" align="absmiddle" alt=""> **Быстрый старт** | [Установка, первый запуск, обновление, удаление](docs/ru/quickstart.md) |
+| <img src="docs/assets/icons/all-skills.svg" width="18" height="18" align="absmiddle" alt=""> **Справочник по скиллам** | [Все 17 скиллов с примерами и тем, что они меняют](docs/ru/skills.md) |
+| <img src="docs/assets/icons/how-it-works.svg" width="18" height="18" align="absmiddle" alt=""> **Как это работает** | [Маршрутизатор, заметка handoff, журнал, токены](docs/ru/how-it-works.md) |
+| <img src="docs/assets/icons/faq.svg" width="18" height="18" align="absmiddle" alt=""> **FAQ** | [Частые вопросы новичков](docs/ru/faq.md) |
+| <img src="docs/assets/icons/research.svg" width="18" height="18" align="absmiddle" alt=""> **Исследование** | Источники, решения и журнал тестов (на английском): [`research/`](research/) |
 
 > [!IMPORTANT]
 > **Статус: пре-релиз (0.1.0).** Все 17 скиллов прошли статические проверки, тесты срабатывания (16 автоматических) и по одному смоук-прогону. Ещё не сделано: итоговое сравнение с вариантом без пака. Цифры в `research/` получены на небольших выборках, считайте их ориентиром, а не доказательством.
 
 ## <img src="docs/assets/icons/contributing.svg" width="28" height="28" align="absmiddle" alt=""> Участие в проекте
 
-> 🎯 **Скилл не сработал?** Это самый полезный отчёт: [напишите, какими именно словами вы просили](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
+> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **Скилл не сработал?** Это самый полезный отчёт: [напишите, какими именно словами вы просили](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
 
 Issues и pull request'ы приветствуются, см. [`CONTRIBUTING.md`](CONTRIBUTING.md) (на английском). Пак нарочно остаётся маленьким: скилл остаётся только если в тестах он лучше обычной строки-инструкции.
 
