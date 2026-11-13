@@ -135,80 +135,15 @@ flowchart LR
 <details>
 <summary><b>🕸️ Как скиллы связаны между собой</b> (схема)</summary>
 
-```mermaid
-flowchart TD
-    hook["SessionStart hook<br/>router line + fresh handoff note + plan progress"]:::hook
-    contract[("CLAUDE.md contract<br/>Commands · Where things live · Workflow")]:::contract
-
-    subgraph SETUP["Setup & upkeep"]
-      gw["groundwork"]:::root
-      tidy["tidying"]:::root
-      learn["learning"]:::root
-      find["skill-finder"]:::root
-      hand["handoff"]:::root
-    end
-    ws["writing-skills"]:::meta
-    tune["tuning<br/>(manual)"]:::meta
-    hook -. "fire log" .-> tune
-
-    subgraph PROC["Processes"]
-      shape["shaping"]:::orch
-      design["design-interview"]:::orch
-      plan["planning<br/>(+ model per task)"]:::orch
-      exec["executing"]:::orch
-    end
-
-    subgraph METH["Methods"]
-      dbg["debugging"]:::meth
-      rev["reviewing"]:::meth
-      ref["refactoring"]:::meth
-    end
-
-    subgraph ATOM["Atomic"]
-      tdd["tdd"]:::atom
-      com["committing"]:::atom
-      doc["documenting"]:::atom
-    end
-
-    subgraph AG["Agents"]
-      impl["implementer"]:::agent
-      rvw["reviewer"]:::agent
-      expl["explorer"]:::agent
-    end
-
-    hook -. "note, plan progress" .-> hand
-    hand -. signals .-> learn
-    hand -. junk .-> tidy
-    gw -. writes .-> contract
-    shape -. "next: plan" .-> plan
-    design -. "next: plan" .-> plan
-    shape --> doc
-    plan --> doc
-    exec --> dbg & rev & ref
-    exec --> tdd & com & doc
-    exec --> impl & rvw & expl
-    dbg --> tdd & expl
-    ref --> tdd
-    impl --> tdd
-    rvw --> rev
-
-    contract -. read .-> plan & exec & doc & com & tidy
-
-    classDef hook fill:#eee,stroke:#999
-    classDef root fill:#ffd,stroke:#a80
-    classDef contract fill:#efe,stroke:#393
-    classDef orch fill:#def,stroke:#36a
-    classDef meth fill:#eef,stroke:#36a
-    classDef atom fill:#fff,stroke:#36a
-    classDef agent fill:#fef,stroke:#939
-    classDef meta fill:#eee,stroke:#999,stroke-dasharray:3
-```
+![Карта скиллов: пять групп, договор в CLAUDE.md, агенты-помощники и кто кого вызывает](docs/assets/charts/skill-map.ru.svg)
 
 Интерактивная версия: [`docs/graph.html`](docs/graph.html).
 
 </details>
 
 ## 🛡️ Безопасно по замыслу
+
+![Цикл «сначала предлагает»: вы просите, скилл читает, показывает точное изменение, вы говорите «ок», только потом он пишет, а отчёт заканчивается тем, что не проверено](docs/assets/charts/propose-first.ru.svg)
 
 - **Сначала предложение.** Скиллы, которые меняют файлы, показывают точное изменение и пишут только после вашего «ок».
 - **Никаких неожиданных пушей.** `committing` никогда не пушит сам; разрушительных команд в скиллах нет.
@@ -220,12 +155,11 @@ flowchart TD
 
 Маленький хук считает, какие скиллы срабатывают: имя скилла, время UTC и id сессии попадают в `.scratch/fires.jsonl` **в вашем проекте**. Текст ваших запросов не сохраняется, наружу ничего не отправляется. Примерно через 20 сессий `/foma-skills:tuning` покажет, какие скиллы ни разу не сработали. Выключить: переменная окружения `FOMA_FIRE_LOG=off` или просто удалить файл.
 
-<details>
-<summary><b>🧮 Из чего состоят ≈1,4k токенов, которые заняты всегда</b></summary>
+## 🪶 Сколько это стоит в токенах
+
+![Токены на скилл: около 80–90 всегда в контексте и 0,7–1,4k только когда скилл срабатывает](docs/assets/charts/token-cost.ru.svg)
 
 Claude держит в контексте название и абзац-описание каждого установленного скилла, чтобы выбрать нужный: примерно 80–90 токенов на скилл, и пак держит описания короткими (до 250 символов). Сверху хук старта сессии добавляет одну короткую строку-маршрутизатор. Полные инструкции скилла (примерно 0,7–1,4k токенов) читаются только когда он срабатывает, а длинные детали лежат в справочных файлах, которые открываются по необходимости. Цифра ≈1,4k — оценка самого Claude Code, проверить её можно командой `claude plugin details foma-skills`.
-
-</details>
 
 <details>
 <summary><b>🗑️ Скиллы, которые пробовали и убрали</b></summary>

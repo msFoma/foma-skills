@@ -136,74 +136,7 @@ Say something like the example in the third column. **auto** = fires on its own 
 <details>
 <summary><b>🕸️ How the skills connect</b> (diagram)</summary>
 
-```mermaid
-flowchart TD
-    hook["SessionStart hook<br/>router line + fresh handoff note + plan progress"]:::hook
-    contract[("CLAUDE.md contract<br/>Commands · Where things live · Workflow")]:::contract
-
-    subgraph SETUP["Setup & upkeep"]
-      gw["groundwork"]:::root
-      tidy["tidying"]:::root
-      learn["learning"]:::root
-      find["skill-finder"]:::root
-      hand["handoff"]:::root
-    end
-    ws["writing-skills"]:::meta
-    tune["tuning<br/>(manual)"]:::meta
-    hook -. "fire log" .-> tune
-
-    subgraph PROC["Processes"]
-      shape["shaping"]:::orch
-      design["design-interview"]:::orch
-      plan["planning<br/>(+ model per task)"]:::orch
-      exec["executing"]:::orch
-    end
-
-    subgraph METH["Methods"]
-      dbg["debugging"]:::meth
-      rev["reviewing"]:::meth
-      ref["refactoring"]:::meth
-    end
-
-    subgraph ATOM["Atomic"]
-      tdd["tdd"]:::atom
-      com["committing"]:::atom
-      doc["documenting"]:::atom
-    end
-
-    subgraph AG["Agents"]
-      impl["implementer"]:::agent
-      rvw["reviewer"]:::agent
-      expl["explorer"]:::agent
-    end
-
-    hook -. "note, plan progress" .-> hand
-    hand -. signals .-> learn
-    hand -. junk .-> tidy
-    gw -. writes .-> contract
-    shape -. "next: plan" .-> plan
-    design -. "next: plan" .-> plan
-    shape --> doc
-    plan --> doc
-    exec --> dbg & rev & ref
-    exec --> tdd & com & doc
-    exec --> impl & rvw & expl
-    dbg --> tdd & expl
-    ref --> tdd
-    impl --> tdd
-    rvw --> rev
-
-    contract -. read .-> plan & exec & doc & com & tidy
-
-    classDef hook fill:#eee,stroke:#999
-    classDef root fill:#ffd,stroke:#a80
-    classDef contract fill:#efe,stroke:#393
-    classDef orch fill:#def,stroke:#36a
-    classDef meth fill:#eef,stroke:#36a
-    classDef atom fill:#fff,stroke:#36a
-    classDef agent fill:#fef,stroke:#939
-    classDef meta fill:#eee,stroke:#999,stroke-dasharray:3
-```
+![Skill map: five groups of skills, the CLAUDE.md contract, the helper agents and who calls whom](docs/assets/charts/skill-map.en.svg)
 
 Interactive version: [`docs/graph.html`](docs/graph.html).
 
@@ -211,6 +144,8 @@ Interactive version: [`docs/graph.html`](docs/graph.html).
 
 <a id="safe"></a>
 ## 🛡️ Safe by design
+
+![The propose-first cycle: you ask, the skill reads, shows the exact change, you say ok, only then it writes, and the report ends with what was not checked](docs/assets/charts/propose-first.en.svg)
 
 - **Propose first.** Skills that change files show the exact change and write only after your ok.
 - **No surprise pushes.** `committing` never pushes on its own; destructive commands are not part of any skill.
@@ -223,12 +158,12 @@ Interactive version: [`docs/graph.html`](docs/graph.html).
 
 A tiny hook counts which skills fire: skill name, UTC time and session id go to `.scratch/fires.jsonl` **in your project**. No prompt text is stored and nothing is sent anywhere. After about 20 sessions `/foma-skills:tuning` can show which skills never fired. Turn it off with the environment variable `FOMA_FIRE_LOG=off`, or delete the file.
 
-<details>
-<summary><b>🧮 What the ≈1.4k always-on tokens are</b></summary>
+<a id="cost"></a>
+## 🪶 What it costs in tokens
+
+![Tokens per skill: about 80 to 90 always on, and 0.7 to 1.4k only when the skill fires](docs/assets/charts/token-cost.en.svg)
 
 Claude keeps every installed skill's name and one-paragraph description in context so it can pick one: about 80–90 tokens each, and the pack keeps descriptions short (≤250 characters). On top of that the session-start hook adds one short router line. A skill's full instructions (about 0.7–1.4k tokens) are read only when it fires, and long details live in reference files read only when needed. The ≈1.4k figure is Claude Code's own estimate; check it yourself with `claude plugin details foma-skills`.
-
-</details>
 
 <details>
 <summary><b>🗑️ Skills that were tried and dropped</b></summary>
