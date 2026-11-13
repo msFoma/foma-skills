@@ -106,7 +106,14 @@ class CheckSkillsTest(unittest.TestCase):
         self.add("alpha", skill_md(level="process", agents="implementer"))
         self.assertTrue(any("agent 'implementer'" in e for e in self.errors()))
 
-    def test_pack_cap_counts_model_skills_only(self):
+    def test_manual_skills_count_toward_the_pack_cap_too(self):
+        # Claude Code's own estimate lists manual skills as well (DEC-038)
+        for i in range(17):
+            n = f"m{i:02d}"
+            self.add(n, skill_md(name=n, desc="y" * 240, extra="disable-model-invocation: true\n"))
+        self.assertTrue(any("pack always-on" in e for e in self.errors()))
+
+    def test_pack_cap_counts_every_listing_with_overhead(self):
         long_desc = "y" * 240
         for i in range(21):
             n = f"s{i:02d}"
@@ -134,7 +141,7 @@ class CheckSkillsTest(unittest.TestCase):
         self.add("alpha", skill_md())
         hooks = self.dir.parent / "hooks"
         hooks.mkdir(exist_ok=True)
-        (hooks / "session-start.sh").write_text("printf '%s' \"" + "x" * 5000 + "\"\n")
+        (hooks / "session-start.sh").write_text("printf '%s' \"" + "x" * 8000 + "\"\n")
         try:
             self.assertTrue(any("pack always-on" in e for e in self.errors()))
         finally:

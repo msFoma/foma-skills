@@ -85,7 +85,7 @@ Leave out: rationale, history, evidence, generic advice, anything the model infe
 
 DEC-032: a core above 800 tokens is accepted with a passing trigger set and smoke run (DEC-029); a task-test win over the shorter version is required only when the skill claims a quality gain. All 17 skills are model-invoked (DEC-031); a skill sets `disable-model-invocation` only by explicit decision, and then the description rules of §3 (manual) apply.
 
-Pack always-on = all model-invoked descriptions plus the text the SessionStart hook prints in an empty project: ≈0.9k target, 1.2k cap.
+Pack always-on = every skill's listing (description plus ≈29 tokens of name and formatting, manual skills included, calibrated on `claude plugin details`, DEC-038) plus the text the SessionStart hook prints in an empty project: ≈1.5k cap, now ≈1.48k.
 
 ## 6. Behaviour rules every skill follows
 
@@ -126,7 +126,7 @@ Apply by context: a skill writes a line only for what it does (asks, delegates, 
 - `metadata.uses` / `agents` targets exist; levels only point down; no cycles (IDEA-020).
 - Token count = SKILL.md body chars ÷ 4, frontmatter excluded (descriptions count only in the pack total): fail above the cap (§5) or when `metadata.tokens` drifts >10%.
 - Model-invoked description contains "Use when"; rule count within the cap of its level (§5).
-- Pack always-on (descriptions + the hook's output in an empty project) ≤1.2k.
+- Pack always-on (listings with overhead + the hook's output in an empty project) ≤1.5k (DEC-038).
 - `claude plugin validate . --strict` (marketplace) and `claude plugin validate plugins/foma-skills --strict` (plugin) (FACT-029, DEC-021).
 
 ## Template

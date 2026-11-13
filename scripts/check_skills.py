@@ -26,7 +26,9 @@ FORBIDDEN_FILES = {"README.md", "CHANGELOG.md", "examples"}
 DESC_MAX_CHARS = 250
 CORE_CAP = {"model": 1500, "manual": 1500}  # DEC-028
 REFERENCE_CAP = 1000
-PACK_CAP = 1200  # descriptions + the session-start router output (DEC-032)
+PACK_CAP = 1500  # listings + the session-start router output (DEC-032, DEC-038)
+LISTING_OVERHEAD = 29  # tokens per skill listing beyond its description (name, prefix, formatting); DEC-038:
+# calibrated on `claude plugin details` (17 skills: 1,430 official vs 931 by chars/4), manual skills included
 RULE_CAP = {"atomic": 5, "method": 5, "meta": 5, "process": 8, "setup": 8}  # DEC-032
 DRIFT = 0.10
 
@@ -250,7 +252,7 @@ def check_pack(skills_dir):
                 errors.append(f"{name}: agent {agent!r} has no assets/agents/{agent}.md")
 
     router = skills_dir.parent / "hooks/session-start.sh"
-    total = sum(i["desc_tokens"] for i in skills.values() if not i["manual"])
+    total = sum(i["desc_tokens"] + LISTING_OVERHEAD for i in skills.values())
     total += router_tokens(router)
     if total > PACK_CAP:
         errors.append(f"pack always-on {total} tokens > cap {PACK_CAP}")
