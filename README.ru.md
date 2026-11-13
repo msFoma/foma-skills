@@ -175,4 +175,4 @@ Issues и pull request'ы приветствуются, см. [`CONTRIBUTING.md`
 
 [Apache-2.0](LICENSE). Copyright 2026 Vladislav Fomin (foma); см. [`NOTICE`](plugins/foma-skills/NOTICE).
 
-Иконки в README: [Lucide](https://lucide.dev) (ISC, перекрашены; [лицензия](docs/assets/icons/LICENSE-lucide.txt)) и одна своя (`safe`). Пересобрать: `scripts/make_icons.py`.
+Иконки в README: [Lucide](https://lucide.dev) (ISC, перекрашены; [лицензия](docs/assets/icons/LICENSE-lucide.txt)) и одна своя (`safe`). Пересобрать: `scripts/assets/make_icons.py`.

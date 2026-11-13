@@ -179,4 +179,4 @@ Issues and pull requests are welcome; see [`CONTRIBUTING.md`](CONTRIBUTING.md). 
 
 [Apache-2.0](LICENSE). Copyright 2026 Vladislav Fomin (foma); see [`NOTICE`](plugins/foma-skills/NOTICE).
 
-README icons: [Lucide](https://lucide.dev) (ISC, recoloured; [licence](docs/assets/icons/LICENSE-lucide.txt)) plus one original icon (`safe`). Regenerate with `scripts/make_icons.py`.
+README icons: [Lucide](https://lucide.dev) (ISC, recoloured; [licence](docs/assets/icons/LICENSE-lucide.txt)) plus one original icon (`safe`). Regenerate with `scripts/assets/make_icons.py`.

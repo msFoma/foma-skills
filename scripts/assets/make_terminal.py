@@ -2,7 +2,7 @@
 """README terminal card: the "first 5 minutes" session as an animated terminal
 (docs/assets/charts/first-5-minutes.{en,ru}.svg).
 
-Usage: python3 scripts/make_terminal.py   (stdlib only; reuses the palette and helpers of make_charts.py)
+Usage: python3 scripts/assets/make_terminal.py   (stdlib only; reuses the palette and helpers of make_charts.py)
 The static look (also what prefers-reduced-motion shows) is the finished session. Motion: user lines are typed
 (a body-coloured curtain slides off the text in one step per character), skill replies fade in, the session holds,
 fades out and loops. Only transform and opacity animate. Monospace text uses textLength, so widths do not depend on

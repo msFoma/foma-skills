@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the README infographics (SVG, English and Russian) from real data. Free: no model calls.
 
-Usage: python3 scripts/make_charts.py [--refresh PROJECT_DIR]
+Usage: python3 scripts/assets/make_charts.py [--refresh PROJECT_DIR]
 Writes docs/assets/charts/{token-cost,skill-map,propose-first}.{en,ru}.svg and docs/assets/hero.svg
 (the hero is rebuilt only where its background plate, which is not committed, exists).
 Token numbers come from docs/assets/charts/tokens.json, captured from Claude Code's own
@@ -26,7 +26,7 @@ import tempfile
 from pathlib import Path
 from xml.sax.saxutils import escape as esc
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs/assets/charts"
 DATA = OUT / "tokens.json"
 HERO = ROOT / "docs/assets/hero.svg"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """README header assets: a stats strip, navigation pills and language pills (docs/assets/header/*.svg).
 
-Usage: python3 scripts/make_header.py   (stdlib only; reuses the palette and helpers of make_charts.py)
+Usage: python3 scripts/assets/make_header.py   (stdlib only; reuses the palette and helpers of make_charts.py)
 The numbers come from the repo: skill count (skills dir), always-on tokens (docs/assets/charts/tokens.json),
 helper agents (docs/agents), version (plugin.json). Icons are the recoloured Lucide files in docs/assets/icons.
 Each file is self-contained (no fonts, scripts or external refs) and is a dark card, so it reads on light and dark themes.

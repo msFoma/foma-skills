@@ -5,7 +5,7 @@ Reads every plugins/foma-skills/skills/*/SKILL.md frontmatter (level, uses, agen
 disable-model-invocation) and docs/assets/charts/tokens.json, then writes ONE
 self-contained HTML page with the data embedded as JSON. No external requests.
 
-Run: python3 scripts/make_graph.py
+Run: python3 scripts/assets/make_graph.py
 Fails loudly when a skill lacks EN/RU copy, a relation points at an unknown node,
 or the page grows past the size budget.
 """
@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 from check_skills import parse_frontmatter  # noqa: E402
 
@@ -23,7 +23,7 @@ OUT = ROOT / "docs/graph.html"
 REPO = "https://github.com/t8jwscc7qy-sketch/foma-skills"
 MAX_BYTES = 250 * 1024
 
-# Group colours: same values as scripts/make_charts.py (COL, BRAND).
+# Group colours: same values as scripts/assets/make_charts.py (COL, BRAND).
 COLORS = {"setup": "#f2b44f", "process": "#86b2f2", "methods": "#5fceb4", "atomic": "#bcb2a8",
           "meta": "#f08fb4", "agents": "#f08fb4", "hooks": "#cfc5bc", "contract": "#e8714a"}
 LEVEL_GROUP = {"setup": "setup", "process": "process", "method": "methods", "atomic": "atomic", "meta": "meta"}
@@ -239,7 +239,7 @@ UI = {
         "d_nocalls": "Calls no other skill.", "d_hook": "Plugin hook", "d_agent": "Helper agent", "d_skill": "skill",
         "play_h": "Play a task", "step": "Step", "prev": "Previous step", "next": "Next step", "pause": "Pause", "resume": "Play", "stop": "Stop",
         "tip_more": "Click for details", "repo": "GitHub repo", "readme": "README", "skills_ref": "Skills reference",
-        "foot": "Generated from the SKILL.md files by scripts/make_graph.py · Apache-2.0",
+        "foot": "Generated from the SKILL.md files by scripts/assets/make_graph.py · Apache-2.0",
         "aria_node": "{name}, {group}, {mode}. Calls {calls}. Called by {by}.", "none": "nothing", "nobody": "no one",
         "skip": "Skip to the map",
     },
@@ -284,7 +284,7 @@ UI = {
         "d_nocalls": "Других скиллов не вызывает.", "d_hook": "Хук плагина", "d_agent": "Агент-помощник", "d_skill": "скилл",
         "play_h": "Проиграть задачу", "step": "Шаг", "prev": "Предыдущий шаг", "next": "Следующий шаг", "pause": "Пауза", "resume": "Играть", "stop": "Стоп",
         "tip_more": "Нажмите, чтобы открыть подробности", "repo": "Репозиторий", "readme": "README", "skills_ref": "Справочник по скиллам",
-        "foot": "Собрано из файлов SKILL.md скриптом scripts/make_graph.py · Apache-2.0",
+        "foot": "Собрано из файлов SKILL.md скриптом scripts/assets/make_graph.py · Apache-2.0",
         "aria_node": "{name}, {group}, {mode}. Вызывает: {calls}. Кем вызывается: {by}.", "none": "никого", "nobody": "никем",
         "skip": "Перейти к карте",
     },

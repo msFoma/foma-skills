@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """README install steps: three numbered bars (docs/assets/install/step-{1,2,3}.{en,ru}.svg).
 
-Usage: python3 scripts/make_install.py   (stdlib only; reuses the palette and helpers of make_charts.py and make_header.py)
+Usage: python3 scripts/assets/make_install.py   (stdlib only; reuses the palette and helpers of make_charts.py and make_header.py)
 The commands themselves stay plain code blocks in the README (GitHub gives them a copy button); these bars only head
 each step. Numbers in the hints come from the repo (skill count, always-on tokens). Each file is self-contained and
 static except a slow running light on the border; prefers-reduced-motion turns it off.

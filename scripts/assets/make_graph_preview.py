@@ -2,7 +2,7 @@
 """README teaser for the live skill map: a browser-window card with a real screenshot of docs/graph.html
 (docs/assets/graph-teaser.{en,ru}.svg).
 
-Usage: python3 scripts/make_graph_preview.py
+Usage: python3 scripts/assets/make_graph_preview.py
 Needs Chrome (set CHROME to its binary if it is not the macOS default) and `sips` (macOS) to turn the screenshot into
 a JPEG; stdlib only otherwise. Rerun it after the graph page or the skills change (make_graph.py first).
 Each SVG embeds the JPEG as a data URI (an <img> SVG cannot load files), so it is self-contained. Motion: a shimmer

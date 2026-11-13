@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Colour the README icons: Lucide (ISC) line icons plus one hand-drawn icon, in the brand palette.
 
-Usage: python3 scripts/make_icons.py LUCIDE_ICONS_DIR
+Usage: python3 scripts/assets/make_icons.py LUCIDE_ICONS_DIR
 LUCIDE_ICONS_DIR holds the stock Lucide SVGs (`icons/` of https://github.com/lucide-icons/lucide, or the
 `icons/` folder of the npm package `lucide-static`). Output: docs/assets/icons/*.svg (one colour each, no
 external refs, readable on light and dark GitHub themes) and the Lucide licence next to them.
@@ -11,7 +11,7 @@ import re
 import sys
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent.parent / "docs/assets/icons"
+OUT = Path(__file__).resolve().parents[2] / "docs/assets/icons"
 BRAND = "#e8714a"
 GROUP = {"setup": "#e0a54a", "proc": "#7fa9d6", "meth": "#4fbfa5", "atom": "#a3adba", "meta": "#e07fa3"}
 STROKE = "1.75"
