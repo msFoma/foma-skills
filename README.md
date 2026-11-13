@@ -4,7 +4,7 @@
 
 <p><img src="docs/assets/header/lang-en.on.svg" height="34" alt="English"> <a href="README.ru.md"><img src="docs/assets/header/lang-ru.off.svg" height="34" alt="Русский"></a></p>
 
-<img src="docs/assets/header/stats.en.svg" width="860" alt="17 skills, about 1.4k tokens always on, 3 helper agents, Apache-2.0, version 0.1.0 pre-release">
+<img src="docs/assets/header/stats.en.svg" width="860" alt="17 skills, about 1.4k tokens always on, 3 agent templates, Apache-2.0, version 0.1.0 pre-release">
 
 [![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
 

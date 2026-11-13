@@ -85,8 +85,8 @@ def lang_pill(label, on):
 
 
 STATS = {
-    "en": ["skills", "tokens always on", "helper agents", "license", "pre-release"],
-    "ru": ["скиллов", "токенов всегда", "агента-помощника", "лицензия", "пре-релиз"],
+    "en": ["skills", "tokens always on", "agent templates", "license", "pre-release"],
+    "ru": ["скиллов", "токенов всегда", "шаблона агентов", "лицензия", "пре-релиз"],
 }
 
 
