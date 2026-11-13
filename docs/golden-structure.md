@@ -1,7 +1,7 @@
 # Golden structure (draft v1)
 
 How to lay out a project so an AI agent orients fast, pays as few tokens as possible, and the setup does not rot.
-Every rule cites evidence: `FACT-*` (`research/facts.md`), `NOTE-*` (`research/field-notes.md`), `PROB-*` (`research/workspace-problems.md`).
+Every rule cites evidence IDs (`FACT-*`, `NOTE-*`, `PROB-*`) from the maintainer's private research notes, which are not part of this repository.
 This document is the spec that `groundwork` implements.
 
 ## Principles

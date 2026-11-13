@@ -1,5 +1,7 @@
 # Test ledger: what was changed after a failure (review R-05)
 
+IDs such as `SRC-`, `FACT-`, `CAND-`, `IDEA-` and `Q-` point to the maintainer's private research notes, which are not part of this repository; `DEC-` entries are complete here.
+
 Rule from 2026-11-12 (standard §8.1): a failed prompt is a result. It is replaced only when it contradicts the standard, and the change is logged here. Pass counts quoted in `research/log.md` before this date are "after replacement" unless listed below.
 
 ## Trigger prompts replaced after a miss

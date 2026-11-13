@@ -1,7 +1,7 @@
 # Lite skill standard (v1.2 — approved, DEC-020)
 
 How every foma-skills skill is written. The `rewriter` agent, `writing-skills` and contributors follow it; CI checks the measurable parts (§9).
-Evidence IDs refer to `research/`. Graph and levels: `research/graph.md` (v1.1). Target: the Claude Code plugin `foma-skills` — the only supported install (plain-folder installs are not namespaced, FACT-034). claude.ai/API upload is out of scope for v1.
+Evidence IDs (`FACT-`, `NOTE-`) refer to the maintainer's private research notes, not to this repository; decisions are in `docs/engineering/decisions.md`. The skill graph is `docs/graph.html`. Target: the Claude Code plugin `foma-skills` — the only supported install (plain-folder installs are not namespaced, FACT-034). claude.ai/API upload is out of scope for v1.
 
 ## 1. Files
 
@@ -73,7 +73,7 @@ metadata:
 6. **Report** — ≤5-line summary, last line "Not checked: …" (IDEA-044). Decision payloads — question rounds, proposals, manifests — are not the report; long lists go to `.scratch/` and are linked.
 7. **Next** — name the command when the next step is a process or manual skill (those can't be called by skills).
 
-Leave out: rationale, history, evidence, generic advice, anything the model infers from code (NOTE-067). Rationale lives in `research/`.
+Leave out: rationale, history, evidence, generic advice, anything the model infers from code (NOTE-067). Rationale lives in `docs/engineering/decisions.md`.
 
 ## 5. Caps per skill
 

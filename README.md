@@ -52,7 +52,7 @@ Then just talk to it. Nothing else to configure.
 |---|---|
 | Only short skill descriptions (≈1.4k tokens) are always in context. A skill's full text loads only when it fires, so your limits go to your work. | Skills **propose first and write after your ok**. Nothing is pushed on its own, files are removed reversibly, third-party skills are vetted before install. |
 | <img src="docs/assets/icons/f-tested.svg" width="18" height="18" align="absmiddle" alt=""> **Tested** | <img src="docs/assets/icons/f-open.svg" width="18" height="18" align="absmiddle" alt=""> **Open** |
-| Every skill passes static checks, trigger tests and a smoke run. Failures and fixes are logged honestly in [`research/`](research/). | Apache-2.0. The whole research history, decisions and test ledger are public. |
+| Every skill passes static checks, trigger tests and a smoke run. Failures and fixes are logged honestly in [`docs/engineering/`](docs/engineering/). | Apache-2.0. Decisions and the test ledger are public. |
 
 <a id="first-5-minutes"></a>
 ## <img src="docs/assets/icons/first-5-minutes.svg" width="28" height="28" align="absmiddle" alt=""> Your first 5 minutes
@@ -163,11 +163,11 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 |---|---|
 | <img src="docs/assets/icons/lang.svg" width="18" height="18" align="absmiddle" alt=""> **Русская документация** | [Быстрый старт](docs/ru/quickstart.md) · [Справочник по скиллам](docs/ru/skills.md) · [Как это работает](docs/ru/how-it-works.md) · [FAQ](docs/ru/faq.md) |
 | <img src="docs/assets/icons/standard.svg" width="18" height="18" align="absmiddle" alt=""> **Lite standard** | How every skill is written and checked: [`docs/lite-standard.md`](docs/lite-standard.md) |
-| <img src="docs/assets/icons/research.svg" width="18" height="18" align="absmiddle" alt=""> **Research** | Sources, decisions and the test ledger: [`research/`](research/) |
+| <img src="docs/assets/icons/research.svg" width="18" height="18" align="absmiddle" alt=""> **Engineering** | Decisions and the test ledger: [`docs/engineering/`](docs/engineering/) |
 | <img src="docs/assets/icons/credits.svg" width="18" height="18" align="absmiddle" alt=""> **Credits** | Third-party work: [`CREDITS.md`](plugins/foma-skills/CREDITS.md) |
 
 > [!IMPORTANT]
-> **Status: pre-release (0.1.0).** All 17 skills pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not done yet: the final eval against a no-pack baseline. The numbers in `research/` come from small samples; treat them as indicative, not proven.
+> **Status: pre-release (0.1.0).** All 17 skills pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not done yet: the final eval against a no-pack baseline. The numbers in `docs/engineering/` come from small samples; treat them as indicative, not proven.
 
 ## <img src="docs/assets/icons/contributing.svg" width="28" height="28" align="absmiddle" alt=""> Contributing
 

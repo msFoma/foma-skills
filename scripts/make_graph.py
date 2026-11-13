@@ -111,7 +111,7 @@ COPY = {
         "say_en": "/foma-skills:tuning", "say_ru": "/foma-skills:tuning"},
 }
 
-# Helper agents (research/graph.md "Agents", docs/ru/skills.md).
+# Helper agents (docs/ru/skills.md).
 AGENTS = {
     "implementer": {
         "en": "Writes code, one task per call, in a fresh context. executing hands it the tasks of a larger plan.",
@@ -128,7 +128,7 @@ AGENTS = {
         "model_en": "Haiku · effort low · tools Read, Grep, Glob only", "model_ru": "Haiku · усилие low · только Read, Grep, Glob"},
 }
 
-# Plugin hooks (plugins/foma-skills/hooks/hooks.json, research/graph.md "Hook").
+# Plugin hooks (plugins/foma-skills/hooks/hooks.json).
 HOOKS = {
     "session-start": {
         "label_en": "SessionStart", "label_ru": "SessionStart",
@@ -149,7 +149,7 @@ CONTRACT = {
 }
 
 # Extra relations not in frontmatter: (source, target, kind, label_en, label_ru).
-# Agents preload skills; skill-finder vets through explorer (its SKILL.md step 4, research/graph.md).
+# Agents preload skills; skill-finder vets through explorer (its SKILL.md step 4).
 EXTRA = [
     ("implementer", "tdd", "call", "preloads", "подгружает"),
     ("reviewer", "reviewing", "call", "preloads", "подгружает"),
