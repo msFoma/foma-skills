@@ -86,6 +86,8 @@ flowchart LR
     class E,F end1
 ```
 
+<img src="docs/assets/divider.jpg" alt="" width="100%">
+
 <a id="skills"></a>
 ## 🧰 All 17 skills
 
@@ -142,6 +144,8 @@ Interactive version: [`docs/graph.html`](docs/graph.html).
 
 </details>
 
+<img src="docs/assets/divider.jpg" alt="" width="100%">
+
 <a id="safe"></a>
 ## 🛡️ Safe by design
 
@@ -176,6 +180,8 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 | `verifying` (evidence before "done") | Fired on 7–8 of 10; no gain on short tasks; a one-line CLAUDE.md rule did as well (6/6) on the long task | Rules in `implementer`/`reviewer` + one CLAUDE.md line |
 
 </details>
+
+<img src="docs/assets/divider.jpg" alt="" width="100%">
 
 <a id="docs"></a>
 ## 📚 Documentation

@@ -1,3 +1,5 @@
+<img src="../assets/docs-how-it-works.jpg" alt="How it works" width="100%">
+
 # ⚙️ Как это работает
 
 [← На главную](../../README.ru.md) · [Быстрый старт](quickstart.md) · [Справочник по скиллам](skills.md) · **Как это работает** · [FAQ](faq.md)

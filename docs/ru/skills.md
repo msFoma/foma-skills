@@ -1,3 +1,5 @@
+<img src="../assets/docs-skills.jpg" alt="Skills reference" width="100%">
+
 # 🧰 Справочник по скиллам
 
 [← На главную](../../README.ru.md) · [Быстрый старт](quickstart.md) · **Справочник по скиллам** · [Как это работает](how-it-works.md) · [FAQ](faq.md)

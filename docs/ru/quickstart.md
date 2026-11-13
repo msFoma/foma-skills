@@ -1,3 +1,5 @@
+<img src="../assets/docs-quickstart.jpg" alt="Quick start" width="100%">
+
 # 🚀 Быстрый старт
 
 [← На главную](../../README.ru.md) · **Быстрый старт** · [Справочник по скиллам](skills.md) · [Как это работает](how-it-works.md) · [FAQ](faq.md)

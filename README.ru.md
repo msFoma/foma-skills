@@ -85,6 +85,8 @@ flowchart LR
     class E,F end1
 ```
 
+<img src="docs/assets/divider.jpg" alt="" width="100%">
+
 <a id="skills"></a>
 ## 🧰 Все скиллы
 
@@ -141,6 +143,8 @@ flowchart LR
 
 </details>
 
+<img src="docs/assets/divider.jpg" alt="" width="100%">
+
 ## 🛡️ Безопасно по замыслу
 
 ![Цикл «сначала предлагает»: вы просите, скилл читает, показывает точное изменение, вы говорите «ок», только потом он пишет, а отчёт заканчивается тем, что не проверено](docs/assets/charts/propose-first.ru.svg)
@@ -172,6 +176,8 @@ Claude держит в контексте название и абзац-опи�
 | `verifying` (доказательства перед словом «готово») | Срабатывал на 7–8 из 10; на коротких задачах выигрыша нет; одна строка в CLAUDE.md справилась так же (6/6) на длинной задаче | Правила в `implementer`/`reviewer` и одна строка в CLAUDE.md |
 
 </details>
+
+<img src="docs/assets/divider.jpg" alt="" width="100%">
 
 ## 📚 Документация
 

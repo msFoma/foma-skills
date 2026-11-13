@@ -1,3 +1,5 @@
+<img src="../assets/docs-faq.jpg" alt="FAQ" width="100%">
+
 # ❓ Частые вопросы
 
 [← На главную](../../README.ru.md) · [Быстрый старт](quickstart.md) · [Справочник по скиллам](skills.md) · [Как это работает](how-it-works.md) · **FAQ**
