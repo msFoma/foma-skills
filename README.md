@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="foma-skills: lightweight skills for Claude Code" width="100%">
+<img src="docs/assets/banner.jpg" alt="Foma Skills: lightweight skills for Claude Code" width="100%">
 
 **English** · [Русский](README.ru.md)
 
 [![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
-![skills](https://img.shields.io/badge/skills-17-e0a54a?style=flat-square)
-![always-on](https://img.shields.io/badge/always--on-%E2%89%881.4k_tokens-7fa9d6?style=flat-square)
-![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-6cc0ad?style=flat-square)
-![version](https://img.shields.io/badge/version-0.1.0_pre--release-d98a9c?style=flat-square)
+![skills](https://img.shields.io/badge/skills-17-e8714a?style=flat-square)
+![always-on](https://img.shields.io/badge/always--on-%E2%89%881.4k_tokens-f0a06a?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-7d5a4a?style=flat-square)
+![version](https://img.shields.io/badge/version-0.1.0_pre--release-3a3a44?style=flat-square)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-a3adba?style=flat-square)](LICENSE)
 
 ### Say what you want. The right skill wakes up, asks first, and does the careful part.

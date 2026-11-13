@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="foma-skills: лёгкие скиллы для Claude Code" width="100%">
+<img src="docs/assets/banner.jpg" alt="Foma Skills: лёгкие скиллы для Claude Code" width="100%">
 
 [English](README.md) · **Русский**
 
 [![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
-![skills](https://img.shields.io/badge/%D1%81%D0%BA%D0%B8%D0%BB%D0%BB%D0%BE%D0%B2-17-e0a54a?style=flat-square)
-![always-on](https://img.shields.io/badge/%D0%B2%D1%81%D0%B5%D0%B3%D0%B4%D0%B0_%D0%B2_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B5-%E2%89%881.4k_%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%B2-7fa9d6?style=flat-square)
-![Claude Code](https://img.shields.io/badge/Claude_Code-%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD-6cc0ad?style=flat-square)
-![version](https://img.shields.io/badge/%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F-0.1.0_pre--release-d98a9c?style=flat-square)
+![skills](https://img.shields.io/badge/%D1%81%D0%BA%D0%B8%D0%BB%D0%BB%D0%BE%D0%B2-17-e8714a?style=flat-square)
+![always-on](https://img.shields.io/badge/%D0%B2%D1%81%D0%B5%D0%B3%D0%B4%D0%B0_%D0%B2_%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%B5-%E2%89%881.4k_%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%B2-f0a06a?style=flat-square)
+![Claude Code](https://img.shields.io/badge/Claude_Code-%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD-7d5a4a?style=flat-square)
+![version](https://img.shields.io/badge/%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F-0.1.0_pre--release-3a3a44?style=flat-square)
 [![Лицензия: Apache-2.0](https://img.shields.io/badge/%D0%BB%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-Apache--2.0-a3adba?style=flat-square)](LICENSE)
 
 ### Скажите, что нужно. Нужный скилл включится сам, сначала спросит и аккуратно сделает работу.
