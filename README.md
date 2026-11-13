@@ -41,7 +41,7 @@ In Claude Code, run two commands, then restart:
 Then just talk to it. Nothing else to configure.
 
 > [!TIP]
-> Try it on a small or throwaway project first. To remove it: `/plugin uninstall foma-skills@foma`. Install only for one project with `--scope local` (`claude plugin install foma-skills@foma --scope local`).
+> Try it on one project first: `claude plugin install foma-skills@foma --scope local` installs it for that project only (the default scope is all your projects). To remove it: `/plugin uninstall foma-skills@foma`. On Windows, Claude Code needs Git Bash: the pack's hooks are shell scripts.
 
 <a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/graph-teaser.en.svg" alt="The live skill map in a browser window: 17 skills in five groups, who calls whom. Click to open it." width="100%"></a>
 
@@ -135,7 +135,7 @@ Say something like the example in the third column. **auto** = fires on its own 
 <a id="usage-log"></a>
 ## <img src="docs/assets/icons/usage-log.svg" width="28" height="28" align="absmiddle" alt=""> Usage log and privacy
 
-A tiny hook counts which skills fire: skill name, UTC time and session id go to `.scratch/fires.jsonl` **in your project**. No prompt text is stored and nothing is sent anywhere. After about 20 sessions `/foma-skills:tuning` can show which skills never fired. Turn it off with the environment variable `FOMA_FIRE_LOG=off`, or delete the file.
+A tiny hook counts which skills fire: skill name, UTC time and session id go to `.scratch/fires.jsonl` **in your project**. No prompt text is stored and nothing is sent anywhere. After about 20 sessions `/foma-skills:tuning` can show which skills never fired. Turn it off with the environment variable `FOMA_FIRE_LOG=off`, or delete the file. Add `.scratch/` to your `.gitignore` (the pack never edits it).
 
 <a id="cost"></a>
 ## <img src="docs/assets/icons/cost.svg" width="28" height="28" align="absmiddle" alt=""> What it costs in tokens
