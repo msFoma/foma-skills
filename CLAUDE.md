@@ -1,6 +1,6 @@
 # foma-skills
 
-Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo content in English.
+Open-source pack of basic, lightweight Claude Code skills (Apache-2.0). Repo content in English, except the user-facing docs that are also kept in Russian: `README.ru.md` and `docs/ru/` (DEC-037); change `README.md` and the Russian pages together.
 
 ## Layout
 - `research/` — open research history: facts, sources, candidates, ideas, decisions (ADR), questions, log.

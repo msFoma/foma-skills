@@ -22,6 +22,10 @@ Thanks for helping. foma-skills stays small on purpose: a skill earns its place 
 
 5. Describe in the pull request how you tested triggering and the task (see §8 of the standard).
 
+## Russian docs
+
+The user-facing docs also exist in Russian (`README.ru.md`, `docs/ru/`). If your change alters what a user sees (a skill's behaviour, install steps, numbers), update both languages or say in the pull request that the Russian side needs an update.
+
 ## License
 
 By contributing you agree that your work is licensed under Apache-2.0 (`LICENSE`).
