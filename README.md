@@ -86,8 +86,6 @@ flowchart LR
     class E,F end1
 ```
 
-<img src="docs/assets/divider.jpg" alt="" width="100%">
-
 <a id="skills"></a>
 ## 🧰 All 17 skills
 
@@ -135,16 +133,11 @@ Say something like the example in the third column. **auto** = fires on its own 
 | `writing-skills` | auto | "Write a skill for our release routine" | Writes or tightens a skill: short description, tight steps, tested triggers. |
 | `tuning` | **manual** | `/foma-skills:tuning` | Reads the usage log and saved test runs, finds skills that never fire or keep failing, proposes the smallest fix. Spends tokens only on flagged skills. |
 
-<details>
-<summary><b>🕸️ How the skills connect</b> (diagram)</summary>
+### 🕸️ How the skills connect
 
 ![Skill map: five groups of skills, the CLAUDE.md contract, the helper agents and who calls whom](docs/assets/charts/skill-map.en.svg)
 
 Interactive version: [`docs/graph.html`](docs/graph.html).
-
-</details>
-
-<img src="docs/assets/divider.jpg" alt="" width="100%">
 
 <a id="safe"></a>
 ## 🛡️ Safe by design
@@ -180,8 +173,6 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 | `verifying` (evidence before "done") | Fired on 7–8 of 10; no gain on short tasks; a one-line CLAUDE.md rule did as well (6/6) on the long task | Rules in `implementer`/`reviewer` + one CLAUDE.md line |
 
 </details>
-
-<img src="docs/assets/divider.jpg" alt="" width="100%">
 
 <a id="docs"></a>
 ## 📚 Documentation
