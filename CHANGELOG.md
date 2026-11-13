@@ -11,6 +11,7 @@ All notable changes to this project are listed here. The format follows [Keep a 
 ### Changed
 - Decisions and the test ledger moved to `docs/engineering/`; the maintainer's private research notes are no longer part of the repository.
 - The art generators moved to `scripts/assets/`.
+- The three agents are called templates (the plugin installs none itself; `groundwork` copies them into a project). The install notes now say how to try the pack in one project, that Windows needs Git Bash and that `.scratch/` belongs in `.gitignore`.
 
 ## [0.1.0] - 2026-11-13
 
