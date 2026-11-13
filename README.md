@@ -68,23 +68,7 @@ You can also call any skill by hand: `/foma-skills:planning`, `/foma-skills:tidy
 <a id="how-a-task-flows"></a>
 ## <img src="docs/assets/icons/task-flow.svg" width="28" height="28" align="absmiddle" alt=""> How a task flows
 
-```mermaid
-flowchart LR
-    A(["your idea"]) --> B["<b>shaping</b><br/>questions → spec"]
-    B --> C["<b>planning</b><br/>tasks + a model each"]
-    C --> D["<b>executing</b><br/>build · check · review"]
-    D --> E["<b>committing</b><br/>small commits"]
-    E --> F["<b>handoff</b><br/>note for next time"]
-    D -.-> G["tdd · debugging · reviewing · refactoring"]
-    classDef idea fill:#fff7e0,stroke:#e0a54a,color:#333
-    classDef proc fill:#e8f0fa,stroke:#7fa9d6,color:#222
-    classDef meth fill:#e4f5f0,stroke:#6cc0ad,color:#222
-    classDef end1 fill:#f1f2f4,stroke:#a3adba,color:#222
-    class A idea
-    class B,C,D proc
-    class G meth
-    class E,F end1
-```
+![A typical task: your idea goes through shaping, planning, executing, committing and handoff; executing uses tdd, debugging and reviewing on the way](docs/assets/charts/task-flow.en.svg)
 
 <a id="skills"></a>
 ## <img src="docs/assets/icons/all-skills.svg" width="28" height="28" align="absmiddle" alt=""> All 17 skills

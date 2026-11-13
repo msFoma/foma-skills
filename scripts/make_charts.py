@@ -537,6 +537,66 @@ def propose_first(lang):
     return s + "</g></svg>\n"
 
 
+TF = {  # the task-flow chart: (title, subtitle) per card; the first card is the user's idea
+    "en": {"title": "How a task flows", "sub": "A typical task: each card is one skill. The green box is what executing uses on the way.",
+           "cards": [("your idea", ""), ("shaping", "questions → spec"), ("planning", "tasks + a model each"),
+                     ("executing", "build · check · review"), ("committing", "small commits"), ("handoff", "note for next time")],
+           "via": "used on the way", "methods": "tdd · debugging · reviewing"},
+    "ru": {"title": "Как идёт задача", "sub": "Типичная задача: каждая карточка — один скилл. Зелёная плашка — то, что executing использует по ходу работы.",
+           "cards": [("ваша идея", ""), ("shaping", "вопросы → спека"), ("planning", "задачи + модель на каждую"),
+                     ("executing", "сборка · проверка · ревью"), ("committing", "маленькие коммиты"), ("handoff", "заметка на завтра")],
+           "via": "по ходу работы", "methods": "tdd · debugging · reviewing"},
+}
+
+
+def task_flow(lang):
+    tf = TF[lang]
+    w, h, cy = 1280, 452, 250
+    cw, ch, gap = 164, 98, 40
+    x0 = (w - (6 * cw + 5 * gap)) / 2
+    cols = [BRAND, COL["proc"], COL["proc"], COL["proc"], COL["atom"], COL["setup"]]
+    s = frame(w, h, tf["title"], tf["sub"], 41, keep_out=[(32, cy - 70, w - 32, h - 30)])
+    s += "<defs>" + "".join(
+        f'<linearGradient id="tc{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.22"/><stop offset="1" stop-color="{c}" stop-opacity="0.05"/></linearGradient>'
+        for i, c in enumerate(cols)) + "</defs>"
+    # a 10 s round: the six cards light up in turn, a pulse runs along each arrow, the dashed branch flows down
+    s += motion(".fb{transform-box:fill-box;transform-origin:center;animation:bump 10s ease-in-out infinite}"
+                "@keyframes bump{0%,14%,100%{transform:scale(1)}5%{transform:scale(1.06)}}"
+                ".ap{animation:ap 10s ease-in-out infinite}@keyframes ap{0%{stroke-dashoffset:26}9%,100%{stroke-dashoffset:-106}}"
+                ".df{animation:df 1.8s linear infinite}@keyframes df{to{stroke-dashoffset:-11}}")
+    xs = [x0 + i * (cw + gap) for i in range(6)]
+    step = 1.4
+    for i in range(5):
+        d = f"M{n(xs[i]+cw+6)},{cy} L{n(xs[i+1]-8)},{cy}"
+        s += (f'<path d="{d}" stroke="#8d847d" stroke-width="2" fill="none" marker-end="url(#{marker_id("#8d847d")})"/>'
+              f'<path class="ap" style="animation-delay:{0.8 + i * step + 0.5:.1f}s" d="{d}" pathLength="100" stroke="#fff4ea" stroke-width="2.6" '
+              'stroke-linecap="round" stroke-dasharray="20 400" stroke-dashoffset="26" fill="none"/>')
+    for i, (name, sub) in enumerate(tf["cards"]):
+        c, x = cols[i], xs[i]
+        delay = f' style="animation-delay:{0.8 + i * step:.1f}s"'
+        rx = ch / 2 if i == 0 else 16
+        s += (f'<g class="fb"{delay}><rect x="{n(x)}" y="{cy-ch/2}" width="{cw}" height="{ch}" rx="{rx}" fill="none" stroke="{c}" stroke-width="5" stroke-opacity="0.28" filter="url(#soft)"/>'
+              f'<rect x="{n(x)}" y="{cy-ch/2}" width="{cw}" height="{ch}" rx="{rx}" fill="#0d0b12"/>'
+              f'<rect x="{n(x)}" y="{cy-ch/2}" width="{cw}" height="{ch}" rx="{rx}" fill="url(#tc{i})" stroke="{c}" stroke-width="1.8"/>')
+        if sub:
+            s += f'<text x="{n(x+cw/2)}" y="{cy-10}" text-anchor="middle" font-size="19" font-weight="700" fill="{INK}">{esc(fit(name, 19, cw - 20, True))}</text>'
+            for j, ln in enumerate(wrap(sub, 13.5, cw - 8)):
+                s += f'<text x="{n(x+cw/2)}" y="{cy+14+17*j}" text-anchor="middle" font-size="13.5" fill="{MUTED}">{esc(ln)}</text>'
+        else:
+            s += f'<text x="{n(x+cw/2)}" y="{cy+6}" text-anchor="middle" font-size="19" font-weight="700" fill="{BRAND}">{esc(fit(name, 19, cw - 20, True))}</text>'
+        s += "</g>"
+    # what executing uses on the way: a dashed branch down to the methods box
+    ex = xs[3] + cw / 2
+    by, bw, bh = cy + ch / 2 + 62, 330, 46
+    c = COL["meth"]
+    s += (f'<path class="df" d="M{n(ex)},{cy+ch/2+4} L{n(ex)},{by-4}" fill="none" stroke="{c}" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#{marker_id(c)})"/>'
+          f'<text x="{n(ex+14)}" y="{n(cy+ch/2+36)}" font-size="13" font-weight="700" fill="{c}">{esc(tf["via"])}</text>'
+          f'<rect x="{n(ex-bw/2)}" y="{by}" width="{bw}" height="{bh}" rx="14" fill="#0d0b12"/>'
+          f'<rect x="{n(ex-bw/2)}" y="{by}" width="{bw}" height="{bh}" rx="14" fill="{c}" fill-opacity="0.1" stroke="{c}" stroke-width="1.8"/>'
+          f'<text x="{n(ex)}" y="{by+29}" text-anchor="middle" font-size="17" font-weight="700" fill="{INK}">{esc(tf["methods"])}</text>')
+    return s + "</g></svg>\n"
+
+
 # --- hero: the clean Mars plate (embedded JPEG) with the vector mark, wordmark and motion on top ---
 def plate_jpeg():
     """The plate as a small JPEG, or None (plate not on this machine, or no ImageMagick)."""
@@ -617,7 +677,7 @@ def main():
         refresh(args.refresh)
     OUT.mkdir(parents=True, exist_ok=True)
     for lang in ("en", "ru"):
-        for name, fn in (("token-cost", token_cost), ("skill-map", skill_map), ("propose-first", propose_first)):
+        for name, fn in (("token-cost", token_cost), ("skill-map", skill_map), ("propose-first", propose_first), ("task-flow", task_flow)):
             (OUT / f"{name}.{lang}.svg").write_text(fn(lang))
     print("wrote", len(list(OUT.glob("*.svg"))), "svg files")
     jpeg = plate_jpeg()

@@ -67,23 +67,7 @@ Claude:  [handoff] сохраняет короткую заметку; нова�
 
 ## <img src="docs/assets/icons/task-flow.svg" width="28" height="28" align="absmiddle" alt=""> Как проходит задача
 
-```mermaid
-flowchart LR
-    A(["ваша идея"]) --> B["<b>shaping</b><br/>вопросы → спека"]
-    B --> C["<b>planning</b><br/>задачи + модель на каждую"]
-    C --> D["<b>executing</b><br/>сделать · проверить · ревью"]
-    D --> E["<b>committing</b><br/>маленькие коммиты"]
-    E --> F["<b>handoff</b><br/>заметка на завтра"]
-    D -.-> G["tdd · debugging · reviewing · refactoring"]
-    classDef idea fill:#fff7e0,stroke:#e0a54a,color:#333
-    classDef proc fill:#e8f0fa,stroke:#7fa9d6,color:#222
-    classDef meth fill:#e4f5f0,stroke:#6cc0ad,color:#222
-    classDef end1 fill:#f1f2f4,stroke:#a3adba,color:#222
-    class A idea
-    class B,C,D proc
-    class G meth
-    class E,F end1
-```
+![Типичная задача: идея проходит через shaping, planning, executing, committing и handoff; executing по ходу работы использует tdd, debugging и reviewing](docs/assets/charts/task-flow.ru.svg)
 
 <a id="skills"></a>
 ## <img src="docs/assets/icons/all-skills.svg" width="28" height="28" align="absmiddle" alt=""> Все скиллы
