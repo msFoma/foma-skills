@@ -23,7 +23,7 @@ jobs:
         run: claude plugin validate plugins/foma-skills --strict
       - name: Skill checks (lite standard §9)
         run: |
-          python3 -m unittest scripts/test_check_skills.py scripts/test_harness.py
+          python3 -m unittest scripts/test_check_skills.py scripts/test_harness.py scripts/test_assets.py
           python3 scripts/check_skills.py
       - name: Plugin LICENSE matches root
         run: cmp LICENSE plugins/foma-skills/LICENSE
