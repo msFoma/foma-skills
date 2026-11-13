@@ -6,9 +6,15 @@ Writes docs/assets/charts/{token-cost,skill-map,propose-first}.{en,ru}.svg.
 Token numbers come from docs/assets/charts/tokens.json, captured from Claude Code's own
 `claude plugin details foma-skills` (run in a project where the plugin is installed):
 --refresh PROJECT_DIR re-captures them. The skill map mirrors docs/graph.html.
+
+Style follows the brand art (docs/assets/banner.jpg): black space, a glowing Mars limb along the
+bottom edge, a four-point star flare, the orange starburst mark. Everything is pure vector and
+self-contained (GitHub serves README SVGs through <img>: no fonts, scripts or external refs).
 """
 import argparse
 import json
+import math
+import random
 import re
 import subprocess
 import sys
@@ -19,9 +25,11 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs/assets/charts"
 DATA = OUT / "tokens.json"
 
-COL = {"setup": "#e0a54a", "proc": "#7fa9d6", "meth": "#6cc0ad", "atom": "#a3adba", "meta": "#d98a9c", "agent": "#d98a9c", "hook": "#a3adba"}
-BRAND = "#e8714a"
-INK, MUTED = "#ece8e1", "#a29c92"
+# Group colours double as the legend, so they stay far apart in hue; tuned to sit on the warm palette.
+COL = {"setup": "#f2b44f", "proc": "#86b2f2", "meth": "#5fceb4", "atom": "#bcb2a8", "meta": "#f08fb4", "agent": "#f08fb4", "hook": "#bcb2a8"}
+BRAND, HOT, EMBER = "#e8714a", "#ff8a4c", "#7a2e14"
+INK, MUTED, SPACE = "#f4ece6", "#b3a9a1", "#0b0a10"
+INVOKE = "#f4ece6"  # "when it fires" series: a warm-white comet trail
 FONT = "-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 GROUP = {"groundwork": "setup", "tidying": "setup", "learning": "setup", "skill-finder": "setup", "handoff": "setup",
          "shaping": "proc", "design-interview": "proc", "planning": "proc", "executing": "proc",
@@ -37,6 +45,7 @@ T = {  # all visible text, per language
         "map_title": "Skill map", "map_sub": "who calls whom. Solid arrows = calls, dashed = signals.",
         "bands": {"setup": "setup & upkeep", "proc": "processes", "meth": "methods", "atom": "atomic", "agent": "agents"},
         "contract": "CLAUDE.md contract  ·  Commands  ·  Where things live  ·  Workflow",
+        "hub": "executing calls each of these",
         "flow_title": "Propose first, write after your ok", "flow_sub": "The rule every skill that changes files follows.",
         "steps": [("You ask", "“Clean up the repo”"), ("Skill reads", "only what it needs"), ("Shows the change", "file, diff, what goes"),
                   ("You say “ok”", "per item, nothing before"), ("Then it writes", "reversible: .trash/, git rm"), ("Report", "ends with “Not checked: …”")],
@@ -57,6 +66,7 @@ T = {  # all visible text, per language
         "map_title": "Карта скиллов", "map_sub": "кто кого вызывает. Сплошные стрелки — вызов, пунктир — сигнал.",
         "bands": {"setup": "подготовка", "proc": "процессы", "meth": "методы", "atom": "атомарные", "agent": "агенты"},
         "contract": "Договор в CLAUDE.md  ·  Команды  ·  Где что лежит  ·  Порядок работы",
+        "hub": "executing вызывает каждый из них",
         "flow_title": "Сначала предлагает, пишет после вашего «ок»", "flow_sub": "Правило каждого скилла, который меняет файлы.",
         "steps": [("Вы просите", "«Убери лишнее»"), ("Скилл читает", "только нужное"), ("Показывает изменение", "файл, diff, что уйдёт"),
                   ("Вы говорите «ок»", "по каждому пункту"), ("Только потом пишет", "обратимо: .trash/, git rm"), ("Отчёт", "в конце «Не проверено: …»")],
@@ -71,19 +81,138 @@ T = {  # all visible text, per language
     },
 }
 
-
-def head(w, h, title):
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-label="{esc(title)}">\n'
-            f'<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#15141c"/><stop offset="0.6" stop-color="#1b1a28"/><stop offset="1" stop-color="#14202a"/></linearGradient>'
-            f'<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8a8579"/></marker></defs>\n'
-            f'<rect width="{w}" height="{h}" rx="20" fill="url(#bg)"/><rect x="1" y="1" width="{w-2}" height="{h-2}" rx="19" fill="none" stroke="#fff" stroke-opacity="0.08"/>\n'
-            f'<g font-family="{FONT}">\n')
+# --- text metrics: a rough Helvetica-like width table, used to keep >=10% slack in every text box ---
+_W = {**dict.fromkeys("ijl|'", 222), **dict.fromkeys("ftI!.,:;/ ·[]\u00a0", 278), **dict.fromkeys("r-()“”\"", 333),
+      **dict.fromkeys("cksvxyzJ", 500), **dict.fromkeys("mM", 833), "w": 722, "W": 944, "…": 1000, "→": 1000,
+      "—": 1000, "–": 556, "≈": 584, "+": 584, "~": 584, "=": 584, "«": 556, "»": 556, "&": 667}
+SLACK = 1.1
 
 
-def title_block(t, sub, w):
-    return (f'<text x="48" y="58" font-size="30" font-weight="800" fill="{INK}">{esc(t)}</text>'
-            f'<text x="48" y="88" font-size="16" fill="{MUTED}">{esc(sub)}</text>'
-            f'<rect x="48" y="104" width="64" height="4" rx="2" fill="{BRAND}"/>\n')
+def tw(s, size, bold=False):
+    """Estimated rendered width of s (px). Errs wide: the system font stack varies by OS."""
+    total = 0
+    for ch in s:
+        if ch in _W:
+            w = _W[ch]
+        elif "а" <= ch.lower() <= "я" or ch in "ёЁ":
+            w = 720 if ch.isupper() else (800 if ch in "жмшщыюф" else 570)
+        else:
+            w = 700 if ch.isupper() else 556
+        total += w
+    return total / 1000 * size * (1.1 if bold else 1.0) * 1.05
+
+
+def fit(s, size, maxw, bold=False):
+    if tw(s, size, bold) * SLACK > maxw:
+        sys.exit(f"text too wide for its box ({tw(s, size, bold):.0f}px*{SLACK} > {maxw:.0f}px): {s!r}")
+    return s
+
+
+def wrap(s, size, maxw, bold=False):
+    """Greedy word wrap; never breaks inside a quotation."""
+    s = re.sub(r"[«“][^»”]*[»”]", lambda m: m.group(0).replace(" ", "\u00a0"), s)
+    lines, cur = [], ""
+    for word in s.split(" "):
+        cand = f"{cur} {word}" if cur else word
+        if cur and tw(cand, size, bold) * SLACK > maxw:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = cand
+    lines.append(cur)
+    for ln in lines:
+        fit(ln, size, maxw, bold)
+    return [ln.replace("\u00a0", " ") for ln in lines]
+
+
+def n(v):
+    return f"{v:.1f}".rstrip("0").rstrip(".")
+
+
+# --- shared frame: space background, nebula, stars, comet arc, star flare, Mars limb, header ---
+MARKER_COLOURS = sorted(set(COL.values()) | {BRAND, "#8d847d"})
+
+
+def marker_id(c):
+    return "ar" + c.lstrip("#")
+
+
+def frame(w, h, title, sub, seed, keep_out=()):
+    rnd = random.Random(seed)
+    pcx, R = w * 0.56, w * 1.4
+    crest = h - 46
+    pcy = crest + R
+    fx, fy = w - 118, 60
+    l1, l2, up, down = 330, 118, 60, 58
+    s = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-label="{esc(title)}">\n'
+         f'<title>{esc(title)}</title>\n<defs>'
+         f'<clipPath id="card"><rect width="{w}" height="{h}" rx="22"/></clipPath>'
+         f'<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c0a12"/><stop offset="1" stop-color="#050508"/></linearGradient>'
+         f'<radialGradient id="neb"><stop offset="0" stop-color="{BRAND}" stop-opacity="0.2"/><stop offset="0.5" stop-color="{BRAND}" stop-opacity="0.06"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></radialGradient>'
+         f'<radialGradient id="neb2"><stop offset="0" stop-color="#6f74b8" stop-opacity="0.13"/><stop offset="1" stop-color="#6f74b8" stop-opacity="0"/></radialGradient>'
+         f'<radialGradient id="planet" gradientUnits="userSpaceOnUse" cx="{n(w*0.74)}" cy="{crest}" r="{n(w*0.5)}"><stop offset="0" stop-color="#5a2410"/><stop offset="0.45" stop-color="#2a120a"/><stop offset="1" stop-color="#0d0807"/></radialGradient>'
+         f'<linearGradient id="limb" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="{w}" y2="0"><stop offset="0.2" stop-color="{BRAND}" stop-opacity="0"/><stop offset="0.42" stop-color="{BRAND}" stop-opacity="0.7"/><stop offset="0.74" stop-color="#ffd2ad"/><stop offset="0.9" stop-color="{HOT}" stop-opacity="0.6"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></linearGradient>'
+         f'<radialGradient id="glint"><stop offset="0" stop-color="#ffe2c8" stop-opacity="0.95"/><stop offset="0.3" stop-color="{HOT}" stop-opacity="0.45"/><stop offset="1" stop-color="{HOT}" stop-opacity="0"/></radialGradient>'
+         f'<linearGradient id="rayh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd2b0" stop-opacity="0"/><stop offset="{n(l1/(l1+l2))}" stop-color="#fff1e4"/><stop offset="1" stop-color="#ffd2b0" stop-opacity="0"/></linearGradient>'
+         f'<linearGradient id="rayv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd2b0" stop-opacity="0"/><stop offset="{n(up/(up+down))}" stop-color="#fff1e4"/><stop offset="1" stop-color="#ffd2b0" stop-opacity="0"/></linearGradient>'
+         f'<radialGradient id="core"><stop offset="0" stop-color="#fff8f0"/><stop offset="0.18" stop-color="#ffc08f" stop-opacity="0.85"/><stop offset="0.5" stop-color="{BRAND}" stop-opacity="0.25"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></radialGradient>'
+         f'<linearGradient id="arc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{BRAND}" stop-opacity="0"/><stop offset="0.6" stop-color="#f3a27c" stop-opacity="0.5"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0"/></linearGradient>'
+         f'<filter id="glow" filterUnits="userSpaceOnUse" x="0" y="0" width="{w}" height="{h}"><feGaussianBlur stdDeviation="3"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+         f'<filter id="soft" filterUnits="userSpaceOnUse" x="0" y="0" width="{w}" height="{h}"><feGaussianBlur stdDeviation="6"/></filter>')
+    for c in MARKER_COLOURS:
+        s += (f'<marker id="{marker_id(c)}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">'
+              f'<path d="M0,0.5 L10,5 L0,9.5 z" fill="{c}"/></marker>')
+    s += '</defs>\n<g clip-path="url(#card)">'
+    s += (f'<rect width="{w}" height="{h}" fill="url(#bg)"/>'
+          f'<ellipse cx="{n(w*0.05)}" cy="0" rx="{n(w*0.42)}" ry="{n(h*0.32)}" fill="url(#neb)"/>'
+          f'<ellipse cx="{n(w*0.86)}" cy="{n(h*0.08)}" rx="{n(w*0.34)}" ry="{n(h*0.3)}" fill="url(#neb2)"/>'
+          f'<ellipse cx="{n(w*0.66)}" cy="{h}" rx="{n(w*0.62)}" ry="{n(min(h*0.3, 220))}" fill="url(#neb)"/>')
+    # star field (deterministic), thinned out behind the data
+    stars = []
+    for _ in range(int(w * h / 6500)):
+        x, y = rnd.uniform(8, w - 8), rnd.uniform(8, h - 8)
+        r = rnd.choice((0.45, 0.6, 0.6, 0.8, 0.8, 1.0, 1.3))
+        op = rnd.uniform(0.25, 0.75)
+        if any(a <= x <= c and b <= y <= d for a, b, c, d in keep_out):
+            op *= 0.35
+        stars.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="{rnd.choice((INK, INK, "#ffd6bf", "#c9d3ff"))}" fill-opacity="{op:.2f}"/>')
+    s += "".join(stars)
+    # comet arc through the top-right corner
+    s += f'<path d="M{n(w*0.4)},-10 Q{n(w*0.8)},10 {w+10},{n(min(h*0.26, 132))}" fill="none" stroke="url(#arc)" stroke-width="1"/>'
+    # four-point star flare
+    s += (f'<circle cx="{fx}" cy="{fy}" r="40" fill="url(#core)" fill-opacity="0.55"/>'
+          f'<polygon points="{fx-l1},{fy} {fx},{fy-1.4} {fx+l2},{fy} {fx},{fy+1.4}" fill="url(#rayh)"/>'
+          f'<polygon points="{fx},{fy-up} {fx+1.4},{fy} {fx},{fy+down} {fx-1.4},{fy}" fill="url(#rayv)"/>'
+          f'<circle cx="{fx}" cy="{fy}" r="9" fill="url(#core)"/><circle cx="{fx}" cy="{fy}" r="2.2" fill="#fffaf4"/>')
+    # Mars limb along the bottom edge
+    gx = w * 0.74
+    gy = pcy - math.sqrt(R * R - (gx - pcx) ** 2)
+    s += (f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="url(#planet)"/>'
+          f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="none" stroke="{HOT}" stroke-width="16" stroke-opacity="0.42" filter="url(#soft)"/>'
+          f'<circle cx="{n(pcx)}" cy="{n(pcy)}" r="{n(R)}" fill="none" stroke="url(#limb)" stroke-width="2"/>'
+          f'<ellipse cx="{n(gx)}" cy="{n(gy)}" rx="230" ry="22" fill="url(#glint)"/>')
+    s += (f'</g><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="21.5" fill="none" stroke="{INK}" stroke-opacity="0.1"/>\n'
+          f'<g font-family="{FONT}">\n')
+    # header: starburst mark | eyebrow, title, subtitle
+    s += starburst(64, 82, 1.0)
+    s += (f'<line x1="106" y1="54" x2="106" y2="110" stroke="{INK}" stroke-opacity="0.28"/>'
+          f'<text x="124" y="56" font-size="12" font-weight="700" letter-spacing="3" fill="{BRAND}">FOMA SKILLS</text>'
+          f'<text x="124" y="90" font-size="30" font-weight="800" fill="{INK}">{esc(fit(title, 30, w - 124 - 150, True))}</text>'
+          f'<text x="124" y="117" font-size="16" fill="{MUTED}">{esc(fit(sub, 16, w - 124 - 48))}</text>\n')
+    return s
+
+
+RAY_JITTER = [(-3, 1), (2, -1), (-1, 2), (3, 0), (-2, -2), (1, 1), (2, 0), (-3, 2), (1, -1), (-1, 1), (3, -2), (-2, 0)]
+
+
+def starburst(cx, cy, k):
+    """The brand mark: twelve rounded rays, slightly uneven like the hand-drawn logo."""
+    rays = ""
+    for i, (da, dl) in enumerate(RAY_JITTER):
+        a = math.radians(i * 30 + da - 90)
+        r1, r2 = 6 * k, (21 + dl) * k
+        rays += f'<line x1="{n(cx+r1*math.cos(a))}" y1="{n(cy+r1*math.sin(a))}" x2="{n(cx+r2*math.cos(a))}" y2="{n(cy+r2*math.sin(a))}"/>'
+    return (f'<g stroke="{BRAND}" stroke-width="{n(5.2*k)}" stroke-linecap="round" filter="url(#glow)">{rays}</g>')
 
 
 def parse_k(s):
@@ -103,126 +232,229 @@ def refresh(project):
     DATA.write_text(json.dumps({"always_total": int(total.group(1).replace(",", "")), "skills": rows}, indent=2) + "\n")
 
 
-def kfmt(n, lang):
-    s = f"{n/1000:.1f}k".replace(".0k", "k") if n >= 1000 else str(n)
+def kfmt(n_, lang):
+    s = f"{n_/1000:.1f}k".replace(".0k", "k") if n_ >= 1000 else str(n_)
     return s.replace(".", ",") if lang == "ru" else s
 
 
 def token_cost(lang):
     d, t = json.loads(DATA.read_text()), T[lang]
     rows = sorted(d["skills"].items(), key=lambda kv: -kv[1]["invoke"])
-    row_h, y0, bx, scale = 34, 190, 330, 780 / 1500
-    h = y0 + row_h * len(rows) + 90
-    s = head(1280, h, t["cost_title"]) + title_block(t["cost_title"], t["cost_sub"], 1280)
-    # legend
-    s += (f'<rect x="760" y="46" width="14" height="14" rx="3" fill="{BRAND}"/><text x="782" y="58" font-size="14" fill="{INK}">{esc(t["always"])}</text>'
-          f'<rect x="760" y="70" width="14" height="14" rx="3" fill="#8fb8e6"/><text x="782" y="82" font-size="14" fill="{INK}">{esc(t["invoke"])}</text>')
-    # chips
-    chips = [(t["chip1"], "#e0a54a", 130), (t["chip2"], BRAND, 238), (t["chip3"], "#8fb8e6", 262)]
+    w, row_h, y0, bx, scale = 1280, 34, 222, 300, 840 / 1500
+    y1 = y0 + row_h * len(rows)
+    h = y1 + 146
+    s = frame(w, h, t["cost_title"], t["cost_sub"], 11, keep_out=[(40, y0 - 10, w - 40, y1 + 30)])
+    s += ('<defs><linearGradient id="gal" x1="0" y1="0" x2="1" y2="0">'
+          f'<stop offset="0" stop-color="{EMBER}"/><stop offset="0.5" stop-color="{BRAND}"/><stop offset="1" stop-color="{HOT}"/></linearGradient>'
+          '<linearGradient id="ginv" x1="0" y1="0" x2="1" y2="0">'
+          f'<stop offset="0" stop-color="{INVOKE}" stop-opacity="0.08"/><stop offset="0.7" stop-color="{INVOKE}" stop-opacity="0.5"/><stop offset="1" stop-color="{INVOKE}" stop-opacity="0.95"/></linearGradient></defs>')
+    # chips (left) and legend (right) on one line
+    cy = 148
     x = 48
-    for label, c, w in chips:
-        s += (f'<rect x="{x}" y="128" width="{w}" height="34" rx="17" fill="{c}" fill-opacity="0.15" stroke="{c}" stroke-opacity="0.7"/>'
-              f'<text x="{x+w/2}" y="150" text-anchor="middle" font-size="15" font-weight="600" fill="{INK}">{esc(label)}</text>')
-        x += w + 12
+    for label, c in ((t["chip1"], COL["atom"]), (t["chip2"], BRAND), (t["chip3"], INVOKE)):
+        cw = tw(label, 15, True) * SLACK + 34
+        s += (f'<rect x="{n(x)}" y="{cy}" width="{n(cw)}" height="34" rx="17" fill="{c}" fill-opacity="0.1" stroke="{c}" stroke-opacity="0.6"/>'
+              f'<text x="{n(x+cw/2)}" y="{cy+22}" text-anchor="middle" font-size="15" font-weight="600" fill="{INK}">{esc(label)}</text>')
+        x += cw + 12
+    lw = max(tw(t["always"], 14), tw(t["invoke"], 14)) * SLACK
+    lx = w - 48 - lw - 34
+    if lx < x + 20:
+        sys.exit("token chart: chips run into the legend")
+    s += (f'<rect x="{n(lx)}" y="{cy+5}" width="24" height="7" rx="3.5" fill="url(#gal)" filter="url(#glow)"/>'
+          f'<text x="{n(lx+34)}" y="{cy+13}" font-size="14" fill="{INK}">{esc(t["always"])}</text>'
+          f'<rect x="{n(lx)}" y="{cy+22}" width="24" height="9" rx="4.5" fill="url(#ginv)"/><circle cx="{n(lx+21)}" cy="{cy+26.5}" r="3.4" fill="#fffaf4" filter="url(#glow)"/>'
+          f'<text x="{n(lx+34)}" y="{cy+31}" font-size="14" fill="{INK}">{esc(t["invoke"])}</text>')
+    # grid
+    for tick in (0, 500, 1000, 1500):
+        gx = bx + tick * scale
+        s += (f'<line x1="{n(gx)}" y1="{y0-6}" x2="{n(gx)}" y2="{y1+4}" stroke="{INK}" stroke-opacity="{0.16 if tick == 0 else 0.07}"{"" if tick == 0 else " stroke-dasharray=\"2 5\""}/>'
+              f'<text x="{n(gx)}" y="{y1+24}" text-anchor="middle" font-size="12" fill="{MUTED}">{kfmt(tick, lang) if tick else "0"}</text>')
+    # rows
     for i, (name, v) in enumerate(rows):
         y = y0 + i * row_h
         c = COL[GROUP[name]]
-        s += (f'<circle cx="62" cy="{y+14}" r="6" fill="{c}"/><text x="78" y="{y+19}" font-size="16" font-weight="600" fill="{INK}">{esc(name)}</text>'
-              f'<rect x="{bx}" y="{y+4}" width="{max(v["always"]*scale, 2):.0f}" height="10" rx="5" fill="{BRAND}"/>'
-              f'<text x="{bx+v["always"]*scale+10:.0f}" y="{y+13}" font-size="12" fill="{MUTED}">~{v["always"]}</text>'
-              f'<rect x="{bx}" y="{y+17}" width="{v["invoke"]*scale:.0f}" height="10" rx="5" fill="#8fb8e6"/>'
-              f'<text x="{bx+v["invoke"]*scale+10:.0f}" y="{y+26}" font-size="12" fill="{INK}">~{kfmt(v["invoke"], lang)}</text>')
-    for tick in (0, 500, 1000, 1500):
-        x = bx + tick * scale
-        s += (f'<line x1="{x:.0f}" y1="{y0-8}" x2="{x:.0f}" y2="{y0+row_h*len(rows)}" stroke="#fff" stroke-opacity="0.07"/>'
-              f'<text x="{x:.0f}" y="{y0+row_h*len(rows)+22}" text-anchor="middle" font-size="12" fill="{MUTED}">{kfmt(tick, lang) if tick else "0"}</text>')
-    s += f'<text x="48" y="{h-26}" font-size="13" fill="{MUTED}">{esc(t["cost_foot"])}</text>\n</g></svg>\n'
-    return s
+        if i % 2 == 0:
+            s += f'<rect x="40" y="{y}" width="{w-80}" height="{row_h}" rx="8" fill="{INK}" fill-opacity="0.028"/>'
+        aw, iw = max(v["always"] * scale, 3), v["invoke"] * scale
+        s += (f'<circle cx="60" cy="{y+17}" r="5" fill="{c}" filter="url(#glow)"/>'
+              f'<text x="76" y="{y+22}" font-size="15" font-weight="600" fill="{INK}">{esc(fit(name, 15, bx - 76 - 16, True))}</text>'
+              f'<rect x="{bx}" y="{y+7}" width="{n(aw)}" height="7" rx="3.5" fill="url(#gal)" filter="url(#glow)"/>'
+              f'<text x="{n(bx+aw+9)}" y="{y+14}" font-size="11.5" fill="{MUTED}">~{v["always"]}</text>'
+              f'<rect x="{bx}" y="{y+18}" width="{n(iw)}" height="9" rx="4.5" fill="url(#ginv)"/>'
+              f'<circle cx="{n(bx+iw-3.5)}" cy="{y+22.5}" r="3.4" fill="#fffaf4" filter="url(#glow)"/>'
+              f'<text x="{n(bx+iw+10)}" y="{y+27}" font-size="12.5" font-weight="600" fill="{INK}">~{kfmt(v["invoke"], lang)}</text>')
+    s += f'<text x="48" y="{y1+62}" font-size="13" fill="{MUTED}">{esc(fit(t["cost_foot"], 13, w - 96))}</text>\n'
+    return s + "</g></svg>\n"
 
 
-NODES = [  # id, name key, column x, row, group, width
-    ("hook", "hook", 310, "hook", "hook", 190), ("tune", "tuning", 1150, "hook", "meta", 150),
-    ("gw", "groundwork", 295, "setup", "setup", 150), ("tidy", "tidying", 465, "setup", "setup", 150), ("hand", "handoff", 635, "setup", "setup", 150),
-    ("learn", "learning", 805, "setup", "setup", 150), ("find", "skill-finder", 975, "setup", "setup", 150), ("ws", "writing-skills", 1145, "setup", "meta", 150),
-    ("shape", "shaping", 310, "proc", "proc", 190), ("design", "design-interview", 555, "proc", "proc", 190), ("plan", "planning", 800, "proc", "proc", 190), ("exec", "executing", 1045, "proc", "proc", 190),
-    ("dbg", "debugging", 430, "meth", "meth", 190), ("rev", "reviewing", 730, "meth", "meth", 190), ("ref", "refactoring", 1030, "meth", "meth", 190),
-    ("tdd", "tdd", 430, "atom", "atom", 190), ("com", "committing", 730, "atom", "atom", 190), ("doc", "documenting", 1030, "atom", "atom", 190),
-    ("impl", "implementer", 430, "agent", "agent", 190), ("expl", "explorer", 730, "agent", "agent", 190), ("rvw", "reviewer", 1030, "agent", "agent", 190),
+# --- skill map ---
+NODES = [  # id, name key, centre x, row, group, width
+    ("hook", "hook", 330, "hook", "hook", 210), ("tune", "tuning", 1160, "hook", "meta", 150),
+    ("gw", "groundwork", 290, "setup", "setup", 150), ("tidy", "tidying", 464, "setup", "setup", 150), ("hand", "handoff", 638, "setup", "setup", 150),
+    ("learn", "learning", 812, "setup", "setup", 150), ("find", "skill-finder", 986, "setup", "setup", 150), ("ws", "writing-skills", 1160, "setup", "meta", 150),
+    ("shape", "shaping", 330, "proc", "proc", 190), ("design", "design-interview", 560, "proc", "proc", 190), ("plan", "planning", 790, "proc", "proc", 190), ("exec", "executing", 1050, "proc", "proc", 190),
+    ("dbg", "debugging", 480, "meth", "meth", 200), ("ref", "refactoring", 750, "meth", "meth", 200), ("rev", "reviewing", 1020, "meth", "meth", 200),
+    ("doc", "documenting", 480, "atom", "atom", 200), ("tdd", "tdd", 750, "atom", "atom", 200), ("com", "committing", 1020, "atom", "atom", 200),
+    ("expl", "explorer", 480, "agent", "agent", 200), ("impl", "implementer", 750, "agent", "agent", 200), ("rvw", "reviewer", 1020, "agent", "agent", 200),
 ]
-ROWS = {"hook": 150, "setup": 222, "contract": 322, "proc": 432, "meth": 542, "atom": 662, "agent": 790}
+ROWS = {"hook": 180, "setup": 290, "contract": 380, "proc": 500, "meth": 630, "atom": 740, "agent": 850}
 EDGES = [("hook", "hand"), ("hook", "tune", "dash"), ("hand", "tidy", "dash"), ("hand", "learn", "dash"), ("shape", "plan", "dash"), ("design", "plan", "dash"),
          ("shape", "doc"), ("plan", "doc"), ("exec", "dbg"), ("exec", "rev"), ("exec", "ref"), ("exec", "tdd"), ("exec", "com"), ("exec", "doc"),
          ("exec", "impl"), ("exec", "rvw"), ("exec", "expl"), ("dbg", "tdd"), ("dbg", "expl"), ("ref", "tdd"), ("impl", "tdd"), ("rvw", "rev")]
+NH = 52
+CONTRACT = (215, 1235)  # x span of the contract bar
+PANEL = (290, 570, 1186, 902)  # every node executing calls sits in this panel
+
+
+def ortho(pts, r=12):
+    """Orthogonal polyline with rounded corners."""
+    d = f"M{n(pts[0][0])},{n(pts[0][1])}"
+    for (x0, y0), (x1, y1), (x2, y2) in zip(pts, pts[1:], pts[2:]):
+        la, lb = math.hypot(x1 - x0, y1 - y0), math.hypot(x2 - x1, y2 - y1)
+        rr = min(r, la / 2, lb / 2)
+        ax, ay = x1 + (x0 - x1) * rr / la, y1 + (y0 - y1) * rr / la
+        bx, by = x1 + (x2 - x1) * rr / lb, y1 + (y2 - y1) * rr / lb
+        d += f" L{n(ax)},{n(ay)} Q{n(x1)},{n(y1)} {n(bx)},{n(by)}"
+    return d + f" L{n(pts[-1][0])},{n(pts[-1][1])}"
+
+
+def routes(nd):
+    """Hand-routed edges: through the gaps and corridors, never across a node."""
+    def top(k, dx=0): return (nd[k]["x"] + dx, nd[k]["y"] - NH / 2)
+    def bot(k, dx=0): return (nd[k]["x"] + dx, nd[k]["y"] + NH / 2)
+    def lft(k): return (nd[k]["x"] - nd[k]["w"] / 2, nd[k]["y"])
+    def rgt(k): return (nd[k]["x"] + nd[k]["w"] / 2, nd[k]["y"])
+    ct = ROWS["contract"] - 22
+    lane = (bot("plan")[1] + PANEL[1]) / 2  # between the process row and the panel
+    gap_ma = (bot("dbg")[1] + top("tdd")[1]) / 2  # between methods and atomic
+    corr = (rgt("doc")[0] + lft("tdd")[0]) / 2  # between the first two columns
+    (hx, hy), (ax_, ay_) = bot("hook", 40), top("hand")
+    (sx, sy), (px_, py_) = top("shape", 40), top("plan", -40)
+    return {
+        ("hook", "hand"): f"M{n(hx)},{n(hy)} C{n(hx)},{n(hy+30)} {n(ax_)},{n(ay_-34)} {n(ax_)},{n(ay_)}",
+        ("hook", "tune"): ortho([rgt("hook"), lft("tune")]),
+        ("hand", "tidy"): ortho([lft("hand"), rgt("tidy")]),
+        ("hand", "learn"): ortho([rgt("hand"), lft("learn")]),
+        ("gw", "CONTRACT"): ortho([bot("gw"), (nd["gw"]["x"], ct)]),
+        ("learn", "CONTRACT"): ortho([bot("learn"), (nd["learn"]["x"], ct)]),
+        ("shape", "plan"): f"M{n(sx)},{n(sy)} C{n(sx)},{n(sy-44)} {n(px_)},{n(py_-44)} {n(px_)},{n(py_)}",
+        ("design", "plan"): ortho([rgt("design"), lft("plan")]),
+        ("shape", "doc"): ortho([bot("shape"), (nd["shape"]["x"], nd["doc"]["y"]), lft("doc")], 16),
+        ("plan", "doc"): ortho([bot("plan"), (nd["plan"]["x"], lane), (nd["shape"]["x"], lane), (nd["shape"]["x"], nd["doc"]["y"]), lft("doc")], 16),
+        ("dbg", "tdd"): ortho([bot("dbg", 40), (nd["dbg"]["x"] + 40, gap_ma), (nd["tdd"]["x"] - 40, gap_ma), top("tdd", -40)]),
+        ("dbg", "expl"): ortho([bot("dbg", 40), (nd["dbg"]["x"] + 40, gap_ma), (corr, gap_ma), (corr, nd["expl"]["y"]), rgt("expl")]),
+        ("ref", "tdd"): ortho([bot("ref"), top("tdd")]),
+        ("impl", "tdd"): ortho([top("impl"), bot("tdd")]),
+        ("rvw", "rev"): ortho([rgt("rvw"), (PANEL[2] - 34, nd["rvw"]["y"]), (PANEL[2] - 34, nd["rev"]["y"]), rgt("rev")]),
+        ("exec", "PANEL"): ortho([bot("exec"), (nd["exec"]["x"], PANEL[1])]),
+    }
+
+
+def node(nd, t):
+    c, key = COL[nd["g"]], nd["name"]
+    x, y, w = nd["x"] - nd["w"] / 2, nd["y"] - NH / 2, nd["w"]
+    rx = NH / 2 if nd["g"] == "agent" else 12
+    label = t["hooklabel"] if key == "hook" else key
+    dash = ' stroke-dasharray="5 4"' if key in ("hook", "tuning", "writing-skills") else ""
+    gid = "ng" + nd["g"]
+    return (f'<rect x="{n(x)}" y="{n(y)}" width="{w}" height="{NH}" rx="{n(rx)}" fill="none" stroke="{c}" stroke-width="5" stroke-opacity="0.32" filter="url(#soft)"/>'
+            f'<rect x="{n(x)}" y="{n(y)}" width="{w}" height="{NH}" rx="{n(rx)}" fill="#0d0b12"/>'
+            f'<rect x="{n(x)}" y="{n(y)}" width="{w}" height="{NH}" rx="{n(rx)}" fill="url(#{gid})" stroke="{c}" stroke-width="1.5"{dash}/>'
+            f'<text x="{n(nd["x"])}" y="{n(nd["y"]-3)}" text-anchor="middle" font-size="16" font-weight="700" fill="{INK}">{esc(fit(label, 16, w - 16, True))}</text>'
+            f'<text x="{n(nd["x"])}" y="{n(nd["y"]+15)}" text-anchor="middle" font-size="12.5" fill="{MUTED}">{esc(fit(t["sub"][key], 12.5, w - 16))}</text>')
 
 
 def skill_map(lang):
     t = T[lang]
-    n = {i: dict(name=nm, x=x, y=ROWS[r], g=g, w=w, h=52) for i, nm, x, r, g, w in NODES}
-    s = head(1280, 850, t["map_title"]) + title_block(t["map_title"], t["map_sub"], 1280)
-    # band labels
-    for key, row in (("setup", "setup"), ("proc", "proc"), ("meth", "meth"), ("atom", "atom"), ("agent", "agent")):
-        y = ROWS[row]
-        s += (f'<circle cx="62" cy="{y}" r="6" fill="{COL[key]}"/><text x="76" y="{y+5}" font-size="14" font-weight="600" fill="{COL[key]}">{esc(t["bands"][key])}</text>')
+    w, h = 1280, 990
+    nd = {i: dict(name=nm, x=x, y=ROWS[r], g=g, w=wd) for i, nm, x, r, g, wd in NODES}
+    s = frame(w, h, t["map_title"], t["map_sub"], 23, keep_out=[(200, 140, w - 30, PANEL[3] + 10)])
+    s += "<defs>" + "".join(
+        f'<linearGradient id="ng{g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c}" stop-opacity="0.2"/><stop offset="1" stop-color="{c}" stop-opacity="0.05"/></linearGradient>'
+        for g, c in COL.items()) + (
+        f'<linearGradient id="ctr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{BRAND}" stop-opacity="0.06"/><stop offset="0.5" stop-color="{BRAND}" stop-opacity="0.2"/><stop offset="1" stop-color="{BRAND}" stop-opacity="0.06"/></linearGradient></defs>')
+    # band labels: the colour legend
+    for key in ("setup", "proc", "meth", "atom", "agent"):
+        y = ROWS[key]
+        s += (f'<circle cx="56" cy="{y}" r="5" fill="{COL[key]}" filter="url(#glow)"/>'
+              f'<text x="70" y="{y+5}" font-size="14" font-weight="700" fill="{COL[key]}">{esc(fit(t["bands"][key], 14, 210 - 70, True))}</text>')
+    # panel of everything executing calls
+    px0, py0, px1, py1 = PANEL
+    s += f'<rect x="{px0}" y="{py0}" width="{px1-px0}" height="{py1-py0}" rx="18" fill="{COL["proc"]}" fill-opacity="0.035" stroke="{COL["proc"]}" stroke-opacity="0.45"/>'
+    hub_w = tw(t["hub"], 13, True) * SLACK
+    hx1 = nd["exec"]["x"] - 18
+    s += (f'<rect x="{n(hx1-hub_w-12)}" y="{py0-11}" width="{n(hub_w+24)}" height="22" rx="11" fill="{SPACE}" stroke="{COL["proc"]}" stroke-opacity="0.45"/>'
+          f'<text x="{n(hx1)}" y="{py0+4.5}" text-anchor="end" font-size="13" font-weight="700" fill="{COL["proc"]}">{esc(t["hub"])}</text>')
     # contract bar
     cy = ROWS["contract"]
-    s += (f'<rect x="220" y="{cy-24}" width="1020" height="48" rx="10" fill="#4d7c3a" fill-opacity="0.14" stroke="#92c27a" stroke-opacity="0.7"/>'
-          f'<text x="730" y="{cy+5}" text-anchor="middle" font-size="15" font-weight="600" fill="{INK}">{esc(t["contract"])}</text>')
-    # edges first
-    for e in EDGES + [("gw", "CONTRACT"), ("learn", "CONTRACT", "dash")]:
+    cx0, cx1 = CONTRACT
+    s += (f'<rect x="{cx0}" y="{cy-22}" width="{cx1-cx0}" height="44" rx="12" fill="none" stroke="{BRAND}" stroke-width="5" stroke-opacity="0.3" filter="url(#soft)"/>'
+          f'<rect x="{cx0}" y="{cy-22}" width="{cx1-cx0}" height="44" rx="12" fill="#0d0b12"/>'
+          f'<rect x="{cx0}" y="{cy-22}" width="{cx1-cx0}" height="44" rx="12" fill="url(#ctr)" stroke="{BRAND}" stroke-width="1.5"/>'
+          f'<text x="{(cx0+cx1)/2}" y="{cy+5}" text-anchor="middle" font-size="15" font-weight="600" fill="{INK}">{esc(fit(t["contract"], 15, cx1 - cx0 - 40, True))}</text>')
+    for k in nd:
+        s += node(nd[k], t)
+    # edges on top of the nodes so every arrowhead stays visible; executing's nine calls go to the panel
+    rt = routes(nd)
+    hub = {b for a, b, *_ in EDGES if a == "exec"}
+    inside = {k for k, v in nd.items() if v["g"] in ("meth", "atom", "agent")}
+    if hub != inside:
+        sys.exit(f"skill map: executing must call exactly the panel nodes ({sorted(hub ^ inside)})")
+    todo = [e for e in EDGES if e[0] != "exec"] + [("gw", "CONTRACT"), ("learn", "CONTRACT", "dash"), ("exec", "PANEL")]
+    for e in todo:
         a, b, style = e[0], e[1], (e[2] if len(e) > 2 else "solid")
-        sa = n[a]
-        c = COL[sa["g"]]
+        if (a, b) not in rt:
+            sys.exit(f"skill map: no route for {a} -> {b}")
+        c = COL[nd[a]["g"]]
         dash = ' stroke-dasharray="6 5"' if style == "dash" else ""
-        if b == "CONTRACT":
-            x1, y1, x2, y2 = sa["x"], sa["y"] + 26, sa["x"], cy - 24
-            d = f"M{x1},{y1} L{x2},{y2}"
-        else:
-            tb = n[b]
-            if sa["y"] == tb["y"]:
-                d = (f"M{sa['x']+sa['w']/2},{sa['y']} L{tb['x']-tb['w']/2},{tb['y']}" if tb["x"] > sa["x"]
-                     else f"M{sa['x']-sa['w']/2},{sa['y']} L{tb['x']+tb['w']/2},{tb['y']}")
-            else:
-                y1, y2 = sa["y"] + 26, tb["y"] - 26
-                m = (y1 + y2) / 2
-                d = f"M{sa['x']},{y1} C{sa['x']},{m} {tb['x']},{m} {tb['x']},{y2}"
-        s += f'<path d="{d}" fill="none" stroke="{c}" stroke-opacity="0.55" stroke-width="1.8"{dash} marker-end="url(#ar)"/>'
-    # nodes
-    for i, nd in n.items():
-        c = COL[nd["g"]]
-        key = nd["name"]
-        label = t["hooklabel"] if key == "hook" else key
-        dash = ' stroke-dasharray="5 4"' if key in ("hook", "tuning", "writing-skills") else ""
-        s += (f'<rect x="{nd["x"]-nd["w"]/2}" y="{nd["y"]-26}" width="{nd["w"]}" height="52" rx="12" fill="#1a1927"/>'
-              f'<rect x="{nd["x"]-nd["w"]/2}" y="{nd["y"]-26}" width="{nd["w"]}" height="52" rx="12" fill="{c}" fill-opacity="0.14" stroke="{c}" stroke-width="1.6"{dash}/>'
-              f'<text x="{nd["x"]}" y="{nd["y"]-2}" text-anchor="middle" font-size="16" font-weight="700" fill="{INK}">{esc(label)}</text>'
-              f'<text x="{nd["x"]}" y="{nd["y"]+16}" text-anchor="middle" font-size="12" fill="{MUTED}">{esc(t["sub"][key])}</text>')
-    s += f'<text x="740" y="{ROWS["hook"]-8}" text-anchor="middle" font-size="12" fill="{MUTED}">{esc(t["fire"])}</text>'
+        sw = 2.2 if b == "PANEL" else 1.8
+        s += f'<path d="{rt[(a, b)]}" fill="none" stroke="{c}" stroke-opacity="0.9" stroke-width="{sw}"{dash} marker-end="url(#{marker_id(c)})"/>'
+    fx = (nd["hook"]["x"] + nd["hook"]["w"] / 2 + nd["tune"]["x"] - nd["tune"]["w"] / 2) / 2
+    s += f'<text x="{n(fx)}" y="{ROWS["hook"]-9}" text-anchor="middle" font-size="12.5" fill="{MUTED}">{esc(t["fire"])}</text>'
     return s + "</g></svg>\n"
 
 
+# --- propose-first cycle ---
 def propose_first(lang):
     t = T[lang]
     steps = t["steps"]
-    w, h, n = 1280, 430, len(steps)
-    gap = (w - 96) / n
-    s = head(w, h, t["flow_title"]) + title_block(t["flow_title"], t["flow_sub"], w)
-    cy = 215
-    xs = [48 + gap * (i + 0.5) for i in range(n)]
-    cols = ["#a3adba", "#7fa9d6", "#e0a54a", BRAND, "#6cc0ad", "#d98a9c"]
-    for i in range(n - 1):
-        s += f'<path d="M{xs[i]+46},{cy} L{xs[i+1]-46},{cy}" stroke="#8a8579" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>'
-    for i, ((title, sub), x) in enumerate(zip(steps, xs)):
-        gate = i == 3
-        r = 44 if gate else 38
-        if gate:
-            s += f'<circle cx="{x}" cy="{cy}" r="58" fill="{BRAND}" fill-opacity="0.16"/>'
-        s += (f'<circle cx="{x}" cy="{cy}" r="{r}" fill="{cols[i]}"/>'
-              f'<text x="{x}" y="{cy+9}" text-anchor="middle" font-size="{30 if gate else 26}" font-weight="800" fill="#15141c">{i+1}</text>'
-              f'<text x="{x}" y="{cy+84}" text-anchor="middle" font-size="18" font-weight="700" fill="{INK}">{esc(title)}</text>'
-              f'<text x="{x}" y="{cy+108}" text-anchor="middle" font-size="14" fill="{MUTED}">{esc(sub)}</text>')
-    gx = xs[3]
-    s += (f'<path d="M{gx},{cy-60} C{gx},{cy-120} {xs[1]},{cy-120} {xs[1]},{cy-44}" fill="none" stroke="{BRAND}" stroke-opacity="0.8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>'
-          f'<text x="{(gx+xs[1])/2:.0f}" y="{cy-112}" text-anchor="middle" font-size="14" font-weight="600" fill="{BRAND}">{esc(t["noop"])}</text>')
+    w, k = 1280, len(steps)
+    col_w = (w - 64) / k
+    cy = 286
+    titles = [wrap(a, 18, col_w - 14, True) for a, _ in steps]
+    subs = [wrap(b, 14, col_w - 14) for _, b in steps]
+    ty = cy + 88
+    sy = ty + 21 * (max(map(len, titles)) - 1) + 25
+    h = int(sy + 18 * (max(map(len, subs)) - 1) + 108)
+    s = frame(w, h, t["flow_title"], t["flow_sub"], 37, keep_out=[(32, cy - 70, w - 32, sy + 30)])
+    cols = [COL["atom"], COL["proc"], COL["setup"], BRAND, COL["meth"], COL["meta"]]
+    s += "<defs>" + "".join(
+        f'<radialGradient id="orb{i}" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="{c}" stop-opacity="0.42"/><stop offset="1" stop-color="{c}" stop-opacity="0.06"/></radialGradient>'
+        for i, c in enumerate(cols)) + (
+        f'<radialGradient id="gate" cx="0.38" cy="0.32" r="0.75"><stop offset="0" stop-color="#ffc59a"/><stop offset="0.45" stop-color="{HOT}"/><stop offset="1" stop-color="{EMBER}"/></radialGradient></defs>')
+    xs = [32 + col_w * (i + 0.5) for i in range(k)]
+    rad = [46 if i == 3 else 38 for i in range(k)]
+    for i in range(k - 1):
+        s += f'<path d="M{n(xs[i]+rad[i]+10)},{cy} L{n(xs[i+1]-rad[i+1]-12)},{cy}" stroke="#8d847d" stroke-width="2" fill="none" marker-end="url(#{marker_id("#8d847d")})"/>'
+    for i, x in enumerate(xs):
+        c = cols[i]
+        if i == 3:  # the gate: nothing is written before this
+            s += (f'<circle cx="{n(x)}" cy="{cy}" r="64" fill="{BRAND}" fill-opacity="0.22" filter="url(#soft)"/>'
+                  f'<circle cx="{n(x)}" cy="{cy}" r="58" fill="none" stroke="{BRAND}" stroke-opacity="0.55" stroke-dasharray="2 5"/>'
+                  f'<circle cx="{n(x)}" cy="{cy}" r="{rad[i]}" fill="url(#gate)" filter="url(#glow)"/>'
+                  f'<text x="{n(x)}" y="{cy+11}" text-anchor="middle" font-size="31" font-weight="800" fill="#1c0b05">{i+1}</text>')
+        else:
+            s += (f'<circle cx="{n(x)}" cy="{cy}" r="{rad[i]}" fill="none" stroke="{c}" stroke-width="5" stroke-opacity="0.3" filter="url(#soft)"/>'
+                  f'<circle cx="{n(x)}" cy="{cy}" r="{rad[i]}" fill="#0d0b12"/>'
+                  f'<circle cx="{n(x)}" cy="{cy}" r="{rad[i]}" fill="url(#orb{i})" stroke="{c}" stroke-width="2"/>'
+                  f'<text x="{n(x)}" y="{cy+9}" text-anchor="middle" font-size="26" font-weight="800" fill="{c}">{i+1}</text>')
+        for j, ln in enumerate(titles[i]):
+            s += f'<text x="{n(x)}" y="{ty+21*j}" text-anchor="middle" font-size="18" font-weight="700" fill="{BRAND if i == 3 else INK}">{esc(ln)}</text>'
+        for j, ln in enumerate(subs[i]):
+            s += f'<text x="{n(x)}" y="{sy+18*j}" text-anchor="middle" font-size="14" fill="{MUTED}">{esc(ln)}</text>'
+    gx, bx = xs[3], xs[1]
+    s += (f'<path d="M{n(gx)},{cy-66} C{n(gx)},{cy-128} {n(bx)},{cy-128} {n(bx)},{cy-48}" fill="none" stroke="{BRAND}" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#{marker_id(BRAND)})"/>'
+          f'<text x="{n((gx+bx)/2)}" y="{cy-122}" text-anchor="middle" font-size="14" font-weight="700" fill="{HOT}">{esc(fit(t["noop"], 14, gx - bx + 120, True))}</text>')
     return s + "</g></svg>\n"
 
 
