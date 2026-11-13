@@ -6,11 +6,11 @@
 
 <img src="docs/assets/header/stats.en.svg" width="860" alt="17 skills, about 1.4k tokens always on, 3 agent templates, Apache-2.0, version 0.1.0 pre-release">
 
-[![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
+[![validate](https://github.com/msFoma/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/msFoma/foma-skills/actions/workflows/validate.yml)
 
 ### Say what you want. The right skill wakes up, asks first, and does the careful part.
 
-<p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="44" alt="Install"></a> <a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/header/nav-map.en.svg" height="44" alt="Live map"></a></p>
+<p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="44" alt="Install"></a> <a href="https://msfoma.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/header/nav-map.en.svg" height="44" alt="Live map"></a></p>
 
 <p><a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.en.svg" height="38" alt="What you get"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.en.svg" height="38" alt="First 5 minutes"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.en.svg" height="38" alt="All skills"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.en.svg" height="38" alt="Документация на русском"></a></p>
 
@@ -27,7 +27,7 @@ In Claude Code, run two commands, then restart:
 <img src="docs/assets/install/step-1.en.svg" alt="Step 1: add the marketplace">
 
 ```
-/plugin marketplace add t8jwscc7qy-sketch/foma-skills
+/plugin marketplace add msFoma/foma-skills
 ```
 
 <img src="docs/assets/install/step-2.en.svg" alt="Step 2: install the plugin">
@@ -43,7 +43,7 @@ Then just talk to it. Nothing else to configure.
 > [!TIP]
 > Try it on one project first: `claude plugin install foma-skills@foma --scope local` installs it for that project only (the default scope is all your projects). To remove it: `/plugin uninstall foma-skills@foma`. On Windows, Claude Code needs Git Bash: the pack's hooks are shell scripts.
 
-<a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/graph-teaser.en.svg" alt="The live skill map in a browser window: 17 skills in five groups, who calls whom. Click to open it." width="100%"></a>
+<a href="https://msfoma.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/graph-teaser.en.svg" alt="The live skill map in a browser window: 17 skills in five groups, who calls whom. Click to open it." width="100%"></a>
 
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> What you get
@@ -119,7 +119,7 @@ Say something like the example in the third column. **auto** = fires on its own 
 
 ![Skill map: five groups of skills, the CLAUDE.md contract, the helper agents and who calls whom](docs/assets/charts/skill-map.en.svg)
 
-**[Open the live, interactive map](https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html)**: hover a skill, click for details, press “Play a task”. (Source: [`docs/graph.html`](docs/graph.html).)
+**[Open the live, interactive map](https://msfoma.github.io/foma-skills/graph.html)**: hover a skill, click for details, press “Play a task”. (Source: [`docs/graph.html`](docs/graph.html).)
 
 <a id="safe"></a>
 ## <img src="docs/assets/icons/safe.svg" width="28" height="28" align="absmiddle" alt=""> Safe by design
@@ -171,7 +171,7 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 
 ## <img src="docs/assets/icons/contributing.svg" width="28" height="28" align="absmiddle" alt=""> Contributing
 
-> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **A skill did not fire?** That is the most useful report you can send: [tell us the exact words you said](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
+> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **A skill did not fire?** That is the most useful report you can send: [tell us the exact words you said](https://github.com/msFoma/foma-skills/issues/new?template=skill_didnt_fire.yml).
 
 Issues and pull requests are welcome; see [`CONTRIBUTING.md`](CONTRIBUTING.md). The pack stays small on purpose: a skill earns its place only if it beats a plain one-line instruction in tests.
 

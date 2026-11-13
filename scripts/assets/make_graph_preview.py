@@ -29,7 +29,7 @@ W, PAD, BAR = 860, 32, 38
 IMG_H = round(W * SHOT_H / SHOT_W)
 H = BAR + IMG_H
 BODY = "#0a0910"
-URL = "t8jwscc7qy-sketch.github.io/foma-skills/graph.html"
+URL = "msfoma.github.io/foma-skills/graph.html"
 
 T = {
     "en": {"title": "Explore the live skill map",

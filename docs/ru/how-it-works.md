@@ -87,5 +87,5 @@ flowchart TD
 ## Где читать дальше
 
 - Решения и их обоснования (на английском): [`docs/engineering/decisions.md`](../engineering/decisions.md)
-- Живая карта связей скиллов: [открыть](https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html) (исходник: [`docs/graph.html`](../graph.html)) · [диаграмма в README](../../README.ru.md#skills)
+- Живая карта связей скиллов: [открыть](https://msfoma.github.io/foma-skills/graph.html) (исходник: [`docs/graph.html`](../graph.html)) · [диаграмма в README](../../README.ru.md#skills)
 - Вопросы новичков: [FAQ](faq.md)

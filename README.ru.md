@@ -6,11 +6,11 @@
 
 <img src="docs/assets/header/stats.ru.svg" width="860" alt="17 скиллов, около 1,4k токенов всегда в контексте, 3 шаблона агентов, Apache-2.0, версия 0.1.0 пре-релиз">
 
-[![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
+[![validate](https://github.com/msFoma/foma-skills/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/msFoma/foma-skills/actions/workflows/validate.yml)
 
 ### Скажите, что нужно. Нужный скилл включится сам, сначала спросит и аккуратно сделает работу.
 
-<p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="44" alt="Установка"></a> <a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/header/nav-map.ru.svg" height="44" alt="Живая карта"></a></p>
+<p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="44" alt="Установка"></a> <a href="https://msfoma.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/header/nav-map.ru.svg" height="44" alt="Живая карта"></a></p>
 
 <p><a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.ru.svg" height="38" alt="Что вы получаете"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.ru.svg" height="38" alt="Первые 5 минут"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.ru.svg" height="38" alt="Все скиллы"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.ru.svg" height="38" alt="Подробная документация"></a></p>
 
@@ -27,7 +27,7 @@
 <img src="docs/assets/install/step-1.ru.svg" alt="Шаг 1: добавьте маркетплейс">
 
 ```
-/plugin marketplace add t8jwscc7qy-sketch/foma-skills
+/plugin marketplace add msFoma/foma-skills
 ```
 
 <img src="docs/assets/install/step-2.ru.svg" alt="Шаг 2: установите плагин">
@@ -43,7 +43,7 @@
 > [!TIP]
 > Сначала попробуйте в одном проекте: `claude plugin install foma-skills@foma --scope local` ставит плагин только для него (по умолчанию он ставится для всех ваших проектов). Удалить: `/plugin uninstall foma-skills@foma`. На Windows нужен Git Bash: хуки пака написаны как shell-скрипты.
 
-<a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/graph-teaser.ru.svg" alt="Живая карта скиллов в окне браузера: 17 скиллов в пяти группах, кто кого вызывает. Нажмите, чтобы открыть." width="100%"></a>
+<a href="https://msfoma.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/graph-teaser.ru.svg" alt="Живая карта скиллов в окне браузера: 17 скиллов в пяти группах, кто кого вызывает. Нажмите, чтобы открыть." width="100%"></a>
 
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> Что вы получаете
@@ -118,7 +118,7 @@
 
 ![Карта скиллов: пять групп, договор в CLAUDE.md, агенты-помощники и кто кого вызывает](docs/assets/charts/skill-map.ru.svg)
 
-**[Открыть живую интерактивную карту](https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html)**: наведите на скилл, нажмите для подробностей, попробуйте «Play a task». (Исходник: [`docs/graph.html`](docs/graph.html).)
+**[Открыть живую интерактивную карту](https://msfoma.github.io/foma-skills/graph.html)**: наведите на скилл, нажмите для подробностей, попробуйте «Play a task». (Исходник: [`docs/graph.html`](docs/graph.html).)
 
 ## <img src="docs/assets/icons/safe.svg" width="28" height="28" align="absmiddle" alt=""> Безопасно по замыслу
 
@@ -167,7 +167,7 @@ Claude держит в контексте название и абзац-опи�
 
 ## <img src="docs/assets/icons/contributing.svg" width="28" height="28" align="absmiddle" alt=""> Участие в проекте
 
-> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **Скилл не сработал?** Это самый полезный отчёт: [напишите, какими именно словами вы просили](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
+> <img src="docs/assets/icons/report.svg" width="18" height="18" align="absmiddle" alt=""> **Скилл не сработал?** Это самый полезный отчёт: [напишите, какими именно словами вы просили](https://github.com/msFoma/foma-skills/issues/new?template=skill_didnt_fire.yml).
 
 Issues и pull request'ы приветствуются, см. [`CONTRIBUTING.md`](CONTRIBUTING.md) (на английском). Пак нарочно остаётся маленьким: скилл остаётся только если в тестах он лучше обычной строки-инструкции.
 

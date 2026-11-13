@@ -17,14 +17,14 @@
 В Claude Code выполните:
 
 ```
-/plugin marketplace add t8jwscc7qy-sketch/foma-skills
+/plugin marketplace add msFoma/foma-skills
 /plugin install foma-skills@foma
 ```
 
 То же из обычного терминала:
 
 ```bash
-claude plugin marketplace add t8jwscc7qy-sketch/foma-skills
+claude plugin marketplace add msFoma/foma-skills
 claude plugin install foma-skills@foma
 ```
 

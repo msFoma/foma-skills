@@ -20,7 +20,7 @@ from check_skills import parse_frontmatter  # noqa: E402
 SKILLS_DIR = ROOT / "plugins/foma-skills/skills"
 TOKENS = ROOT / "docs/assets/charts/tokens.json"
 OUT = ROOT / "docs/graph.html"
-REPO = "https://github.com/t8jwscc7qy-sketch/foma-skills"
+REPO = "https://github.com/msFoma/foma-skills"
 MAX_BYTES = 250 * 1024
 
 # Group colours: same values as scripts/assets/make_charts.py (COL, BRAND).
@@ -1035,7 +1035,7 @@ function renderIntro(){
  var ordered=[].concat(D.order.setup,D.order.meta,D.order.process,D.order.methods,D.order.atomic);
  ordered.forEach(function(id){var n=N[id];h+='<span title="'+id+' · ~'+n.always+'" style="flex:'+n.always+';--c:'+COL[n.group]+'"></span>'});
  h+='</div><div class="bcap"><span>0</span><span>≈'+D.always_total.toLocaleString(nf)+' · '+esc(t('st_est'))+'</span></div>';
- h+='<h3>'+esc(t('install_h'))+'</h3><div class="inst-row"><span class="note" style="margin:0">Claude Code</span><button type="button" class="chip" id="copy">'+esc(t('copy'))+'</button></div><pre class="inst" id="inst">/plugin marketplace add t8jwscc7qy-sketch/foma-skills\n/plugin install foma-skills@foma</pre>';
+ h+='<h3>'+esc(t('install_h'))+'</h3><div class="inst-row"><span class="note" style="margin:0">Claude Code</span><button type="button" class="chip" id="copy">'+esc(t('copy'))+'</button></div><pre class="inst" id="inst">/plugin marketplace add msFoma/foma-skills\n/plugin install foma-skills@foma</pre>';
  h+='<div class="links"><a href="'+D.repo+'">'+esc(t('repo'))+' ↗</a><a href="'+D.repo+'/blob/main/'+(lang==='ru'?'README.ru.md':'README.md')+'">'+esc(t('readme'))+' ↗</a></div>';
  $('#intro').innerHTML=h;
  $('#copy').addEventListener('click',function(){var b=this,txt=$('#inst').textContent;function ok(){b.textContent=t('copied');setTimeout(function(){b.textContent=t('copy')},1600)}

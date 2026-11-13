@@ -47,7 +47,7 @@ claude plugin uninstall foma-skills@foma
 
 - **Вызовите скилл вручную:** `/foma-skills:<имя>`. Это работает всегда.
 - Скажите задачу **словами из столбца «Скажите примерно так»** в [справочнике](skills.md).
-- Если промахи повторяются, расскажите об этом в [issue](https://github.com/t8jwscc7qy-sketch/foma-skills/issues): вместе с вашей фразой. Описания скиллов подстраиваются именно по таким случаям.
+- Если промахи повторяются, расскажите об этом в [issue](https://github.com/msFoma/foma-skills/issues): вместе с вашей фразой. Описания скиллов подстраиваются именно по таким случаям.
 </details>
 
 <details>
@@ -111,7 +111,7 @@ claude plugin uninstall foma-skills@foma
 <details>
 <summary><b>Как сообщить об ошибке или предложить улучшение?</b></summary>
 
-Откройте [issue](https://github.com/t8jwscc7qy-sketch/foma-skills/issues). Для нового скилла сначала issue, для исправлений и правки формулировок можно сразу pull request. Правила: [`CONTRIBUTING.md`](../../CONTRIBUTING.md) (на английском).
+Откройте [issue](https://github.com/msFoma/foma-skills/issues). Для нового скилла сначала issue, для исправлений и правки формулировок можно сразу pull request. Правила: [`CONTRIBUTING.md`](../../CONTRIBUTING.md) (на английском).
 </details>
 
 <details>

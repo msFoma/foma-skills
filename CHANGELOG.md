@@ -22,5 +22,5 @@ First public pre-release.
 - Three agent templates (`implementer`, `reviewer`, `explorer`, installed into your project by `groundwork`) and a session-start hook that adds one router line and keeps a local fire log (nothing leaves your project).
 - Live interactive skill map (`docs/graph.html`), Russian documentation (`README.ru.md`, `docs/ru/`), static skill checks, trigger and smoke test harness.
 
-[Unreleased]: https://github.com/t8jwscc7qy-sketch/foma-skills/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/t8jwscc7qy-sketch/foma-skills/releases/tag/v0.1.0
+[Unreleased]: https://github.com/msFoma/foma-skills/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/msFoma/foma-skills/releases/tag/v0.1.0
