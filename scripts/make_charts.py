@@ -9,7 +9,7 @@ Token numbers come from docs/assets/charts/tokens.json, captured from Claude Cod
 --refresh PROJECT_DIR re-captures them. The skill map mirrors docs/graph.html.
 
 Style follows the brand art (docs/assets/banner.jpg): black space, a glowing Mars limb along the
-bottom edge, a four-point star flare, the orange starburst mark. Everything is pure vector and
+bottom edge, a four-point star flare. Everything is pure vector and
 self-contained (GitHub serves README SVGs through <img>: no fonts, scripts or external refs).
 Motion is CSS @keyframes in an inline <style> (works inside <img>): it only animates transform, opacity
 and stroke-dashoffset, every animation rests on the static design, and prefers-reduced-motion turns it off.
@@ -159,12 +159,6 @@ def flare_css(fx, fy, delay=2):
             "@keyframes fc{0%,55%,100%{transform:scale(1)}68%{transform:scale(1.4)}}")
 
 
-def mark_css(cx, cy, turn=90):
-    return (f".sb,.sbp{{transform-origin:{cx}px {cy}px;animation:spin {turn}s linear infinite}}"
-            ".sbp{animation:breathe 6s ease-in-out 1.5s infinite}"
-            "@keyframes spin{to{transform:rotate(360deg)}}@keyframes breathe{50%{transform:scale(1.07)}}")
-
-
 SHIMMER = ".sh{animation:sh 9s ease-in-out 3s infinite}@keyframes sh{0%{stroke-dashoffset:16}45%,100%{stroke-dashoffset:-104}}"
 
 
@@ -228,7 +222,7 @@ def frame(w, h, title, sub, seed, keep_out=()):
     s += '</defs>' + motion(
         ".t1,.t2,.t3{animation:tw 6s ease-in-out 1s infinite}.t2{animation-duration:8s;animation-delay:2.6s}"
         ".t3{animation-duration:11s;animation-delay:4.2s}@keyframes tw{50%{opacity:.2}}"
-        + mark_css(64, 82) + flare_css(fx, fy) + SHIMMER +
+        + flare_css(fx, fy) + SHIMMER +
         ".gl{transform-box:fill-box;transform-origin:center;animation:gl 8s ease-in-out 1s infinite}"
         "@keyframes gl{50%{opacity:.6;transform:scaleX(1.15)}}")
     s += '\n<g clip-path="url(#card)">'
@@ -264,26 +258,11 @@ def frame(w, h, title, sub, seed, keep_out=()):
           f'<ellipse class="gl" cx="{n(gx)}" cy="{n(gy)}" rx="230" ry="22" fill="url(#glint)"/>')
     s += (f'</g><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="21.5" fill="none" stroke="{INK}" stroke-opacity="0.1"/>\n'
           f'<g font-family="{FONT}">\n')
-    # header: starburst mark | eyebrow, title, subtitle
-    s += starburst(64, 82, 1.0)
-    s += (f'<line x1="106" y1="54" x2="106" y2="110" stroke="{INK}" stroke-opacity="0.28"/>'
-          f'<text x="124" y="56" font-size="12" font-weight="700" letter-spacing="3" fill="{BRAND}">FOMA SKILLS</text>'
-          f'<text x="124" y="90" font-size="30" font-weight="800" fill="{INK}">{esc(fit(title, 30, w - 124 - 150, True))}</text>'
-          f'<text x="124" y="117" font-size="16" fill="{MUTED}">{esc(fit(sub, 16, w - 124 - 48))}</text>\n')
+    # header: eyebrow, title, subtitle
+    s += (f'<text x="48" y="56" font-size="12" font-weight="700" letter-spacing="3" fill="{BRAND}">FOMA SKILLS</text>'
+          f'<text x="48" y="90" font-size="30" font-weight="800" fill="{INK}">{esc(fit(title, 30, w - 48 - 150, True))}</text>'
+          f'<text x="48" y="117" font-size="16" fill="{MUTED}">{esc(fit(sub, 16, w - 48 - 48))}</text>\n')
     return s
-
-
-RAY_JITTER = [(-3, 1), (2, -1), (-1, 2), (3, 0), (-2, -2), (1, 1), (2, 0), (-3, 2), (1, -1), (-1, 1), (3, -2), (-2, 0)]
-
-
-def starburst(cx, cy, k, glow="glow"):
-    """The brand mark: twelve rounded rays, slightly uneven like the hand-drawn logo. Turns slowly (.sb) and breathes (.sbp)."""
-    rays = ""
-    for i, (da, dl) in enumerate(RAY_JITTER):
-        a = math.radians(i * 30 + da - 90)
-        r1, r2 = 6 * k, (21 + dl) * k
-        rays += f'<line x1="{n(cx+r1*math.cos(a))}" y1="{n(cy+r1*math.sin(a))}" x2="{n(cx+r2*math.cos(a))}" y2="{n(cy+r2*math.sin(a))}"/>'
-    return (f'<g class="sb"><g class="sbp"><g stroke="{BRAND}" stroke-width="{n(5.2*k)}" stroke-linecap="round" filter="url(#{glow})">{rays}</g></g></g>')
 
 
 def parse_k(s):
@@ -539,7 +518,7 @@ def propose_first(lang):
                ".rg{opacity:0;transform-box:fill-box;transform-origin:center;animation:rg 10s ease-out infinite}"
                "@keyframes rg{0%{opacity:0;transform:scale(1)}4%{opacity:.9}14%,100%{opacity:0;transform:scale(1.4)}}"
                ".ap{animation:ap 10s ease-in-out infinite}@keyframes ap{0%{stroke-dashoffset:26}9%,100%{stroke-dashoffset:-106}}"
-               ".spin{transform-box:fill-box;transform-origin:center;animation:spin 40s linear infinite}"
+               ".spin{transform-box:fill-box;transform-origin:center;animation:spin 40s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}"
                ".df{animation:df 1.8s linear infinite}@keyframes df{to{stroke-dashoffset:-11}}")
     xs = [32 + col_w * (i + 0.5) for i in range(k)]
     rad = [46 if i == 3 else 38 for i in range(k)]
@@ -590,14 +569,13 @@ def plate_jpeg():
 
 def hero(jpeg):
     w, h = 1280, 480
-    mx, my, k = 372, 214, 2.7  # the mark
-    tx = 504  # wordmark left edge
+    my = 214  # wordmark baseline anchor
     fx, fy = 1172, 84  # the plate's star flare
     pcx, pcy, R = 640, 2007, 1640  # the plate's planet limb (fitted to the brightest rim pixels)
     title = "Foma Skills"
     tag = "Lightweight skills for Claude Code"
-    fit(title, 84, w - tx - 60, True)
-    fit(tag, 24, w - tx - 60)
+    fit(title, 84, w - 120, True)
+    fit(tag, 24, w - 120)
 
     def limb_y(x):
         return pcy - math.sqrt(R * R - (x - pcx) ** 2)
@@ -606,7 +584,7 @@ def hero(jpeg):
     sparks = [(118, 128, 1.4, 1), (330, 64, 1.1, 2), (566, 104, 1.6, 3), (772, 58, 1.2, 1), (912, 150, 1.5, 2),
               (1064, 246, 1.3, 3), (1218, 196, 1.1, 1), (214, 318, 1.5, 2), (1108, 318, 1.2, 3), (640, 34, 1.0, 2),
               (992, 36, 1.3, 1), (468, 336, 1.1, 3)]
-    css = (mark_css(mx, my, 120) + flare_css(fx, fy, 1.5) + SHIMMER.replace("9s ease-in-out 3s", "12s ease-in-out 2s") +
+    css = (flare_css(fx, fy, 1.5) + SHIMMER.replace("9s ease-in-out 3s", "12s ease-in-out 2s") +
            ".lb{animation:lb 7s ease-in-out .5s infinite}@keyframes lb{50%{opacity:.45}}"
            ".gl{transform-box:fill-box;transform-origin:center;animation:gl 7s ease-in-out .5s infinite}"
            "@keyframes gl{50%{opacity:.55;transform:scaleX(1.18)}}"
@@ -643,10 +621,8 @@ def hero(jpeg):
          + "".join(f'<circle class="s{c}" style="animation-delay:{i * 0.7 % 5:.1f}s" cx="{x}" cy="{y}" r="{r}" fill="#ffe9d8"/>'
                    for i, (x, y, r, c) in enumerate(sparks)) +
          f'</g><rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="23.5" fill="none" stroke="{INK}" stroke-opacity="0.1"/>\n'
-         + starburst(mx, my, k, "hg") +
-         f'<line x1="{tx-36}" y1="{my-46}" x2="{tx-36}" y2="{my+46}" stroke="{INK}" stroke-opacity="0.35" stroke-width="1.5"/>'
-         f'<g font-family="{FONT}"><text x="{tx}" y="{my+30}" font-size="84" font-weight="700" letter-spacing="-1" fill="{INK}">Foma <tspan fill="{BRAND}">Skills</tspan></text>'
-         f'<text x="{tx+3}" y="{my+80}" font-size="24" letter-spacing="0.3" fill="#d9cbc0" fill-opacity="0.85">{tag}</text></g>\n</svg>\n')
+         + f'<g font-family="{FONT}" text-anchor="middle"><text x="{w // 2}" y="{my+30}" font-size="84" font-weight="700" letter-spacing="-1" fill="{INK}">Foma <tspan fill="{BRAND}">Skills</tspan></text>'
+         f'<text x="{w // 2}" y="{my+80}" font-size="24" letter-spacing="0.3" fill="#d9cbc0" fill-opacity="0.85">{tag}</text></g>\n</svg>\n')
     return s
 
 
