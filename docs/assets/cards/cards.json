@@ -1,0 +1,47 @@
+[
+  {
+    "id": "foma-skills",
+    "mascot": "mascot-cat.jpg",
+    "title": [
+      "Foma",
+      "Skills"
+    ],
+    "eyebrow": {
+      "en": "SKILL PACK FOR CLAUDE CODE",
+      "ru": "НАБОР СКИЛЛОВ ДЛЯ CLAUDE CODE"
+    },
+    "tagline": {
+      "en": "Skills that propose first and write only after your ok.",
+      "ru": "Скиллы, которые сначала предлагают и пишут только после вашего «ок»."
+    },
+    "stats": [
+      {
+        "value": "@skills",
+        "label": {
+          "en": "skills",
+          "ru": "скиллов"
+        },
+        "icon": "all-skills",
+        "color": "#e8714a"
+      },
+      {
+        "value": "@tokens",
+        "label": {
+          "en": "tokens always on",
+          "ru": "токенов"
+        },
+        "icon": "cost",
+        "color": "setup"
+      },
+      {
+        "value": "Apache-2.0",
+        "label": {
+          "en": "license",
+          "ru": "лицензия"
+        },
+        "icon": "license",
+        "color": "meth"
+      }
+    ]
+  }
+]
