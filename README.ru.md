@@ -136,7 +136,7 @@ flowchart LR
 
 ![Карта скиллов: пять групп, договор в CLAUDE.md, агенты-помощники и кто кого вызывает](docs/assets/charts/skill-map.ru.svg)
 
-Интерактивная версия: [`docs/graph.html`](docs/graph.html).
+**[Открыть живую интерактивную карту](https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html)**: наведите на скилл, нажмите для подробностей, попробуйте «Play a task». (Исходник: [`docs/graph.html`](docs/graph.html).)
 
 ## 🛡️ Безопасно по замыслу
 

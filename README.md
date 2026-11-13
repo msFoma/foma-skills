@@ -137,7 +137,7 @@ Say something like the example in the third column. **auto** = fires on its own 
 
 ![Skill map: five groups of skills, the CLAUDE.md contract, the helper agents and who calls whom](docs/assets/charts/skill-map.en.svg)
 
-Interactive version: [`docs/graph.html`](docs/graph.html).
+**[Open the live, interactive map](https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html)**: hover a skill, click for details, press “Play a task”. (Source: [`docs/graph.html`](docs/graph.html).)
 
 <a id="safe"></a>
 ## 🛡️ Safe by design

@@ -3,239 +3,758 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>foma-skills graph</title>
+<title>Foma Skills · skill map</title>
+<meta name="description" content="Interactive map of Foma Skills: 17 lightweight Claude Code skills, who calls whom, token cost and a typical task path.">
+<meta name="theme-color" content="#07060b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='-23 -23 46 46' aria-hidden='true'%3E%3Cg fill='%23e8714a'%3E%3Cpath transform='rotate(0)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(30)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(60)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(90)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(120)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(150)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(180)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(210)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(240)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(270)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(300)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3Cpath transform='rotate(330)' d='M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z'/%3E%3C/g%3E%3C/svg%3E">
 <style>
-  :root {
-    --bg: #f6f3ee; --panel: #fffdf9; --ink: #1f1d1a; --muted: #6f6a62; --line: #d9d2c7; --edge: #8a8377;
-    --setup: #b7791f; --proc: #2f5d8a; --meth: #2c7a6b; --atom: #55606e; --agent: #9a4a5c; --contract: #4d7c3a; --meta: #8a8377;
-    --setup-bg: #fbf1df; --proc-bg: #e6eef6; --meth-bg: #e3f1ed; --atom-bg: #eef0f2; --agent-bg: #f6e8eb; --contract-bg: #e9f2e3;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #17161a; --panel: #1f1e23; --ink: #ece8e1; --muted: #a29c92; --line: #34323a; --edge: #7d776d;
-      --setup: #e0a54a; --proc: #7fa9d6; --meth: #6cc0ad; --atom: #a3adba; --agent: #d98a9c; --contract: #92c27a; --meta: #8d877d;
-      --setup-bg: #2c2418; --proc-bg: #1b2633; --meth-bg: #182b27; --atom-bg: #23262b; --agent-bg: #2e1d22; --contract-bg: #1d2a18;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #17161a; --panel: #1f1e23; --ink: #ece8e1; --muted: #a29c92; --line: #34323a; --edge: #7d776d;
-    --setup: #e0a54a; --proc: #7fa9d6; --meth: #6cc0ad; --atom: #a3adba; --agent: #d98a9c; --contract: #92c27a; --meta: #8d877d;
-    --setup-bg: #2c2418; --proc-bg: #1b2633; --meth-bg: #182b27; --atom-bg: #23262b; --agent-bg: #2e1d22; --contract-bg: #1d2a18;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.5 ui-sans-serif, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-  main { max-width: 1320px; margin: 0 auto; padding: 32px 16px 48px; }
-  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 18px; }
-  h1 { font: 600 28px/1.2 ui-serif, Georgia, "Times New Roman", serif; margin: 0; letter-spacing: -0.01em; }
-  header p { margin: 0; color: var(--muted); }
-  .stats { margin-left: auto; display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
-  .stats b { color: var(--ink); font-size: 18px; margin-right: 4px; }
-  .board { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; overflow-x: auto; }
-  svg { display: block; width: 100%; min-width: 980px; height: auto; }
-  .band-label { font: 600 11px/1 ui-sans-serif, Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; fill: var(--muted); }
-  .band { fill: none; stroke: var(--line); stroke-dasharray: 2 6; }
-  .node rect, .node polygon { stroke-width: 1.5; }
-  .node text { font: 600 14px/1 ui-sans-serif, Arial, sans-serif; fill: var(--ink); }
-  .node .sub { font: 400 11.5px/1 ui-sans-serif, Arial, sans-serif; fill: var(--muted); }
-  .node { cursor: default; transition: opacity .15s; }
-  .edge { fill: none; stroke: var(--edge); stroke-width: 1.3; opacity: .45; transition: opacity .15s, stroke-width .15s; }
-  .edge.handoff { stroke-dasharray: 6 5; }
-  .edge.config { stroke-dasharray: 2 4; }
-  .edge.writes { stroke: var(--contract); stroke-width: 2.6; opacity: .9; }
-  svg.focus .node:not(.hot) { opacity: .25; }
-  svg.focus .edge { opacity: .08; }
-  svg.focus .edge.hot { opacity: 1; stroke-width: 2.2; stroke: var(--ink); }
-  .info { margin-top: 12px; min-height: 48px; padding: 12px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
-  .info b { font-size: 16px; }
-  .info span { color: var(--muted); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
-  .card h2 { font: 600 13px/1.2 ui-sans-serif, Arial, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
-  .card ul { margin: 0; padding-left: 18px; }
-  .card li { margin: 3px 0; }
-  .key { display: inline-flex; align-items: center; gap: 8px; margin: 3px 14px 3px 0; color: var(--muted); font-size: 13.5px; }
-  .key i { display: inline-block; width: 26px; border-top: 2px solid var(--edge); }
-  .key i.d { border-top-style: dashed; } .key i.o { border-top-style: dotted; } .key i.w { border-top: 3px solid var(--contract); }
-  .key s { text-decoration: none; display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; }
-  code { font: 13px ui-monospace, Menlo, Consolas, monospace; background: var(--bg); padding: 1px 5px; border-radius: 4px; }
-  footer { margin-top: 18px; color: var(--muted); font-size: 13px; }
+:root{--bg:#07060b;--panel:rgba(13,11,18,.84);--panel2:rgba(20,17,26,.9);--ink:#f4ece6;--muted:#b9afa7;--faint:#958b84;
+--brand:#e8714a;--hot:#ff8a4c;--line:rgba(244,236,230,.10);--line2:rgba(244,236,230,.2);color-scheme:dark;
+--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:16px}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);overflow-x:hidden}
+a{color:var(--hot)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.skip{position:absolute;left:-9999px;top:8px;z-index:50;background:var(--brand);color:#140a06;padding:8px 12px;border-radius:8px;font-weight:700}
+.skip:focus{left:12px}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.nebula{position:absolute;inset:-12%;will-change:transform;background:
+ radial-gradient(38% 30% at 84% 14%,rgba(232,113,74,.17),transparent 70%),
+ radial-gradient(30% 26% at 10% 26%,rgba(118,96,196,.10),transparent 70%),
+ radial-gradient(26% 20% at 60% 40%,rgba(255,138,76,.05),transparent 70%)}
+.planet{position:absolute;left:50%;top:84vh;width:250vw;height:250vw;margin-left:-125vw;border-radius:50%;will-change:transform;
+ background:radial-gradient(circle at 50% 0,#6a2a15 0,#36160c 2.6%,#170b09 9%,#08070b 24%);
+ box-shadow:0 -1px 0 rgba(255,178,128,.6),0 -14px 50px rgba(255,138,76,.30),0 -60px 190px rgba(232,113,74,.20)}
+.flare{position:absolute;top:8%;right:7%;width:180px;height:180px;margin:-90px -90px 0 0;opacity:.9;animation:twinkle 6s ease-in-out infinite}
+.flare:before,.flare:after{content:"";position:absolute;left:0;top:50%;width:100%;height:1.5px;margin-top:-.75px;background:linear-gradient(90deg,transparent,rgba(255,206,170,.95),transparent)}
+.flare:after{transform:rotate(90deg) scaleX(.7)}
+.flare i{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:#fff;box-shadow:0 0 12px 4px rgba(255,178,120,.9),0 0 54px 18px rgba(232,113,74,.4)}
+@keyframes twinkle{0%,100%{opacity:.75;transform:scale(.9)}50%{opacity:1;transform:scale(1.04)}}
+.wrap{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:0 24px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 28px;padding:18px 0 8px}
+.brand{display:flex;align-items:center;gap:16px;min-width:0}
+.mark{flex:none;filter:drop-shadow(0 0 10px rgba(232,113,74,.55));animation:spin 60s linear infinite}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--hot);font-weight:700}
+h1{margin:0;font-size:32px;line-height:1.1;letter-spacing:-.01em;font-weight:800}
+h1 b{color:var(--brand)}
+.sub{margin:4px 0 0;color:var(--muted);max-width:620px;font-size:14.5px}
+.stats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.stats li{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 14px;min-width:96px}
+.stats b{display:block;font-size:22px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--ink)}
+.stats li.hot b{color:var(--hot);text-shadow:0 0 18px rgba(255,138,76,.45)}
+.stats span{font-size:12.5px;color:var(--muted)}
+.stats small{display:block;font-size:12px;color:var(--faint)}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:8px 0 8px}
+.search{position:relative;flex:1 1 220px;max-width:300px}
+.search input{width:100%;height:38px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);padding:0 12px 0 34px;font-size:14.5px}
+.search input::placeholder{color:var(--faint)}
+.search svg{position:absolute;left:11px;top:11px;opacity:.7}
+.list{position:absolute;z-index:20;left:0;right:0;top:42px;margin:0;padding:6px;list-style:none;background:#14111b;border:1px solid var(--line2);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.list li{display:flex;gap:8px;align-items:baseline;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:14px}
+.list li[aria-selected=true],.list li:hover{background:rgba(232,113,74,.16)}
+.list li i{flex:none;width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);transform:translateY(-1px)}
+.list li span{font-family:var(--mono);font-weight:600}
+.list li em{font-style:normal;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.list li.none{color:var(--muted);cursor:default}
+.group{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.glabel{font-size:12.5px;color:var(--muted);margin-right:2px}
+.chip,.seg button,.btn{border:1px solid var(--line2);background:var(--panel2);border-radius:999px;height:32px;padding:0 12px;font-size:13.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:background .2s,border-color .2s,color .2s}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c)}
+.chip:hover,.seg button:hover,.btn:hover{border-color:rgba(255,138,76,.55)}
+.chip[aria-pressed=true]{background:color-mix(in srgb,var(--c,#e8714a) 22%,#120f17);border-color:var(--c,#e8714a)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:999px;padding:2px;background:var(--panel2)}
+.seg button{border:0;height:28px;background:transparent;padding:0 11px}
+.seg button[aria-pressed=true]{background:rgba(232,113,74,.22);color:#fff}
+.btn.play{background:linear-gradient(135deg,#ff8a4c,#e8714a 55%,#b84d2c);border:0;color:#170a05;font-weight:700;height:36px;padding:0 16px;box-shadow:0 0 0 1px rgba(255,170,120,.35),0 6px 22px rgba(232,113,74,.35)}
+.btn.play:hover{filter:brightness(1.08)}
+.btn.play svg{fill:currentColor}
+.hint{margin:0 0 10px;color:var(--faint);font-size:12.5px}
+.hint .t{display:none}
+@media (hover:none){.hint .m{display:none}.hint .t{display:inline}}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:18px;align-items:start}
+.gwrap{position:relative;border:1px solid var(--line);border-radius:22px;background:radial-gradient(70% 50% at 50% 0,rgba(232,113,74,.07),transparent 70%),rgba(9,8,13,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 30px 80px rgba(0,0,0,.35)}
+#map{display:block;width:100%;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.band{opacity:.05}
+.band-l{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.band-d{font-size:12px;fill:var(--faint)}
+.edge{fill:none;stroke-width:1.6;opacity:.42;transition:opacity .3s,stroke-width .3s}
+.edge.k-signal{stroke-dasharray:5 6;opacity:.55}
+.edge.k-write{stroke-width:2;opacity:.7}
+.edge.k-read{stroke-dasharray:2 5;opacity:0}
+.edge.lit{opacity:1;stroke-width:2.4}
+.edge.k-read.lit{opacity:.6;stroke-width:1.6}
+.edge.dim{opacity:.06}
+.elabel{font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;paint-order:stroke;stroke:#07060b;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.elabel.lit{opacity:1}
+.pt{transition:opacity .35s}
+.pt.dim{opacity:.05}
+.pt.lit circle{r:4}
+.node{cursor:pointer;outline:none;transition:opacity .3s}
+.node.dim{opacity:.16}
+.node.half{opacity:.55}
+.pop{transform-box:fill-box;transform-origin:center}
+.halo{opacity:.55;transition:opacity .3s;animation:breathe 5s ease-in-out infinite;animation-delay:var(--b,0s)}
+@keyframes breathe{50%{opacity:.32}}
+.node.lit .halo,.node:hover .halo{opacity:1;animation:none}
+.node.beat .halo{animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{50%{opacity:.45}}
+.track{fill:none;stroke:rgba(244,236,230,.13);stroke-width:2.2}
+.arc{fill:none;stroke-width:2.6;stroke-linecap:round}
+.lbl{font-size:13px;font-weight:650;fill:var(--ink);font-family:var(--mono);paint-order:stroke;stroke:#07060b;stroke-width:4.5px;stroke-linejoin:round}
+.badge{font-size:12px;font-weight:700;paint-order:stroke;stroke:#07060b;stroke-width:4px}
+.fring{fill:none;stroke:var(--hot);stroke-width:2;opacity:0}
+.node:focus-visible .fring{opacity:1}
+.orbit{fill:none;stroke:var(--hot);stroke-width:1.6;stroke-dasharray:3 7;opacity:0;transform-box:fill-box;transform-origin:center}
+.node.sel .orbit{opacity:.95;animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pill{stroke-width:1.2}
+.ptext{font-size:12.5px;font-weight:650;fill:var(--ink)}
+.ctext{font-size:13px;font-weight:700;fill:#ffd9c4}
+.csub{font-size:12px;fill:var(--muted);font-family:var(--mono)}
+.trail{fill:none;stroke:url(#trailg);stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(255,138,76,.8))}
+.trail.draw{transition:stroke-dashoffset .9s ease-out}
+.tip{position:absolute;z-index:5;pointer-events:none;max-width:280px;background:rgba(17,14,22,.95);border:1px solid var(--line2);border-radius:12px;padding:9px 12px;font-size:13px;box-shadow:0 14px 30px rgba(0,0,0,.5);opacity:0;transform:translate(-50%,calc(-100% - 4px));transition:opacity .15s}
+.tip.on{opacity:1}
+.tip b{font-family:var(--mono);color:var(--c)}
+.tip p{margin:3px 0 0;color:var(--muted)}
+.tip small{display:block;margin-top:4px;color:var(--faint);font-size:12px}
+.cap{margin:12px 12px 0;padding:12px 14px;background:rgba(17,13,20,.94);border:1px solid rgba(255,138,76,.4);border-radius:16px;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 18px 40px rgba(0,0,0,.55),0 0 40px rgba(232,113,74,.12)}
+.cap[hidden]{display:none}
+.cap-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.cap-step{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--hot);font-weight:700}
+.cap-title{font-size:16px}
+.cap p{margin:4px 0 10px;color:#e6dcd4;font-size:14px}
+.cap-row{display:flex;align-items:center;gap:10px}
+.segs{flex:1;display:flex;gap:4px}
+.segs span{flex:1;height:4px;border-radius:2px;background:rgba(244,236,230,.14);overflow:hidden}
+.segs span i{display:block;height:100%;background:linear-gradient(90deg,#e8714a,#ffb27e);transform-origin:left;transform:scaleX(0)}
+.segs span.done i{transform:scaleX(1)}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);display:inline-grid;place-items:center;cursor:pointer;padding:0}
+.ib svg{fill:var(--ink)}
+.ib:hover{border-color:var(--hot)}
+.side{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;scrollbar-width:thin;border:1px solid var(--line);border-radius:22px;background:var(--panel)}
+.card{padding:18px}
+.card h2{margin:0 0 10px;font-size:15px;letter-spacing:.02em}
+.card h3{margin:16px 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lg{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:13.5px;color:#ddd3cb}
+.lg li{display:flex;align-items:center;gap:10px}
+.lg svg{flex:none}
+.lv{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px}
+.lv li{display:grid;grid-template-columns:10px 1fr;gap:9px;align-items:baseline}
+.lv i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.lv b{color:var(--c)}
+.lv span{color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.budget{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:1px;margin:10px 0 6px;background:rgba(244,236,230,.06)}
+.budget span{background:var(--c);opacity:.85}
+.budget span:hover{opacity:1}
+.bcap{display:flex;justify-content:space-between;font-size:12px;color:var(--faint)}
+pre.inst{margin:0;padding:10px 12px;border-radius:12px;background:#0d0b11;border:1px solid var(--line);font:12.5px/1.6 var(--mono);color:#ffd9c4;white-space:pre-wrap;word-break:break-all}
+.inst-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.links{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13.5px;margin-top:14px}
+#detail{display:none}
+.has-sel #detail{display:block;animation:slidein .35s ease-out}
+.has-sel #intro{display:none}
+@keyframes slidein{from{opacity:0;transform:translateX(18px)}}
+.d-head{display:flex;gap:12px;align-items:center}
+.d-orb{flex:none;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,var(--c) 38%,color-mix(in srgb,var(--c) 40%,#000) 100%);box-shadow:0 0 22px var(--c)}
+.d-orb.hex{border-radius:6px;transform:rotate(45deg) scale(.82)}
+.d-orb.pill{border-radius:10px;height:22px}
+.d-head h2{margin:0;font:700 20px/1.2 var(--mono);word-break:break-word}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.tag{font-size:12px;border-radius:999px;padding:1px 9px;border:1px solid color-mix(in srgb,var(--c,#b9afa7) 60%,transparent);color:var(--c,#b9afa7)}
+.x{margin-left:auto;flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:transparent;cursor:pointer;font-size:20px;line-height:1}
+.x:hover{border-color:var(--hot)}
+.d-text{margin:14px 0 0;font-size:15px;color:#efe6df}
+.say{margin:14px 0 0;padding:10px 12px;border-left:3px solid var(--c);background:rgba(244,236,230,.04);border-radius:0 10px 10px 0}
+.k{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.say q{font-size:15px;font-style:italic;quotes:"“" "”"}
+.say code{font:600 14px var(--mono);color:#ffd9c4}
+.tok{margin-top:16px}
+.tok .k small{text-transform:none;letter-spacing:0;color:var(--faint)}
+.bar{height:8px;border-radius:4px;background:rgba(244,236,230,.08);overflow:hidden;margin:6px 0 3px}
+.bar span{display:block;height:100%;border-radius:4px;background:var(--c);transform-origin:left;animation:grow .7s ease-out}
+.bar.inv span{background:linear-gradient(90deg,#f4ece6,#ffd2b4)}
+@keyframes grow{from{transform:scaleX(0)}}
+.brow{font-size:13px;color:var(--muted)}
+.brow b{color:var(--ink);font-variant-numeric:tabular-nums}
+.rel{margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips .chip{height:30px;font-family:var(--mono);font-size:13px}
+.chips .chip em{font-family:var(--sans);font-style:normal;color:var(--muted);font-size:12px}
+.muted{color:var(--muted);font-size:13.5px;margin:0}
+.ctr{margin-top:14px;font-size:13px;color:#ffd9c4;display:flex;gap:8px;align-items:center}
+.gh{display:inline-flex;margin-top:18px;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;border:1px solid rgba(255,138,76,.5);text-decoration:none;color:#ffd9c4;font-weight:600;font-size:14px}
+.gh:hover{background:rgba(232,113,74,.14)}
+.grab{display:none}
+footer{position:relative;z-index:1;padding:26px 0 40px;color:var(--faint);font-size:12.5px;text-align:center}
+@media (max-width:1060px){
+ .stage{grid-template-columns:minmax(0,1fr)}
+ .side{position:static;max-height:none;overflow:visible}
+ #detail{display:block;position:fixed;z-index:30;left:0;right:0;bottom:0;max-height:72vh;overflow:auto;border-radius:22px 22px 0 0;border:1px solid var(--line2);border-bottom:0;background:#121017;box-shadow:0 -20px 60px rgba(0,0,0,.65);transform:translateY(105%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.9,.3,1),visibility 0s .35s;animation:none!important}
+ .has-sel #detail{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.9,.3,1)}
+ .has-sel #intro{display:block}
+ .grab{display:block;width:44px;height:5px;border-radius:3px;background:rgba(244,236,230,.25);margin:8px auto 0}
+ .has-sel .wrap main{padding-bottom:40vh}
+ .cap{position:fixed;z-index:25;left:8px;right:8px;bottom:8px;margin:0;max-width:720px;margin-inline:auto}
+ .playing .wrap main{padding-bottom:190px}
+}
+@media (max-width:640px){
+ .wrap{padding:0 14px}
+ h1{font-size:26px}
+ .mark{width:38px;height:38px}
+ .stats{gap:8px;width:100%}
+ .stats li{flex:1 1 40%;padding:7px 11px;min-width:0}
+ .stats b{font-size:19px}
+ .search{max-width:none;flex-basis:100%}
+ .flare{width:110px;height:110px;margin:-55px -55px 0 0}
+ .gwrap{border-radius:18px}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important}
+}
+.still *,.still *:before,.still *:after{animation:none!important;transition:none!important}
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>foma-skills · skill graph v2.0</h1>
-    <p>Lite Claude Code skills linked by levels. Edges only point down.</p>
-    <div class="stats"><span><b>17</b>skills</span><span><b>3</b>agents</span><span><b>16</b>automatic</span><span><b>≈1.4k</b>always-on tokens</span></div>
-  </header>
-
-  <div class="board"><svg id="g" viewBox="0 0 1280 770" role="img" aria-label="Skill dependency graph"></svg></div>
-  <div class="info" id="info"><b>Hover a skill</b> <span>to see what it does and what it connects to.</span></div>
-
-  <div class="grid">
-    <div class="card">
-      <h2>Legend</h2>
-      <span class="key"><i></i>uses</span>
-      <span class="key"><i class="d"></i>hand-off (tell the user)</span>
-      <span class="key"><i class="o"></i>configures</span>
-      <span class="key"><i class="w"></i>writes contract</span><br>
-      <span class="key"><s style="border-color:var(--setup);background:var(--setup-bg)"></s>setup &amp; upkeep</span>
-      <span class="key"><s style="border-color:var(--proc);background:var(--proc-bg)"></s>process</span>
-      <span class="key"><s style="border-color:var(--meth);background:var(--meth-bg)"></s>method</span>
-      <span class="key"><s style="border-color:var(--atom);background:var(--atom-bg)"></s>atomic</span>
-      <span class="key"><s style="border-color:var(--agent);background:var(--agent-bg)"></s>agent</span>
-      <p style="margin:8px 0 0;color:var(--muted);font-size:13.5px">Dashed outline = meta or hook. Every skill fires on its own except tuning (manual); skills that change files only propose first.</p>
-    </div>
-    <div class="card">
-      <h2>Maintenance loop</h2>
-      <ul>
-        <li><code>handoff</code> sees signals → <code>learning</code> adds or prunes one rule</li>
-        <li><code>handoff</code> sees junk → <code>tidying</code> cleans reversibly</li>
-        <li>after big changes → <code>groundwork</code> audit checks the contract stamp</li>
-        <li>prose advises; Bash hooks enforce; Write/Edit hooks warn until proven</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>Contract v1 in CLAUDE.md</h2>
-      <ul>
-        <li><code>## Commands</code> — test, typecheck</li>
-        <li><code>## Where things live</code> — docs, decisions, specs, plans, design, rules, scratch, trash</li>
-        <li><code>## Workflow</code> — small change → just do it, idea → shaping, UI → design-interview, bug → debugging</li>
-      </ul>
-    </div>
-  </div>
-  <footer>Source of truth: <code>research/graph.md</code>. Decisions DEC-007…DEC-032 in <code>research/decisions.md</code>.</footer>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="sky" aria-hidden="true"><div class="nebula"></div><div class="flare"><i></i></div><div class="planet"></div></div>
+<a class="skip" href="#gwrap" data-t="skip">Skip to the map</a>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><svg class="mark" width="46" height="46" viewBox="-23 -23 46 46" aria-hidden="true"><g fill="#e8714a"><path transform="rotate(0)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(30)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(60)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(90)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(120)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(150)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(180)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(210)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(240)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(270)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(300)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/><path transform="rotate(330)" d="M0,-6.5 C2.6,-11 2.6,-16.5 0,-21.5 C-2.6,-16.5 -2.6,-11 0,-6.5Z"/></g></svg><div><p class="eyebrow" data-t="eyebrow"></p><h1>Foma <b>Skills</b></h1><p class="sub" data-t="sub"></p></div></div>
+ <ul class="stats" id="stats"></ul>
+</header>
+<nav class="controls" aria-label="Map controls">
+ <div class="search" role="search">
+  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="#f4ece6" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="#f4ece6" stroke-width="1.8" stroke-linecap="round"/></svg>
+  <input id="q" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="qlist" data-tp="search_ph" data-ta="search_label">
+  <ul class="list" id="qlist" role="listbox" hidden></ul>
+ </div>
+ <div class="group" role="group" id="filters"><span class="glabel" data-t="show"></span></div>
+ <div class="group"><span class="glabel" data-t="size"></span><div class="seg" id="size"><button type="button" data-v="equal" data-t="equal"></button><button type="button" data-v="tokens" data-t="tokens"></button></div></div>
+ <div class="seg" id="lang" role="group" data-ta="lang"><button type="button" data-v="en">EN</button><button type="button" data-v="ru">RU</button></div>
+ <button type="button" class="btn play" id="playbtn"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg><span data-t="play"></span></button>
+</nav>
+<p class="hint"><span class="m" data-t="hint"></span><span class="t" data-t="hint_touch"></span></p>
+<main class="stage" id="stage">
+ <section class="gwrap" id="gwrap" tabindex="-1">
+  <svg id="map" role="group"></svg>
+  <div class="tip" id="tip" aria-hidden="true"></div>
+ </section>
+ <aside class="side" id="side">
+  <div class="cap" id="cap" hidden role="region" aria-live="polite"></div>
+  <div id="intro" class="card"></div>
+  <div id="detail" class="card" role="region" aria-live="polite"></div>
+ </aside>
 </main>
-
+<footer id="foot"></footer>
+</div>
+<script type="application/json" id="data">{"repo":"https://github.com/t8jwscc7qy-sketch/foma-skills","colors":{"setup":"#f2b44f","process":"#86b2f2","methods":"#5fceb4","atomic":"#bcb2a8","meta":"#f08fb4","agents":"#f08fb4","hooks":"#cfc5bc","contract":"#e8714a"},"order":{"hooks":["session-start","fire-log"],"setup":["groundwork","tidying","handoff","learning","skill-finder"],"meta":["writing-skills","tuning"],"process":["shaping","design-interview","planning","executing"],"methods":["debugging","refactoring","reviewing"],"atomic":["documenting","tdd","committing"],"agents":["explorer","implementer","reviewer"]},"nodes":[{"id":"committing","kind":"skill","group":"atomic","level":"atomic","mode":"auto","always":70,"invoke":800,"text":{"en":"Makes small commits in your project's style; never pushes on its own.","ru":"Делает маленькие коммиты в стиле вашего проекта; сам никогда не пушит."},"say":{"en":"Commit my changes","ru":"Закоммить мои изменения"},"desc":"Makes clean git commits in the project's own style. Use when the user asks to commit, write a commit message, split changes into commits, or open a PR. Not for reviews or explaining history."},{"id":"debugging","kind":"skill","group":"methods","level":"method","mode":"auto","always":90,"invoke":910,"text":{"en":"Reproduces, forms a hypothesis, finds the root cause, then fixes with a regression test.","ru":"Воспроизводит, строит гипотезы, находит первопричину и только потом чинит с регрессионным тестом."},"say":{"en":"Why does checkout throw an error?","ru":"Почему падает оформление заказа?"},"desc":"Finds the root cause of a bug before fixing it. Use when something behaves unexpectedly, throws, fails a test, runs slow, or the user says \"find out why\". Not for a precisely diagnosed fix, test runs, reviews or tests-first work."},{"id":"design-interview","kind":"skill","group":"process","level":"process","mode":"auto","always":90,"invoke":1400,"text":{"en":"Shows three different visual variants side by side in the browser and records your pick in DESIGN.md.","ru":"Показывает три разных варианта внешнего вида рядом в браузере и записывает ваш выбор в DESIGN.md."},"say":{"en":"I need a new look for the settings screen","ru":"Нужен новый вид экрана настроек"},"desc":"Builds 3 different visual variants side by side in the browser and records the pick in DESIGN.md. Use when the user wants a new look, UI, screen design or game feel and the style isn't fixed. Not for styling within an existing design system."},{"id":"documenting","kind":"skill","group":"atomic","level":"atomic","mode":"auto","always":80,"invoke":790,"text":{"en":"Puts docs and decision records in their home.","ru":"Кладёт документацию и записи о решениях туда, где им место."},"say":{"en":"Record the decision to use Decimal","ru":"Запиши решение использовать Decimal"},"desc":"Writes project docs in the right place. Use when the user asks to document something, record a decision, write an ADR, or update the README or docs. Not for code comments, commit messages or reviews."},{"id":"executing","kind":"skill","group":"process","level":"process","mode":"auto","always":80,"invoke":1100,"text":{"en":"Runs the plan task by task with checks, one review per feature, then archives the plan.","ru":"Выполняет план задача за задачей с проверками, одно ревью на фичу, затем архивирует план."},"say":{"en":"Execute the plan","ru":"Выполняй план"},"desc":"Runs a written plan task by task with checks and a final review. Use when a plan exists and the user says go, implement it, execute the plan, or build the planned feature. Not for writing plans, single edits or reviews."},{"id":"groundwork","kind":"skill","group":"setup","level":"setup","mode":"auto","always":80,"invoke":1200,"text":{"en":"Sets up or audits a project for AI work: safety scan, a short CLAUDE.md contract, docs layout, helper agents. Writes after your ok.","ru":"Настраивает или проверяет проект для работы с ИИ: безопасность, короткий договор в CLAUDE.md, скелет docs/, агенты-помощники. Пишет только после вашего «ок»."},"say":{"en":"Set up this project for Claude","ru":"Настрой этот проект для работы с Claude"},"desc":"Sets up or audits a project for AI work: CLAUDE.md contract, docs layout, agents. Use when starting a new project, there is no CLAUDE.md, or the user asks to set up or audit the repo. Writes only after your ok."},{"id":"handoff","kind":"skill","group":"setup","level":"setup","mode":"auto","always":70,"invoke":550,"text":{"en":"Writes a short session note (.scratch/handoff.md, Next: first) so the next session resumes in one step; flags lessons for learning and junk for tidying.","ru":"Пишет короткую заметку о сессии (.scratch/handoff.md, первая строка Next:), чтобы следующая сессия продолжила с одного шага; отмечает уроки для learning и мусор для tidying."},"say":{"en":"Wrap up, I'll continue tomorrow","ru":"Завершаем, продолжу завтра"},"desc":"Writes a short session note so the next session resumes in one step. Use when the user says wrap up, done for today, continue later, or start a new session. Not for commits or docs."},{"id":"learning","kind":"skill","group":"setup","level":"setup","mode":"auto","always":90,"invoke":1100,"text":{"en":"Turns a repeated mistake into the smallest lasting fix (CLAUDE.md line, rule, hook) and prunes stale rules. Proposes first.","ru":"Превращает повторяющуюся ошибку в самое маленькое постоянное исправление (строка в CLAUDE.md, правило, хук) и вычищает устаревшие правила. Сначала предлагает."},"say":{"en":"You keep forgetting X, make it a rule","ru":"Ты постоянно делаешь X, сделай правило"},"desc":"Turns a repeated mistake or correction into the smallest lasting fix (CLAUDE.md line, rule, hook) and prunes stale rules. Use when the user says you keep doing X, wants a rule for this project, or asks to clean up CLAUDE.md. Proposes first."},{"id":"planning","kind":"skill","group":"process","level":"process","mode":"auto","always":90,"invoke":990,"text":{"en":"Breaks work into ordered, checkable tasks and picks a model and effort per task. Small change: no plan needed.","ru":"Разбивает работу на упорядоченные проверяемые задачи и выбирает модель и усилие для каждой. Для мелкой правки план не нужен."},"say":{"en":"Make a plan for the refunds feature","ru":"Составь план для фичи возвратов"},"desc":"Breaks a feature into ordered, verifiable tasks in a plan file and assigns a model per task. Use when the user asks for a plan, a task breakdown, or which model fits a plan task, or a change spans several files. Not for small edits or reviews."},{"id":"refactoring","kind":"skill","group":"methods","level":"method","mode":"auto","always":90,"invoke":780,"text":{"en":"Changes structure, never behaviour, and only after tests are green.","ru":"Меняет структуру, но не поведение, и только при зелёных тестах."},"say":{"en":"Refactor report.py, remove the duplication","ru":"Отрефактори report.py, убери дублирование"},"desc":"Changes code structure without changing behaviour. Use when the user asks to refactor, clean up, restructure, extract, rename across files, reduce duplication, or improve the architecture. Not for features, bug fixes or reviews."},{"id":"reviewing","kind":"skill","group":"methods","level":"method","mode":"auto","always":90,"invoke":1000,"text":{"en":"Reviews against your standards and the spec and ends with a verdict: ship or fix first.","ru":"Проверяет изменение по стандартам проекта и спеке, итог: можно выпускать или сначала исправить."},"say":{"en":"Review my branch, is it ready to merge?","ru":"Проверь мою ветку, можно мёржить?"},"desc":"Reviews a diff against the project's standards and spec in priority order, ending in a ship or fix-first verdict. Use when the user asks to review code, a PR or a branch, \"is this ready to merge?\", or for UI code feedback. Not for debugging."},{"id":"shaping","kind":"skill","group":"process","level":"process","mode":"auto","always":90,"invoke":1400,"text":{"en":"Questions a raw idea until it becomes an approved spec in docs/specs/.","ru":"Задаёт вопросы по сырой идее, пока она не станет утверждённой спекой в docs/specs/."},"say":{"en":"I want to build a loyalty points system","ru":"Хочу сделать систему бонусных баллов"},"desc":"Turns a raw idea into an approved spec by questioning the user first. Use when the user has a new feature or product idea, says \"I want to build...\", or a request is vague with a design choice open. Not for clear small edits or bugs."},{"id":"skill-finder","kind":"skill","group":"setup","level":"setup","mode":"auto","always":90,"invoke":1100,"text":{"en":"Finds a third-party skill, vets every file through a read-only agent and installs only after your ok.","ru":"Находит чужой скилл, проверяет каждый его файл через агента только для чтения и ставит только после вашего «ок»."},"say":{"en":"Is there a skill for release notes?","ru":"Есть скилл для release notes?"},"desc":"Finds a third-party Claude skill, vets every file in it, and installs it only after your ok. Use when the user asks if there is a skill for X, wants to add a skill from GitHub or a registry, or asks whether a skill is safe."},{"id":"tdd","kind":"skill","group":"atomic","level":"atomic","mode":"auto","always":80,"invoke":680,"text":{"en":"Builds a change in red-green slices with expected values worked out independently of the code.","ru":"Строит изменение срезами «красный — зелёный», ожидаемые значения берёт независимо от реализации."},"say":{"en":"Add the discount rule test-first","ru":"Добавь правило скидки сначала с тестом"},"desc":"Builds a change test-first in red-green slices. Use when the user asks for tests first, TDD, a test-driven change, or a regression test for a bug fix. Not for plain \"add a function\", review or debugging."},{"id":"tidying","kind":"skill","group":"setup","level":"setup","mode":"auto","always":80,"invoke":1100,"text":{"en":"Finds junk by tier, shows a report and removes it reversibly (.trash/ or git rm) after your ok.","ru":"Ищет мусор по уровням, показывает отчёт и удаляет обратимо (.trash/ или git rm) после вашего «ок»."},"say":{"en":"The repo is messy, clean it up","ru":"В репозитории бардак, убери лишнее"},"desc":"Finds junk files (backups, temp, stray notes) and removes them reversibly after your ok. Use when the user asks to clean up the project, remove leftovers, or says the repo is messy. Not for refactoring code."},{"id":"tuning","kind":"skill","group":"meta","level":"meta","mode":"manual","always":80,"invoke":870,"text":{"en":"Reads the fire log and saved test runs, finds skills that never fire or keep failing, and proposes the smallest fix.","ru":"Читает журнал срабатываний и сохранённые прогоны тестов, находит скиллы, которые не срабатывают или падают, и предлагает минимальную правку."},"say":{"en":"/foma-skills:tuning","ru":"/foma-skills:tuning"},"desc":"Reads the pack's own evidence (fire log, saved test runs), finds skills that never fire or keep failing, and proposes the smallest fix, applied only after the user's ok. Run by hand: /foma-skills:tuning."},{"id":"writing-skills","kind":"skill","group":"meta","level":"meta","mode":"auto","always":90,"invoke":1000,"text":{"en":"Writes or tightens a skill: short description, tight steps, tested triggers.","ru":"Пишет или ужимает скилл: короткое описание, сжатые шаги, проверенные триггеры."},"say":{"en":"Write a skill for our release routine","ru":"Напиши скилл для нашего процесса релиза"},"desc":"Writes or tightens a Claude Code skill: short description, tight steps, tested triggers. Use when the user asks to create, write, improve or shrink a SKILL.md or a project skill, or says a skill never fires. Not for using a skill."},{"id":"implementer","kind":"agent","group":"agents","text":{"en":"Writes code, one task per call, in a fresh context. executing hands it the tasks of a larger plan.","ru":"Пишет код, одну задачу за вызов, в свежем контексте. executing отдаёт ему задачи большого плана."},"model":{"en":"Model from the plan (Opus complex, Sonnet routine, Haiku only behind tests) · effort medium","ru":"Модель из плана (Opus для сложного, Sonnet для рутины, Haiku только при тестах) · усилие medium"}},{"id":"reviewer","kind":"agent","group":"agents","text":{"en":"Reviews the whole change once per feature, with the reviewing skill preloaded.","ru":"Делает ревью всего изменения раз на фичу, со скиллом reviewing."},"model":{"en":"Opus · effort medium · once per feature","ru":"Opus · усилие medium · раз на фичу"}},{"id":"explorer","kind":"agent","group":"agents","text":{"en":"Finds and reads files and returns a short summary (up to 10 lines). Read-only.","ru":"Ищет и читает файлы и возвращает короткую сводку (до 10 строк). Только чтение."},"model":{"en":"Haiku · effort low · tools Read, Grep, Glob only","ru":"Haiku · усилие low · только Read, Grep, Glob"}},{"id":"session-start","kind":"hook","group":"hooks","text":{"en":"Runs at session start: prints a one-line router, the handoff note's Next: line when the note is under 24 h old, and the progress of an open plan.","ru":"Срабатывает в начале сессии: печатает однострочный маршрутизатор, строку Next: из заметки handoff, если ей меньше суток, и прогресс открытого плана."},"label":{"en":"SessionStart","ru":"SessionStart"},"title":{"en":"SessionStart hook","ru":"Хук SessionStart"}},{"id":"fire-log","kind":"hook","group":"hooks","text":{"en":"A PostToolUse hook on Skill: appends each skill fire to the local .scratch/fires.jsonl. learning and tuning read it to spot skills that never fire.","ru":"Хук PostToolUse на Skill: дописывает каждое срабатывание скилла в локальный .scratch/fires.jsonl. learning и tuning читают его, чтобы найти скиллы, которые не срабатывают."},"label":{"en":"fire log","ru":"журнал"},"title":{"en":"Fire-log hook","ru":"Хук журнала срабатываний"}},{"id":"contract","kind":"contract","group":"contract","text":{"en":"A short contract in your project's CLAUDE.md: ## Commands (test, typecheck) and ## Where things live (docs, decisions, specs, plans, design, rules, scratch, trash). groundwork writes it, learning adds lines, skills read it and fall back to defaults for missing keys.","ru":"Короткий договор в CLAUDE.md проекта: ## Commands (тесты, typecheck) и ## Where things live (документация, решения, спеки, планы, дизайн, правила, scratch, корзина). groundwork пишет его, learning дописывает строки, скиллы читают и для отсутствующих ключей берут значения по умолчанию."}}],"edges":[{"s":"debugging","t":"tdd","kind":"call"},{"s":"debugging","t":"explorer","kind":"call"},{"s":"executing","t":"tdd","kind":"call"},{"s":"executing","t":"debugging","kind":"call"},{"s":"executing","t":"reviewing","kind":"call"},{"s":"executing","t":"committing","kind":"call"},{"s":"executing","t":"documenting","kind":"call"},{"s":"executing","t":"implementer","kind":"call"},{"s":"executing","t":"reviewer","kind":"call"},{"s":"executing","t":"explorer","kind":"call"},{"s":"planning","t":"documenting","kind":"call"},{"s":"refactoring","t":"tdd","kind":"call"},{"s":"shaping","t":"documenting","kind":"call"},{"s":"implementer","t":"tdd","kind":"call","label":{"en":"preloads","ru":"подгружает"}},{"s":"reviewer","t":"reviewing","kind":"call","label":{"en":"preloads","ru":"подгружает"}},{"s":"skill-finder","t":"explorer","kind":"call","label":{"en":"vets a skill","ru":"проверка скилла"}},{"s":"groundwork","t":"contract","kind":"write","label":{"en":"writes","ru":"пишет"}},{"s":"learning","t":"contract","kind":"signal","label":{"en":"adds a line","ru":"дописывает строку"}},{"s":"session-start","t":"handoff","kind":"signal","label":{"en":"shows Next:","ru":"показывает Next:"}},{"s":"fire-log","t":"learning","kind":"signal","label":{"en":"fire log","ru":"журнал"}},{"s":"fire-log","t":"tuning","kind":"signal","label":{"en":"fire log","ru":"журнал"}},{"s":"handoff","t":"learning","kind":"signal","label":{"en":"lessons","ru":"уроки"}},{"s":"handoff","t":"tidying","kind":"signal","label":{"en":"junk","ru":"мусор"}},{"s":"shaping","t":"planning","kind":"signal","label":{"en":"next: plan","ru":"дальше: план"}},{"s":"design-interview","t":"planning","kind":"signal","label":{"en":"next: plan","ru":"дальше: план"}},{"s":"contract","t":"planning","kind":"read"},{"s":"contract","t":"executing","kind":"read"},{"s":"contract","t":"documenting","kind":"read"},{"s":"contract","t":"committing","kind":"read"},{"s":"contract","t":"tidying","kind":"read"},{"s":"contract","t":"design-interview","kind":"read"},{"s":"contract","t":"tdd","kind":"read"}],"play":[{"nodes":["shaping","documenting"],"edges":[["shaping","documenting"]],"trail":["shaping"],"title":{"en":"Idea → spec","ru":"Идея → спека"},"text":{"en":"You say “I want to build a loyalty points system”. shaping asks questions until the idea is clear, then the approved spec goes to docs/specs/.","ru":"Вы говорите «Хочу сделать систему бонусных баллов». shaping задаёт вопросы, пока идея не станет ясной, и кладёт утверждённую спеку в docs/specs/."}},{"nodes":["planning","documenting"],"edges":[["shaping","planning"],["planning","documenting"]],"trail":["planning"],"title":{"en":"Spec → plan","ru":"Спека → план"},"text":{"en":"planning splits the work into ordered tasks, each with a “Done when” check and a model per task, in docs/plans/<feature>/.","ru":"planning разбивает работу на упорядоченные задачи, у каждой условие «Done when» и модель, в docs/plans/<фича>/."}},{"nodes":["executing","implementer"],"edges":[["executing","implementer"]],"trail":["executing","implementer"],"title":{"en":"Run the plan","ru":"Выполнение плана"},"text":{"en":"“Execute the plan.” executing does 1–2 tasks itself; larger plans go to implementer agents, each on the model the plan names.","ru":"«Выполняй план». executing делает 1–2 задачи сам, большие планы отдаёт агентам implementer на модели из плана."}},{"nodes":["implementer","tdd"],"edges":[["implementer","tdd"],["executing","tdd"]],"trail":["tdd"],"title":{"en":"Test first","ru":"Сначала тест"},"text":{"en":"Code grows in red-green slices: one failing test, the least code to pass it, then the next slice.","ru":"Код растёт срезами «красный — зелёный»: один падающий тест, минимум кода, чтобы он прошёл, затем следующий срез."}},{"nodes":["executing","reviewer","reviewing"],"edges":[["executing","reviewer"],["reviewer","reviewing"]],"trail":["reviewer","reviewing"],"title":{"en":"One review per feature","ru":"Одно ревью на фичу"},"text":{"en":"At the end the reviewer agent (Opus) checks the whole change against your standards and the spec: ship, or fix first.","ru":"В конце агент reviewer (Opus) проверяет всё изменение по стандартам и спеке: можно выпускать или сначала исправить."}},{"nodes":["committing"],"edges":[["executing","committing"]],"trail":["committing"],"title":{"en":"Commit","ru":"Коммит"},"text":{"en":"Small commits in your project's style, files added by path. Nothing is pushed on its own.","ru":"Маленькие коммиты в стиле проекта, файлы добавляются по путям. Ничего не пушится само."}},{"nodes":["handoff","session-start"],"edges":[["session-start","handoff"]],"trail":["handoff"],"title":{"en":"Wrap up","ru":"Конец сессии"},"text":{"en":"“Done for today.” handoff writes a short note; next time the SessionStart hook shows its Next: line, so you resume in one step.","ru":"«Завершаем». handoff пишет короткую заметку; в следующий раз хук SessionStart покажет её строку Next:, и работа продолжится с одного шага."}}],"ui":{"en":{"doc_title":"Foma Skills · skill map","eyebrow":"Interactive skill map","sub":"17 lightweight Claude Code skills: who calls whom, what each costs in tokens, and how a task flows through them.","st_skills":"skills","st_always":"tokens always on","st_est":"Claude Code's estimate","st_auto":"auto","st_manual":"manual","st_agents":"helper agents","search_ph":"Find a skill…","search_label":"Find a skill","no_match":"No skill matches","show":"Show","all":"All","size":"Size","equal":"Equal","tokens":"Tokens","lang":"Language","play":"Play a task","hint":"Hover or Tab to explore · Enter or click for details · / to search · Esc to close","hint_touch":"Tap a skill for details","map_label":"Skill map: 17 skills in five levels, three helper agents, two hooks and the CLAUDE.md contract","groups":{"setup":"Setup & upkeep","process":"Processes","methods":"Methods","atomic":"Atomic","agents":"Helper agents","meta":"Meta","hooks":"Hooks","contract":"Contract"},"chips":{"setup":"Setup","process":"Processes","methods":"Methods","atomic":"Atomic","agents":"Agents","meta":"Meta"},"group_desc":{"setup":"set up and keep the project clean; hand off by message","process":"take a feature from idea to code","methods":"one way of working; call atomic skills and agents","atomic":"the smallest steps; call no other skill","meta":"skills about skills","agents":"fresh-context helpers; groundwork ships copies to .claude/agents/"},"legend_h":"How to read the map","lg_call":"calls: dots flow from caller to callee","lg_signal":"signal: a hand-off by message or a file","lg_ring":"size and ring: tokens loaded when a skill fires","lg_agent":"helper agent with a fresh context","lg_manual":"manual: you run it yourself","levels_h":"Levels","lv_rule":"Calls only point down a level, so the graph has no cycles. CI checks it.","budget_h":"Always in context","budget_txt":"Only the short skill descriptions stay in context: ≈{total} tokens for all 17. A skill's full text (~{min}–{max} tokens) loads only when it fires.","install_h":"Install","copy":"Copy","copied":"Copied","contract_name":"CLAUDE.md contract","contract_sub":"## Commands · ## Where things live","d_auto":"auto","d_manual":"manual","d_say":"Say something like","d_run":"Run it with","d_tokens":"Tokens","d_always":"always on","d_fires":"when it fires","d_share":"{pct}% of the ≈{total} always-on total","d_calls":"Calls","d_calledby":"Called by","d_out":"Hands off to","d_in":"Hears from","d_agents":"Helper agents","d_contract":"Reads the CLAUDE.md contract","d_gh":"Open SKILL.md on GitHub","d_close":"Close details","d_usedby":"Used by","d_preloads":"Preloads","d_model":"Model","d_writtenby":"Written by","d_readby":"Read by","d_nocalls":"Calls no other skill.","d_hook":"Plugin hook","d_agent":"Helper agent","d_skill":"skill","play_h":"Play a task","step":"Step","prev":"Previous step","next":"Next step","pause":"Pause","resume":"Play","stop":"Stop","tip_more":"Click for details","repo":"GitHub repo","readme":"README","skills_ref":"Skills reference","foot":"Generated from the SKILL.md files by scripts/make_graph.py · Apache-2.0","aria_node":"{name}, {group}, {mode}. Calls {calls}. Called by {by}.","none":"nothing","nobody":"no one","skip":"Skip to the map"},"ru":{"doc_title":"Foma Skills · карта скиллов","eyebrow":"Интерактивная карта скиллов","sub":"17 лёгких скиллов для Claude Code: кто кого вызывает, сколько токенов стоит каждый и как через них проходит задача.","st_skills":"скиллов","st_always":"токенов всегда в контексте","st_est":"оценка Claude Code","st_auto":"авто","st_manual":"вручную","st_agents":"агента-помощника","search_ph":"Найти скилл…","search_label":"Найти скилл","no_match":"Ничего не найдено","show":"Показать","all":"Все","size":"Размер","equal":"Равный","tokens":"Токены","lang":"Язык","play":"Проиграть задачу","hint":"Наведите или нажмите Tab · Enter или клик — подробности · / — поиск · Esc — закрыть","hint_touch":"Нажмите на скилл, чтобы открыть подробности","map_label":"Карта скиллов: 17 скиллов на пяти уровнях, три агента-помощника, два хука и договор в CLAUDE.md","groups":{"setup":"Подготовка и поддержка","process":"Процессы","methods":"Методы","atomic":"Атомарные","agents":"Агенты-помощники","meta":"Мета","hooks":"Хуки","contract":"Договор"},"chips":{"setup":"Подготовка","process":"Процессы","methods":"Методы","atomic":"Атомарные","agents":"Агенты","meta":"Мета"},"group_desc":{"setup":"готовят и поддерживают проект; передают дальше сообщением","process":"ведут фичу от идеи до кода","methods":"один способ работы; вызывают атомарные скиллы и агентов","atomic":"самые маленькие шаги; других скиллов не вызывают","meta":"скиллы про скиллы","agents":"помощники со свежим контекстом; groundwork кладёт их копии в .claude/agents/"},"legend_h":"Как читать карту","lg_call":"вызов: точки бегут от вызывающего к вызываемому","lg_signal":"сигнал: передача сообщением или через файл","lg_ring":"размер и кольцо: токены при срабатывании скилла","lg_agent":"агент-помощник со свежим контекстом","lg_manual":"вручную: вы запускаете его сами","levels_h":"Уровни","lv_rule":"Вызовы идут только вниз по уровням, поэтому циклов нет. Это проверяет CI.","budget_h":"Всегда в контексте","budget_txt":"В контексте постоянно лежат только короткие описания: ≈{total} токенов на все 17. Полный текст скилла (~{min}–{max} токенов) загружается, только когда он срабатывает.","install_h":"Установка","copy":"Копировать","copied":"Скопировано","contract_name":"Договор в CLAUDE.md","contract_sub":"## Commands · ## Where things live","d_auto":"авто","d_manual":"вручную","d_say":"Скажите","d_run":"Запуск","d_tokens":"Токены","d_always":"всегда в контексте","d_fires":"при срабатывании","d_share":"{pct}% от общих ≈{total}","d_calls":"Вызывает","d_calledby":"Кем вызывается","d_out":"Передаёт","d_in":"Получает от","d_agents":"Агенты-помощники","d_contract":"Читает договор в CLAUDE.md","d_gh":"Открыть SKILL.md на GitHub","d_close":"Закрыть подробности","d_usedby":"Кто использует","d_preloads":"Подгружает","d_model":"Модель","d_writtenby":"Кто пишет","d_readby":"Кто читает","d_nocalls":"Других скиллов не вызывает.","d_hook":"Хук плагина","d_agent":"Агент-помощник","d_skill":"скилл","play_h":"Проиграть задачу","step":"Шаг","prev":"Предыдущий шаг","next":"Следующий шаг","pause":"Пауза","resume":"Играть","stop":"Стоп","tip_more":"Нажмите, чтобы открыть подробности","repo":"Репозиторий","readme":"README","skills_ref":"Справочник по скиллам","foot":"Собрано из файлов SKILL.md скриптом scripts/make_graph.py · Apache-2.0","aria_node":"{name}, {group}, {mode}. Вызывает: {calls}. Кем вызывается: {by}.","none":"никого","nobody":"никем","skip":"Перейти к карте"}},"always_total":1409,"max_invoke":1400,"min_invoke":550,"count":17,"manual":1,"agents":3}</script>
 <script>
-const C = { setup: 'setup', proc: 'proc', meth: 'meth', atom: 'atom', agent: 'agent', meta: 'meta' };
-const X5 = [310, 520, 730, 940, 1150];
-const X4 = [310, 555, 800, 1045];
-const X3 = [430, 730, 1030];
-const X6 = [295, 465, 635, 805, 975, 1145];
-const Y = { hook: 42, setup: 112, contract: 212, proc: 322, meth: 432, atom: 552, agent: 680 };
-const N = [
-  ['hook', 'SessionStart hook', 'router · note · plan', X5[0], Y.hook, 'meta', 0, 'Plugin hook: a short router line, the handoff note\'s Next line when it is under 24 h old (not after compaction), and the progress of an open plan.', 170, 40],
-  ['gw', 'groundwork', 'set up · audit', X6[0], Y.setup, C.setup, 0, 'Owns safety, contract and structure. Writes the contract and agent files after ok, measures session-start token cost.', 150],
-  ['tidy', 'tidying', 'junk → .trash/', X6[1], Y.setup, C.setup, 0, 'Owns files: junk in three tiers, stray docs, leftover plans. Report first, reversible removal after ok. Never rm -rf.', 150],
-  ['hand', 'handoff', 'note + /clear', X6[2], Y.setup, C.setup, 0, 'Session note in .scratch/ with the next action first, then /clear. Flags lessons for learning and junk for tidying.', 150],
-  ['learn', 'learning', 'lesson → smallest layer', X6[3], Y.setup, C.setup, 0, 'Owns rule content: turns repeated mistakes into the smallest fix and prunes stale rules with equal weight. Proposes, writes after ok.', 150],
-  ['find', 'skill-finder', 'find · vet · install', X6[4], Y.setup, C.setup, 0, 'Finds a skill, vets every file through a read-only agent, never passes -y, pins a commit, copies it in only after ok.', 150],
-  ['tune', 'tuning', 'manual · fires + runs → fixes', X5[4], Y.hook, 'meta', 0, 'Manual. Reads the fire log and saved test runs for free, flags skills that never fire or keep failing, proposes the smallest fix, applies it after ok. In the pack repo it checks the fix with the held-out triggers.', 150],
-  ['ws', 'writing-skills', 'meta', X6[5], Y.setup, C.meta, 0, 'Writes or tightens a skill in the lite style: layer check, short description, trigger test.', 150],
-  ['shape', 'shaping', 'idea → spec', X4[0], Y.proc, C.proc, 0, 'Questions a raw idea (AI asks, you write), challenges it, ends with docs/specs/<name>.md.'],
-  ['design', 'design-interview', 'variants · gallery', X4[1], Y.proc, C.proc, 0, 'Interviews you about the look; fresh agents build 3 different variants for a browser gallery; the choice goes to docs/design/ and DESIGN.md.'],
-  ['plan', 'planning', 'plans + model per task', X4[2], Y.proc, C.proc, 0, 'Small → just do it; multi-step → task files with a model and effort per task.'],
-  ['exec', 'executing', 'tasks → done', X4[3], Y.proc, C.proc, 0, 'Runs 1–2 task plans inline, larger ones via agents with the plan\'s model; appetite check; review once per feature; archives the plan.'],
-  ['dbg', 'debugging', 'loop → root cause', X3[0], Y.meth, C.meth, 0, 'Feedback loop first, reproduce, hypothesise, fix with a regression test.'],
-  ['rev', 'reviewing', 'standards + spec', X3[1], Y.meth, C.meth, 0, 'Reviews against project rules and the spec; UI list; compact verdict.'],
-  ['ref', 'refactoring', 'after green', X3[2], Y.meth, C.meth, 0, 'Behaviour-preserving change after tests are green, outside the tdd loop.'],
-  ['tdd', 'tdd', 'red → green', X3[0], Y.atom, C.atom, 0, 'Agreed seams, vertical slices, expected values from an independent source.'],
-  ['com', 'committing', 'small · confirmed', X3[1], Y.atom, C.atom, 0, 'Small commits in the style from CLAUDE.md; stops on staged debug lines; never pushes on its own.'],
-  ['doc', 'documenting', 'docs home', X3[2], Y.atom, C.atom, 0, 'Puts docs in the docs home; decision entries with status and the three-gate filter.'],
-  ['impl', 'implementer', 'model per call · medium', X3[0], Y.agent, C.agent, 0, 'Agent that writes code, one task per call. Effort medium; the model comes from the plan at each call.'],
-  ['expl', 'explorer', 'Haiku · read-only', X3[1], Y.agent, C.agent, 0, 'Read/Grep/Glob only: cannot change anything. Searches and vets, returns a short answer.'],
-  ['rvw', 'reviewer', 'Opus · per feature', X3[2], Y.agent, C.agent, 0, 'Reviews once per feature against the spec and the evidence.'],
-];
-const E = [
-  ['hook','hand','handoff'],
-  ['hand','tidy','handoff'], ['hand','learn','handoff'],
-  ['shape','plan','handoff'], ['design','plan','handoff'], ['shape','doc'], ['plan','doc'],
-  ['exec','dbg'], ['exec','rev'], ['exec','ref'],
-  ['exec','tdd'], ['exec','com'], ['exec','doc'],
-  ['exec','impl'], ['exec','rvw'], ['exec','expl'],
-  ['dbg','tdd'], ['dbg','expl'], ['ref','tdd'],
-  ['impl','tdd'], ['rvw','rev'],
-];
-const ns = 'http://www.w3.org/2000/svg';
-const svg = document.getElementById('g');
-const el = (t, a, p = svg) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
-const css = v => `var(--${v})`;
+(function(){
+'use strict';
+var D=JSON.parse(document.getElementById('data').textContent);
+var $=function(s,r){return (r||document).querySelector(s)};
+var NS='http://www.w3.org/2000/svg';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Headless capture renders few frames: skip one-shot entrance effects so screenshots show the final state.
+var STILL=RM||/HeadlessChrome/.test(navigator.userAgent);
+if(STILL)document.documentElement.classList.add('still');
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+var N={},COL=D.colors;
+D.nodes.forEach(function(n){N[n.id]=n;n.out=[];n.inc=[]});
+D.edges.forEach(function(e,i){e.i=i;N[e.s].out.push(e);N[e.t].inc.push(e)});
+var GROUPS=['setup','process','methods','atomic','agents','meta'];
+var SKILLS=D.nodes.filter(function(n){return n.kind==='skill'});
+var lang='en',langPinned=false,filter='all',sizeMode='tokens',sel=null,hover=null,query='',matches=null;
+var play={on:false,step:0,auto:false,timer:0};
+var booted=false,intro=[],introT0=0,pos={},geo={},svg=$('#map'),gwrap=$('#gwrap'),tip=$('#tip'),W=0,narrow=false,parts=[],nodeEls={},edgeEls=[],labelEls=[],firstRender=true;
+function t(k){return D.ui[lang][k]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
+function kfmt(v){return v>=1000?(Math.round(v/100)/10).toLocaleString(lang==='ru'?'ru-RU':'en-US')+'k':String(v)}
+function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function gname(n){return D.ui[lang].groups[n.group]}
+function label(n){return n.kind==='hook'?n.label[lang]:n.kind==='contract'?t('contract_name'):n.id}
+function title(n){return n.kind==='hook'?n.title[lang]:n.kind==='contract'?t('contract_name'):n.id}
 
-el('defs', {}).innerHTML = '<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--edge)"/></marker>';
-
-const bands = [['setup & upkeep', Y.setup], ['contract', Y.contract], ['processes', Y.proc], ['methods', Y.meth], ['atomic', Y.atom], ['agents', Y.agent]];
-for (const [t, y] of bands) {
-  el('line', { x1: 20, x2: 1260, y1: y + 52, y2: y + 52, class: 'band' });
-  el('text', { x: 24, y: y + 4, class: 'band-label' }).textContent = t;
+/* ---------- star field ---------- */
+var cv=$('#stars'),cx=cv.getContext('2d'),stars=[],SW=0,SH=0,mx=0,my=0,tmx=0,tmy=0,shoot=null,nextShoot=4000,sprite;
+function initStars(){
+ var dpr=Math.min(2,window.devicePixelRatio||1);SW=innerWidth;SH=innerHeight;
+ cv.width=Math.round(SW*dpr);cv.height=Math.round(SH*dpr);cv.style.width=SW+'px';cv.style.height=SH+'px';cx.setTransform(dpr,0,0,dpr,0,0);
+ var n=Math.round(Math.min(340,SW*SH/4200));stars=[];
+ for(var i=0;i<n;i++){var z=Math.random();stars.push({x:Math.random()*SW,y:Math.random()*SH,z:z,r:z>.93?1.5+Math.random():.4+z*.9,a:.35+Math.random()*.6,ph:Math.random()*6.3,sp:.4+Math.random()*1.4,w:Math.random()<.22})}
+ sprite=document.createElement('canvas');sprite.width=sprite.height=32;var g=sprite.getContext('2d'),rg=g.createRadialGradient(16,16,0,16,16,16);
+ rg.addColorStop(0,'rgba(255,240,228,1)');rg.addColorStop(.2,'rgba(255,190,150,.5)');rg.addColorStop(1,'rgba(255,140,80,0)');g.fillStyle=rg;g.fillRect(0,0,32,32);
 }
-
-const nodes = {};
-for (const [id, label, sub, x, y, lvl, manual, job, w = 176, h = 58] of N) nodes[id] = { id, label, sub, x, y, lvl, manual, job, w, h };
-
-const edgeEls = [];
-const gE = el('g', {});
-for (const [a, b, type = 'uses'] of E) {
-  const s = nodes[a], t = nodes[b];
-  let d;
-  if (Math.abs(s.y - t.y) < 5) {
-    const x1 = s.x + (t.x > s.x ? s.w / 2 : -s.w / 2), x2 = t.x + (t.x > s.x ? -t.w / 2 : t.w / 2);
-    const far = Math.abs(t.x - s.x) > 250, lift = far ? 62 : 0;
-    d = far ? `M${s.x},${s.y - s.h / 2} C${s.x},${s.y - s.h / 2 - lift} ${t.x},${t.y - t.h / 2 - lift} ${t.x},${t.y - t.h / 2}`
-            : `M${x1},${s.y} L${x2},${t.y}`;
-  } else if (t.y > s.y) {
-    const y1 = s.y + s.h / 2, y2 = t.y - t.h / 2, m = (y1 + y2) / 2;
-    d = `M${s.x},${y1} C${s.x},${m} ${t.x},${m} ${t.x},${y2}`;
-  } else {
-    const y1 = s.y - s.h / 2, y2 = t.y + t.h / 2, m = (y1 + y2) / 2;
-    d = `M${s.x},${y1} C${s.x},${m} ${t.x},${m} ${t.x},${y2}`;
-  }
-  const p = el('path', { d, class: `edge ${type}`, 'marker-end': 'url(#ar)' }, gE);
-  edgeEls.push({ p, a, b });
+function drawStars(ts){
+ cx.clearRect(0,0,SW,SH);mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
+ var sy=window.scrollY||0;
+ for(var i=0;i<stars.length;i++){var s=stars[i],k=.3+s.z*1.4;
+  var x=s.x+(RM?0:ts*.0024*k)+mx*k*10,y=s.y-sy*.05*k+my*k*7;
+  x=((x%SW)+SW)%SW;y=((y%SH)+SH)%SH;
+  var a=RM?s.a:s.a*(.6+.4*Math.sin(ts*.0011*s.sp+s.ph));cx.globalAlpha=a;
+  if(s.r>1.4){cx.drawImage(sprite,x-s.r*4,y-s.r*4,s.r*8,s.r*8)}else{cx.fillStyle=s.w?'#ffd6bf':'#f4f0ff';cx.fillRect(x,y,s.r,s.r)}}
+ if(!RM){
+  if(!shoot&&ts>nextShoot){shoot={x:Math.random()*SW*.7+SW*.2,y:Math.random()*SH*.35,t0:ts}}
+  if(shoot){var p=(ts-shoot.t0)/900;if(p>=1){shoot=null;nextShoot=ts+7000+Math.random()*9000}else{
+   var hx=shoot.x-p*260,hy=shoot.y+p*120,gr=cx.createLinearGradient(hx,hy,hx+120,hy-55);
+   gr.addColorStop(0,'rgba(255,220,200,.9)');gr.addColorStop(1,'rgba(255,160,110,0)');
+   cx.globalAlpha=Math.sin(p*Math.PI);cx.strokeStyle=gr;cx.lineWidth=1.4;cx.beginPath();cx.moveTo(hx,hy);cx.lineTo(hx+120,hy-55);cx.stroke()}}}
+ cx.globalAlpha=1;
 }
+var neb=$('.nebula'),planet=$('.planet');
+function parallax(){var sy=window.scrollY||0;neb.style.transform='translate3d('+(mx*-14)+'px,'+(my*-10-sy*.04)+'px,0)';planet.style.transform='translate3d('+(mx*-6)+'px,'+(-sy*.08)+'px,0)'}
 
-// contract bar + writes edges
-const cb = el('g', { class: 'node', 'data-id': 'contract' });
-el('rect', { x: 220, y: Y.contract - 26, width: 1020, height: 52, rx: 8, fill: css('contract-bg'), stroke: css('contract') }, cb);
-const ct = el('text', { x: 730, y: Y.contract - 2, 'text-anchor': 'middle' }, cb); ct.textContent = 'CLAUDE.md  ·  contract v1';
-const cs = el('text', { x: 730, y: Y.contract + 16, 'text-anchor': 'middle', class: 'sub' }, cb);
-cs.textContent = '## Commands  ·  ## Where things live  ·  ## Workflow   —   read by planning, executing, documenting, committing, tidying';
-nodes.contract = { id: 'contract', job: 'One section block in the root CLAUDE.md. groundwork writes it; skills read paths and commands from it. Missing line → golden default.', label: 'contract v1', x: 730, y: Y.contract, w: 1020, h: 52 };
-for (const a of ['gw', 'learn']) {  // groundwork writes; learning proposes
-  const s = nodes[a];
-  const p = el('path', { d: `M${s.x},${s.y + s.h / 2} L${s.x},${Y.contract - 26}`, class: a === 'gw' ? 'edge writes' : 'edge handoff', 'marker-end': 'url(#ar)' }, gE);
-  edgeEls.push({ p, a, b: 'contract' });
+/* ---------- layout ---------- */
+function radius(n){
+ if(n.kind==='agent')return narrow?17:20;
+ if(n.kind!=='skill')return 0;
+ var rmax=narrow?25:30;
+ return sizeMode==='tokens'?Math.max(13,rmax*Math.sqrt(n.invoke/D.max_invoke)):(narrow?18:21);
 }
-
-const fill = { setup: 'setup-bg', proc: 'proc-bg', meth: 'meth-bg', atom: 'atom-bg', agent: 'agent-bg', meta: 'bg' };
-for (const n of Object.values(nodes)) {
-  if (n.id === 'contract') continue;
-  const g = el('g', { class: 'node', 'data-id': n.id });
-  const stroke = css(n.lvl === 'meta' ? 'meta' : n.lvl);
-  if (n.lvl === 'agent') {
-    const { x, y, w, h } = n, k = 14;
-    el('polygon', { points: `${x - w/2 + k},${y - h/2} ${x + w/2 - k},${y - h/2} ${x + w/2},${y} ${x + w/2 - k},${y + h/2} ${x - w/2 + k},${y + h/2} ${x - w/2},${y}`,
-      fill: css(fill[n.lvl]), stroke, 'stroke-dasharray': n.id === 'expl' ? '5 4' : '' }, g);
-  } else {
-    el('rect', { x: n.x - n.w / 2, y: n.y - n.h / 2, width: n.w, height: n.h, rx: n.id === 'hook' ? 20 : 8,
-      fill: css(fill[n.lvl]), stroke, 'stroke-dasharray': n.manual || n.lvl === 'meta' ? '5 4' : '' }, g);
-  }
-  const t = el('text', { x: n.x, y: n.sub ? n.y - 3 : n.y + 5, 'text-anchor': 'middle' }, g); t.textContent = n.label;
-  if (n.sub) { const s = el('text', { x: n.x, y: n.y + 15, 'text-anchor': 'middle', class: 'sub' }, g); s.textContent = n.sub; }
-  n.g = g;
-}
-cb.parentNode.appendChild(cb);
-nodes.contract.g = cb;
-
-const info = document.getElementById('info');
-const def = info.innerHTML;
-for (const n of Object.values(nodes)) {
-  n.g.addEventListener('mouseenter', () => {
-    svg.classList.add('focus');
-    n.g.classList.add('hot');
-    for (const e of edgeEls) if (e.a === n.id || e.b === n.id) {
-      e.p.classList.add('hot');
-      nodes[e.a].g.classList.add('hot'); nodes[e.b].g.classList.add('hot');
-    }
-    info.innerHTML = `<b>${n.label}</b> <span>${n.manual ? '(manual) ' : ''}— ${n.job}</span>`;
+function anchorR(n){if(n.kind==='hook')return 15;if(n.kind==='skill')return radius(n)+5;if(n.kind==='agent')return radius(n)+3;return 0}
+function layout(){
+ W=Math.max(300,Math.round(gwrap.clientWidth));narrow=W<700;pos={};geo={bands:[]};
+ var O=D.order,y,i;
+ function row(ids,cy,xa,xb,slotMax){var n=ids.length,slot=Math.min(slotMax,(xb-xa)/n),st=(xa+xb)/2-slot*n/2;ids.forEach(function(id,j){pos[id]={x:st+slot*(j+.5),y:cy}})}
+ if(!narrow){
+  var pad=22,gut=W>1000?158:132,xa=pad+gut,xb=W-pad;
+  var yH=40,yS=yH+86,yC=yS+96,yP=yC+90,yM=yP+104,yA=yM+100,yG=yA+100;
+  var slots=7.7,slot=Math.min(176,(xb-xa)/slots),st=(xa+xb)/2-slot*slots/2;
+  O.setup.forEach(function(id,j){pos[id]={x:st+slot*(j+.5),y:yS}});
+  O.meta.forEach(function(id,j){pos[id]={x:st+slot*(5.7+j+.5),y:yS}});
+  pos['session-start']={x:pos.handoff.x,y:yH};
+  pos['fire-log']={x:(pos.learning.x+pos.tuning.x)/2+slot*.25,y:yH};
+  row(O.process,yP,xa,xb,230);row(O.methods,yM,xa,xb,250);row(O.atomic,yA,xa,xb,250);row(O.agents,yG,xa,xb,250);
+  geo.contract={x:xa-6,y:yC-24,w:xb-xa+12,h:48};
+  geo.bands=[{g:'hooks',y:yH,h:56},{g:'setup',y:yS,h:96,meta:{x:st+slot*5.7,w:slot*2}},{g:'process',y:yP,h:100},{g:'methods',y:yM,h:96},{g:'atomic',y:yA,h:96},{g:'agents',y:yG,h:92}];
+  geo.pad=pad;geo.gut=gut;geo.H=yG+58;
+ }else{
+  var p2=12,xa2=p2,xb2=W-p2,maxC=W>=500?4:3;y=6;
+  ['hooks','setup','meta','contract','process','methods','atomic','agents'].forEach(function(b){
+   if(b==='contract'){y+=10;geo.contract={x:p2,y:y,w:W-2*p2,h:52};y+=52+14;return}
+   var ids=O[b],rows=Math.ceil(ids.length/maxC),cols=Math.ceil(ids.length/rows),top=y;y+=26;
+   for(var r=0;r<rows;r++){var part=ids.slice(r*cols,r*cols+cols),hook=b==='hooks';var cy=y+(hook?22:36);row(part,cy,xa2,xb2,(xb2-xa2)/cols);y+=hook?48:(b==='agents'?82:94)}
+   geo.bands.push({g:b,top:top,bottom:y});y+=6;
   });
-  n.g.addEventListener('mouseleave', () => {
-    svg.classList.remove('focus');
-    document.querySelectorAll('.hot').forEach(x => x.classList.remove('hot'));
-    info.innerHTML = def;
-  });
+  geo.H=y+4;
+ }
 }
+
+/* ---------- edges geometry ---------- */
+function trim(p,c,d){var dx=c.x-p.x,dy=c.y-p.y,L=Math.hypot(dx,dy)||1;return {x:p.x+dx/L*d,y:p.y+dy/L*d}}
+function P(p){return p.x.toFixed(1)+','+p.y.toFixed(1)}
+function edgeGeom(e){
+ var C=geo.contract,a,b,ra,rb;
+ if(e.t==='contract'){a=pos[e.s];var cx2=Math.min(C.x+C.w-20,Math.max(C.x+20,a.x));b={x:cx2,y:a.y<C.y?C.y:C.y+C.h};ra=anchorR(N[e.s]);rb=5}
+ else if(e.s==='contract'){b=pos[e.t];var cx3=Math.min(C.x+C.w-20,Math.max(C.x+20,b.x));a={x:cx3,y:b.y<C.y?C.y:C.y+C.h};ra=0;rb=anchorR(N[e.t])+3}
+ else{a=pos[e.s];b=pos[e.t];ra=anchorR(N[e.s]);rb=anchorR(N[e.t])+(e.kind==='read'?2:6)}
+ var dx=b.x-a.x,dy=b.y-a.y,c1,c2;
+ if(Math.abs(dy)<24){var k=Math.min(58,30+Math.abs(dx)*.2);c1={x:a.x+dx*.22,y:a.y-k};c2={x:b.x-dx*.22,y:b.y-k}}
+ else{var s=dy>0?1:-1,kk=Math.max(34,Math.abs(dy)*.5);c1={x:a.x,y:a.y+s*kk};c2={x:b.x,y:b.y-s*kk}}
+ var p0=ra?trim(a,c1,ra):a,p3=trim(b,c2,rb);
+ var mid={x:(p0.x+3*c1.x+3*c2.x+p3.x)/8,y:(p0.y+3*c1.y+3*c2.y+p3.y)/8};
+ return {d:'M'+P(p0)+' C'+P(c1)+' '+P(c2)+' '+P(p3),mid:mid};
+}
+
+/* ---------- render ---------- */
+function defs(){
+ var d=el('defs',{},svg);
+ Object.keys(COL).forEach(function(g){
+  var c=COL[g];
+  var o=el('radialGradient',{id:'orb-'+g,cx:'36%',cy:'30%',r:'75%'},d);
+  el('stop',{offset:'0','stop-color':'#fff4ea','stop-opacity':'.95'},o);el('stop',{offset:'.42','stop-color':c},o);el('stop',{offset:'.85','stop-color':c,'stop-opacity':'.5'},o);el('stop',{offset:'1','stop-color':c,'stop-opacity':'.3'},o);
+  var h=el('radialGradient',{id:'halo-'+g},d);
+  el('stop',{offset:'0','stop-color':c,'stop-opacity':'.55'},h);el('stop',{offset:'.45','stop-color':c,'stop-opacity':'.16'},h);el('stop',{offset:'1','stop-color':c,'stop-opacity':'0'},h);
+  var pg=el('radialGradient',{id:'pt-'+g},d);
+  el('stop',{offset:'0','stop-color':'#fff'},pg);el('stop',{offset:'.35','stop-color':c},pg);el('stop',{offset:'1','stop-color':c,'stop-opacity':'0'},pg);
+  var m=el('marker',{id:'ar-'+g,viewBox:'0 0 10 10',refX:'7',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'},d);
+  el('path',{d:'M0,1 L9,5 L0,9 L2,5z',fill:c},m);
+ });
+ var tg=el('linearGradient',{id:'trailg',x1:'0',y1:'0',x2:'1',y2:'1'},d);
+ el('stop',{offset:'0','stop-color':'#ffd2b4'},tg);el('stop',{offset:'1','stop-color':'#ff8a4c'},tg);
+ var cg=el('linearGradient',{id:'cbar',x1:'0',x2:'1'},d);
+ el('stop',{offset:'0','stop-color':'#e8714a','stop-opacity':'.05'},cg);el('stop',{offset:'.5','stop-color':'#e8714a','stop-opacity':'.2'},cg);el('stop',{offset:'1','stop-color':'#e8714a','stop-opacity':'.05'},cg);
+}
+function wrapLabel(text,maxW,fs,f){var words=text.split(' '),lines=[''],cw=fs*f;words.forEach(function(w){var l=lines[lines.length-1];if(l&&(l.length+1+w.length)*cw>maxW)lines.push(w);else lines[lines.length-1]=l?l+' '+w:w});return lines}
+function render(){
+ layout();
+ svg.textContent='';nodeEls={};edgeEls=[];labelEls=[];parts=[];
+ svg.setAttribute('viewBox','0 0 '+W+' '+Math.round(geo.H));svg.setAttribute('width',W);svg.setAttribute('height',Math.round(geo.H));
+ svg.setAttribute('aria-label',t('map_label'));
+ intro=[];var animIn=firstRender&&!STILL;
+ defs();
+ var gB=el('g',{'aria-hidden':'true'},svg);
+ geo.bands.forEach(function(b){
+  var c=COL[b.g],name=D.ui[lang].groups[b.g];
+  if(!narrow){
+   el('rect',{class:'band',x:geo.pad,y:b.y-b.h/2,width:W-2*geo.pad,height:b.h,rx:16,fill:c},gB);
+   el('rect',{x:geo.pad,y:b.y-b.h/2+14,width:3,height:b.h-28,rx:1.5,fill:c,opacity:.7},gB);
+   var lines=wrapLabel(name.toUpperCase(),geo.gut-30,12.5,.8),dl=wrapLabel(D.ui[lang].group_desc[b.g]||'',geo.gut-30,12,.55);
+   if(!D.ui[lang].group_desc[b.g]||dl.length>3||lines.length*16+dl.length*15>b.h-18)dl=[];
+   var bh=lines.length*16+dl.length*15+(dl.length?4:0),ty=b.y-bh/2+12;
+   var tx=el('text',{class:'band-l',x:geo.pad+16,y:ty,fill:c},gB);
+   lines.forEach(function(l,i){var ts=el('tspan',{x:geo.pad+16,dy:i?16:0},tx);ts.textContent=l});
+   if(dl.length){var dt=el('text',{class:'band-d',x:geo.pad+16,y:ty+lines.length*16+3},gB);dl.forEach(function(l,i){var ts=el('tspan',{x:geo.pad+16,dy:i?15:0},dt);ts.textContent=l})}
+   if(b.meta){var mt=el('text',{class:'band-l',x:b.meta.x+b.meta.w/2,y:b.y-b.h/2+16,'text-anchor':'middle',fill:COL.meta},gB);mt.textContent=D.ui[lang].groups.meta.toUpperCase();
+    el('line',{x1:b.meta.x-6,x2:b.meta.x-6,y1:b.y-b.h/2+12,y2:b.y+b.h/2-12,stroke:COL.meta,'stroke-opacity':.25,'stroke-dasharray':'3 5'},gB)}
+  }else{
+   el('rect',{class:'band',x:6,y:b.top,width:W-12,height:b.bottom-b.top,rx:14,fill:c},gB);
+   var t2=el('text',{class:'band-l',x:16,y:b.top+18,fill:c},gB);t2.textContent=name.toUpperCase();
+  }
+ });
+ var gE=el('g',{},svg),gT=el('g',{'aria-hidden':'true'},svg),gP=el('g',{'aria-hidden':'true'},svg),gN=el('g',{},svg),gL=el('g',{'aria-hidden':'true'},svg);
+ geo.trailLayer=gT;
+ D.edges.forEach(function(e){
+  var g=edgeGeom(e),src=N[e.s],c=COL[e.kind==='read'?'contract':src.group];
+  var attrs={class:'edge k-'+e.kind,d:g.d,stroke:c};
+  if(e.kind!=='read')attrs['marker-end']='url(#ar-'+(e.kind==='read'?'contract':src.group)+')';
+  var p=el('path',attrs,gE);edgeEls[e.i]=p;e.mid=g.mid;
+  if(e.label){var lt=el('text',{class:'elabel',x:g.mid.x,y:g.mid.y+4,'data-y':g.mid.y+4,'text-anchor':'middle',fill:c},gL);lt.textContent=e.label[lang];labelEls[e.i]=lt}
+  if(e.kind==='call'&&!RM){
+   var L=p.getTotalLength(),pts=[];for(var i=0;i<=48;i++){var q=p.getPointAtLength(L*i/48);pts.push(q.x,q.y)}
+   var wrapG=el('g',{class:'pt'},gP),dot=el('circle',{r:3.6,fill:'url(#pt-'+src.group+')'},wrapG);
+   parts.push({e:e,g:wrapG,c:dot,pts:pts,t:Math.random(),dur:Math.max(1.6,L/62)});
+  }
+ });
+ var C=geo.contract,cn=N.contract;
+ var cg=el('g',{class:'node',tabindex:'0',role:'button','data-id':'contract'},gN);
+ var cp=el('g',{class:'pop'},cg);intro.push({el:cp,d:.25});
+ el('rect',{class:'halo',x:C.x-4,y:C.y-4,width:C.w+8,height:C.h+8,rx:16,fill:'url(#halo-contract)'},cp);
+ el('rect',{x:C.x,y:C.y,width:C.w,height:C.h,rx:12,fill:'url(#cbar)',stroke:COL.contract,'stroke-opacity':.75},cp);
+ el('rect',{class:'fring',x:C.x-4,y:C.y-4,width:C.w+8,height:C.h+8,rx:15},cp);
+ var ct=el('text',{class:'ctext',x:C.x+C.w/2,y:C.y+(narrow?21:20),'text-anchor':'middle'},cp);ct.textContent=t('contract_name');
+ var cs=el('text',{class:'csub',x:C.x+C.w/2,y:C.y+(narrow?39:37),'text-anchor':'middle'},cp);cs.textContent=t('contract_sub');
+ nodeEls.contract=cg;wire(cg,cn);
+ var order=[].concat(D.order.hooks,D.order.setup,D.order.meta,D.order.process,D.order.methods,D.order.atomic,D.order.agents);
+ order.forEach(function(id,idx){
+  var n=N[id],p=pos[id],c=COL[n.group],R=radius(n);
+  var g=el('g',{class:'node g-'+n.group,transform:'translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')',tabindex:'0',role:'button','data-id':id},gN);
+  var pp=el('g',{class:'pop'},g);intro.push({el:pp,d:.05+idx*.035});
+  if(n.kind==='hook'){
+   var tw=Math.max(64,label(n).length*7.4+26);
+   el('rect',{class:'halo',x:-tw/2-10,y:-22,width:tw+20,height:44,rx:22,fill:'url(#halo-hooks)'},pp);
+   el('rect',{class:'pill',x:-tw/2,y:-14,width:tw,height:28,rx:14,fill:'#1a161d',stroke:c},pp);
+   el('rect',{class:'fring',x:-tw/2-5,y:-19,width:tw+10,height:38,rx:19},pp);
+   var ht=el('text',{class:'ptext',y:4.5,'text-anchor':'middle'},pp);ht.textContent=label(n);
+  }else{
+   el('circle',{class:'halo',r:(R*2.3).toFixed(1),fill:'url(#halo-'+n.group+')',style:'--b:'+(-idx*.37).toFixed(2)+'s'},pp);
+   el('circle',{class:'orbit',r:(R+11).toFixed(1)},pp);
+   if(n.kind==='agent'){
+    var hp=[];for(var k=0;k<6;k++){var an=Math.PI/3*k-Math.PI/2;hp.push((Math.cos(an)*(R+2)).toFixed(1)+','+(Math.sin(an)*(R+2)).toFixed(1))}
+    el('polygon',{points:hp.join(' '),fill:'url(#orb-agents)',stroke:c,'stroke-width':1.4,'stroke-linejoin':'round'},pp);
+    var hp2=[];for(var k2=0;k2<6;k2++){var an2=Math.PI/3*k2-Math.PI/2;hp2.push((Math.cos(an2)*(R+7)).toFixed(1)+','+(Math.sin(an2)*(R+7)).toFixed(1))}
+    el('polygon',{points:hp2.join(' '),fill:'none',stroke:c,'stroke-opacity':.35,'stroke-width':1,'stroke-linejoin':'round'},pp);
+   }else{
+    el('circle',{class:'track',r:(R+5).toFixed(1),'stroke-dasharray':n.mode==='manual'?'3 4':null},pp);
+    el('circle',{class:'arc',r:(R+5).toFixed(1),stroke:c,pathLength:100,'stroke-dasharray':(n.invoke/D.max_invoke*100).toFixed(1)+' 100',transform:'rotate(-90)'},pp);
+    el('circle',{r:R.toFixed(1),fill:'url(#orb-'+n.group+')'},pp);
+   }
+   el('circle',{class:'fring',r:(R+9).toFixed(1)},pp);
+   var lt=el('text',{class:'lbl',y:(R+(n.kind==='agent'?24:22)).toFixed(1),'text-anchor':'middle'},pp);lt.textContent=id;
+   if(n.mode==='manual'){var bt=el('text',{class:'badge',y:(R+38).toFixed(1),'text-anchor':'middle',fill:c},pp);bt.textContent='⚙ '+t('d_manual')}
+  }
+  nodeEls[id]=g;wire(g,n);
+ });
+ // remove null dasharray attributes created above
+ svg.querySelectorAll('[stroke-dasharray="null"]').forEach(function(x){x.removeAttribute('stroke-dasharray')});
+ firstRender=false;
+ if(animIn){introT0=0;intro.forEach(function(o){o.el.style.opacity='0';o.el.style.transform='scale(.3)'})}else intro=[];
+ ariaLabels();refresh();if(play.on)drawTrail(false);
+}
+function ariaLabels(){
+ Object.keys(nodeEls).forEach(function(id){
+  var n=N[id],calls=n.out.filter(function(e){return e.kind==='call'}).map(function(e){return e.t}),by=n.inc.filter(function(e){return e.kind==='call'}).map(function(e){return e.s});
+  var mode=n.kind==='skill'?(n.mode==='manual'?t('d_manual'):t('d_auto')):(n.kind==='agent'?t('d_agent'):n.kind==='hook'?t('d_hook'):'');
+  nodeEls[id].setAttribute('aria-label',fmt(t('aria_node'),{name:title(n),group:gname(n),mode:mode,calls:calls.join(', ')||t('none'),by:by.join(', ')||t('nobody')}));
+ });
+}
+
+/* ---------- interaction ---------- */
+function wire(g,n){
+ g.addEventListener('pointerenter',function(ev){if(ev.pointerType==='touch')return;hover=n.id;refresh();showTip(n)});
+ g.addEventListener('pointerleave',function(){if(hover===n.id){hover=null;refresh();hideTip()}});
+ g.addEventListener('focus',function(){hover=n.id;refresh();showTip(n)});
+ g.addEventListener('blur',function(){if(hover===n.id){hover=null;refresh()}hideTip()});
+ g.addEventListener('click',function(){hideTip();select(n.id)});
+ g.addEventListener('keydown',function(ev){
+  if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select(n.id)}
+  else if(/^Arrow/.test(ev.key)){ev.preventDefault();var nx=nearest(n.id,ev.key);if(nx)nodeEls[nx].focus()}
+ });
+}
+function centre(id){if(id==='contract'){var C=geo.contract;return {x:C.x+C.w/2,y:C.y+C.h/2}}return pos[id]}
+function nearest(id,key){
+ var a=centre(id),best=null,bs=1e9;
+ Object.keys(nodeEls).forEach(function(o){if(o===id)return;var b=centre(o),dx=b.x-a.x,dy=b.y-a.y,m,s;
+  if(key==='ArrowRight'){m=dx;s=Math.abs(dy)}else if(key==='ArrowLeft'){m=-dx;s=Math.abs(dy)}else if(key==='ArrowDown'){m=dy;s=Math.abs(dx)}else{m=-dy;s=Math.abs(dx)}
+  if(m<=4)return;var sc=m+s*2.2;if(sc<bs){bs=sc;best=o}});
+ return best;
+}
+function showTip(n){
+ if(narrow){hideTip();return}
+ var p=centre(n.id),R=n.kind==='contract'?geo.contract.h/2:n.kind==='hook'?14:radius(n)+8;
+ var txt=n.text[lang];if(txt.length>150)txt=txt.slice(0,147).replace(/\s\S*$/,'')+'…';
+ tip.style.setProperty('--c',COL[n.group]);
+ tip.innerHTML='<b>'+esc(title(n))+'</b><p>'+esc(txt)+'</p><small>'+esc(t('tip_more'))+'</small>';
+ var x=Math.min(W-150,Math.max(150,p.x));tip.style.left=x+'px';tip.style.top=(p.y-R-6)+'px';
+ if(p.y-R<130){tip.style.top=(p.y+R+(n.kind==='skill'?30:14))+'px';tip.style.transform='translate(-50%,0)'}else tip.style.transform='';
+ tip.classList.add('on');
+}
+function hideTip(){tip.classList.remove('on')}
+function neigh(id){var ns=new Set([id]),es=new Set();N[id].out.concat(N[id].inc).forEach(function(e){es.add(e.i);ns.add(e.s);ns.add(e.t)});return {n:ns,e:es}}
+function refresh(){
+ var litN=null,half=new Set(),litE=new Set(),beat=new Set();
+ if(play.on){var st=D.play[play.step];litN=new Set(st.nodes);for(var i=0;i<play.step;i++)D.play[i].nodes.forEach(function(x){half.add(x)});
+  st.edges.forEach(function(pr){D.edges.forEach(function(e){if(e.s===pr[0]&&e.t===pr[1])litE.add(e.i)})});st.trail.forEach(function(x){beat.add(x)})}
+ else if(hover||sel){var nb=neigh(hover||sel);litN=nb.n;litE=nb.e}
+ else if(matches){litN=new Set(matches)}
+ else if(filter!=='all'){litN=new Set(D.nodes.filter(function(n){return n.group===filter}).map(function(n){return n.id}));
+  D.edges.forEach(function(e){if(e.kind!=='read'&&(litN.has(e.s)||(litN.has(e.t)&&e.kind!=='call'))){litE.add(e.i);half.add(e.s);half.add(e.t)}})}
+ Object.keys(nodeEls).forEach(function(id){var g=nodeEls[id],on=!litN||litN.has(id);
+  g.classList.toggle('lit',!!litN&&litN.has(id));g.classList.toggle('half',!on&&half.has(id));g.classList.toggle('dim',!on&&!half.has(id));
+  g.classList.toggle('sel',id===sel&&!play.on);g.classList.toggle('beat',beat.has(id))});
+ D.edges.forEach(function(e){var p=edgeEls[e.i];if(!p)return;var on=litE.has(e.i);p.classList.toggle('lit',on);p.classList.toggle('dim',!!litN&&!on);
+  if(labelEls[e.i])labelEls[e.i].classList.toggle('lit',on)});
+ placeLabels();
+ parts.forEach(function(q){var on=litE.has(q.e.i);q.g.classList.toggle('lit',on);q.g.classList.toggle('dim',!!litN&&!on)});
+}
+
+// Nudge visible edge labels apart so they never overlap each other.
+function placeLabels(){
+ var placed=[],offs=[0,-14,14,-28,28,-42];
+ labelEls.forEach(function(lt,i){if(!lt)return;var by=+lt.getAttribute('data-y');lt.setAttribute('y',by);if(!lt.classList.contains('lit'))return;
+  for(var k=0;k<offs.length;k++){lt.setAttribute('y',by+offs[k]);var b=lt.getBBox(),hit=placed.some(function(o){return b.x<o.x+o.width+4&&o.x<b.x+b.width+4&&b.y<o.y+o.height&&o.y<b.y+b.height});if(!hit){placed.push(b);return}}
+  placed.push(lt.getBBox())});
+}
+/* ---------- detail panel ---------- */
+function chip(id,extra){var n=N[id];return '<button type="button" class="chip" data-go="'+id+'" style="--c:'+COL[n.group]+'"><i></i>'+esc(n.kind==='skill'||n.kind==='agent'?id:title(n))+(extra?' <em>'+esc(extra)+'</em>':'')+'</button>'}
+function rel(head,list){return list.length?'<div class="rel"><span class="k">'+esc(head)+'</span><div class="chips">'+list.join('')+'</div></div>':''}
+function renderDetail(id){
+ var n=N[id],c=COL[n.group],h='',ui=D.ui[lang];
+ var calls=[],agents=[],by=[],sout=[],sin=[];
+ n.out.forEach(function(e){if(e.kind==='call'){(N[e.t].kind==='agent'?agents:calls).push(chip(e.t,e.label&&e.label[lang]))}else if(e.kind!=='read')sout.push(chip(e.t,e.label&&e.label[lang]))});
+ n.inc.forEach(function(e){if(e.kind==='call')by.push(chip(e.s));else if(e.kind!=='read')sin.push(chip(e.s,e.label&&e.label[lang]))});
+ var orbCls=n.kind==='agent'?' hex':n.kind==='hook'||n.kind==='contract'?' pill':'';
+ h+='<div class="d-head"><span class="d-orb'+orbCls+'" style="--c:'+c+'"></span><div style="min-width:0"><h2 id="dtitle">'+esc(title(n))+'</h2><div class="tags">';
+ h+='<span class="tag" style="--c:'+c+'">'+esc(gname(n))+'</span>';
+ if(n.kind==='skill')h+='<span class="tag">'+esc(n.mode==='manual'?'⚙ '+t('d_manual'):t('d_auto'))+'</span>';
+ if(n.kind==='agent')h+='<span class="tag">'+esc(t('d_agent'))+'</span>';
+ if(n.kind==='hook')h+='<span class="tag">'+esc(t('d_hook'))+'</span>';
+ h+='</div></div><button type="button" class="x" id="dclose" aria-label="'+esc(t('d_close'))+'">×</button></div>';
+ h+='<p class="d-text">'+esc(n.text[lang])+'</p>';
+ if(n.kind==='skill'){
+  var manual=n.mode==='manual';
+  h+='<div class="say" style="--c:'+c+'"><span class="k">'+esc(manual?t('d_run'):t('d_say'))+'</span>'+(manual?'<code>'+esc(n.say[lang])+'</code>':'<q>'+esc(n.say[lang])+'</q>')+'</div>';
+  var pct=Math.round(n.always/D.always_total*100);
+  h+='<div class="tok"><span class="k">'+esc(t('d_tokens'))+' <small>· '+esc(t('st_est'))+'</small></span>';
+  h+='<div class="bar" style="--c:'+c+'"><span style="width:'+(n.always/D.max_invoke*100).toFixed(1)+'%"></span></div><div class="brow"><b>~'+n.always+'</b> '+esc(t('d_always'))+' · '+esc(fmt(t('d_share'),{pct:pct,total:D.always_total.toLocaleString(lang==='ru'?'ru-RU':'en-US')}))+'</div>';
+  h+='<div class="bar inv"><span style="width:'+(n.invoke/D.max_invoke*100).toFixed(1)+'%"></span></div><div class="brow"><b>~'+kfmt(n.invoke)+'</b> '+esc(t('d_fires'))+'</div></div>';
+  h+=rel(t('d_calls'),calls)+rel(t('d_agents'),agents)+rel(t('d_calledby'),by)+rel(t('d_out'),sout)+rel(t('d_in'),sin);
+  if(!calls.length&&!agents.length&&n.group==='atomic')h+='<p class="muted" style="margin-top:12px">'+esc(t('d_nocalls'))+'</p>';
+  if(N.contract.out.some(function(e){return e.t===id}))h+='<div class="ctr"><svg width="22" height="10" aria-hidden="true"><rect x="1" y="1" width="20" height="8" rx="3" fill="none" stroke="#e8714a"/></svg>'+esc(t('d_contract'))+'</div>';
+  h+='<a class="gh" href="'+D.repo+'/blob/main/plugins/foma-skills/skills/'+id+'/SKILL.md" target="_blank" rel="noopener">'+esc(t('d_gh'))+' ↗</a>';
+ }else if(n.kind==='agent'){
+  h+='<div class="say" style="--c:'+c+'"><span class="k">'+esc(t('d_model'))+'</span>'+esc(n.model[lang])+'</div>';
+  h+=rel(t('d_usedby'),by)+rel(t('d_preloads'),calls);
+ }else if(n.kind==='hook'){
+  h+=rel(t('d_out'),sout);
+ }else{
+  var writers=n.inc.map(function(e){return chip(e.s,e.label&&e.label[lang])}),readers=n.out.map(function(e){return chip(e.t)});
+  h+=rel(t('d_writtenby'),writers)+rel(t('d_readby'),readers);
+ }
+ var d=$('#detail');d.innerHTML='<div class="grab" aria-hidden="true"></div>'+h;d.scrollTop=0;
+ $('#dclose').addEventListener('click',function(){closeSel(true)});
+}
+function select(id,opts){
+ opts=opts||{};if(!N[id])return;
+ if(play.on)stopPlay(true);
+ sel=id;renderDetail(id);document.body.classList.add('has-sel');refresh();writeHash();
+ if(opts.scroll)scrollToNode(id);
+}
+function closeSel(focusBack){var was=sel;sel=null;document.body.classList.remove('has-sel');refresh();writeHash();if(focusBack&&was&&nodeEls[was])nodeEls[was].focus({preventScroll:true})}
+function scrollToNode(id){
+ var g=nodeEls[id];if(!g)return;var r=g.getBoundingClientRect(),vh=innerHeight,sheet=innerWidth<=1060&&document.body.classList.contains('has-sel');
+ var lim=sheet?vh*.27:vh*.92;if(r.top<70||r.bottom>lim){var target=sheet?vh*.14:vh*.42;window.scrollBy({top:r.top+r.height/2-target,behavior:STILL||!booted?'auto':'smooth'})}
+}
+$('#detail').addEventListener('click',function(ev){var b=ev.target.closest('[data-go]');if(b){var id=b.getAttribute('data-go');select(id,{scroll:true});if(nodeEls[id])nodeEls[id].focus({preventScroll:true})}});
+(function(){var d=$('#detail'),y0=null;d.addEventListener('touchstart',function(e){y0=d.scrollTop<=0?e.touches[0].clientY:null},{passive:true});
+ d.addEventListener('touchmove',function(e){if(y0!==null&&e.touches[0].clientY-y0>90){y0=null;closeSel(false)}},{passive:true})})();
+
+/* ---------- play a task ---------- */
+function startPlay(step,auto){
+ play.on=true;play.step=step;play.auto=auto&&!RM;sel=null;document.body.classList.remove('has-sel');
+ clearSearch();renderPlay(true);
+}
+function stopPlay(silent){play.on=false;clearTimeout(play.timer);$('#cap').hidden=true;document.body.classList.remove('playing');if(geo.trailLayer)geo.trailLayer.textContent='';if(!silent){refresh();writeHash()}}
+function renderPlay(animate){
+ clearTimeout(play.timer);var st=D.play[play.step],cap=$('#cap'),n=D.play.length;
+ var segs='';for(var i=0;i<n;i++)segs+='<span class="'+(i<play.step?'done':'')+'"><i'+(i===play.step?' id="curseg"':'')+'></i></span>';
+ cap.innerHTML='<div class="cap-top"><span class="cap-step">'+esc(t('step'))+' '+(play.step+1)+' / '+n+'</span><b class="cap-title">'+esc(st.title[lang])+'</b></div><p>'+esc(st.text[lang])+'</p>'+
+  '<div class="cap-row"><button type="button" class="ib" data-a="prev" aria-label="'+esc(t('prev'))+'"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 1L3 6l5 5" fill="none" stroke="#f4ece6" stroke-width="2"/></svg></button>'+
+  '<button type="button" class="ib" data-a="pp" aria-label="'+esc(play.auto?t('pause'):t('resume'))+'"><svg width="12" height="12" viewBox="0 0 12 12">'+(play.auto?'<path d="M2 1h3v10H2zM7 1h3v10H7z"/>':'<path d="M2 1l9 5-9 5z"/>')+'</svg></button>'+
+  '<button type="button" class="ib" data-a="next" aria-label="'+esc(t('next'))+'"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M4 1l5 5-5 5" fill="none" stroke="#f4ece6" stroke-width="2"/></svg></button>'+
+  '<div class="segs" aria-hidden="true">'+segs+'</div><button type="button" class="ib" data-a="stop" aria-label="'+esc(t('stop'))+'"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#f4ece6" stroke-width="2"/></svg></button></div>';
+ cap.hidden=false;document.body.classList.add('playing');refresh();drawTrail(animate&&!STILL);writeHash();
+ var cur=$('#curseg');
+ if(play.auto){var dur=6200;if(cur){cur.style.transition='transform '+dur+'ms linear';requestAnimationFrame(function(){requestAnimationFrame(function(){cur.style.transform='scaleX(1)'})})}
+  play.timer=setTimeout(function(){if(play.step<D.play.length-1){play.step++;renderPlay(true)}else{play.auto=false;renderPlay(false)}},dur)}
+ else if(cur)cur.style.transform='scaleX(1)';
+ var first=pos[st.trail[0]];if(first&&animate){var g=nodeEls[st.trail[0]],r=g.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight-170)window.scrollBy({top:r.top-innerHeight*.35,behavior:STILL||!booted?'auto':'smooth'})}
+}
+$('#cap').addEventListener('click',function(ev){var b=ev.target.closest('[data-a]');if(!b)return;var a=b.getAttribute('data-a');
+ if(a==='stop'){stopPlay();$('#playbtn').focus();return}
+ if(a==='pp'){if(!play.auto&&play.step===D.play.length-1)play.step=0;play.auto=!play.auto&&!RM;if(RM&&!play.auto&&play.step<D.play.length-1)play.step++;renderPlay(true)}
+ if(a==='prev'){play.auto=false;play.step=Math.max(0,play.step-1);renderPlay(false)}
+ if(a==='next'){play.auto=false;play.step=Math.min(D.play.length-1,play.step+1);renderPlay(true)}
+ var nb=$('#cap [data-a="'+a+'"]');if(nb)nb.focus();
+});
+var comet=null;
+function drawTrail(animate){
+ var L=geo.trailLayer;if(!L)return;L.textContent='';var ptsAll=[],cut=0;
+ for(var i=0;i<=play.step;i++){if(i===play.step)cut=ptsAll.length;D.play[i].trail.forEach(function(id){ptsAll.push(centre(id))})}
+ var last=null;
+ for(var j=1;j<ptsAll.length;j++){var a=ptsAll[j-1],b=ptsAll[j],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy),side=j%2?1:-1;
+  var c={x:(a.x+b.x)/2-dy*.18*side,y:(a.y+b.y)/2+dx*.18*side};
+  var p=el('path',{class:'trail',d:'M'+P(a)+' Q'+P(c)+' '+P(b)},L);
+  if(j>=cut&&animate){var tl=p.getTotalLength();p.style.strokeDasharray=tl;p.style.strokeDashoffset=tl;last=p;(function(pp){requestAnimationFrame(function(){requestAnimationFrame(function(){pp.classList.add('draw');pp.style.strokeDashoffset='0'})})})(p)}
+  else if(j>=cut)last=p;
+ }
+ var end=ptsAll[ptsAll.length-1];
+ var cm=el('circle',{r:6,fill:'url(#pt-contract)',transform:'translate('+P(end).replace(',',' ')+')'},L);
+ comet=animate&&last?{el:cm,path:last,t0:0}:null;
+}
+
+/* ---------- search ---------- */
+var q=$('#q'),qlist=$('#qlist'),qi=-1;
+function searchItems(){var s=query.trim().toLowerCase();if(!s)return null;
+ return D.nodes.filter(function(n){return (n.id+' '+title(n)+' '+n.text[lang]+' '+(n.say?n.say[lang]:'')).toLowerCase().indexOf(s)>=0})
+  .sort(function(a,b){var ai=a.id.indexOf(s)===0?0:a.id.indexOf(s)>=0?1:2,bi=b.id.indexOf(s)===0?0:b.id.indexOf(s)>=0?1:2;return ai-bi})}
+function renderList(){
+ var items=searchItems();matches=items?items.map(function(n){return n.id}):null;
+ if(!items){qlist.hidden=true;q.setAttribute('aria-expanded','false');refresh();return}
+ qlist.innerHTML=items.length?items.slice(0,7).map(function(n,i){return '<li role="option" id="qo'+i+'" data-go="'+n.id+'" aria-selected="'+(i===qi)+'" style="--c:'+COL[n.group]+'"><i></i><span>'+esc(n.kind==='skill'||n.kind==='agent'?n.id:title(n))+'</span><em>'+esc(n.text[lang])+'</em></li>'}).join(''):'<li class="none">'+esc(t('no_match'))+'</li>';
+ qlist.hidden=false;q.setAttribute('aria-expanded','true');q.setAttribute('aria-activedescendant',qi>=0?'qo'+qi:'');refresh();
+}
+function clearSearch(){query='';q.value='';qi=-1;matches=null;qlist.hidden=true;q.setAttribute('aria-expanded','false')}
+function pick(id){clearSearch();select(id,{scroll:true});if(nodeEls[id])nodeEls[id].focus({preventScroll:true})}
+q.addEventListener('input',function(){query=q.value;qi=query?0:-1;if(play.on)stopPlay();renderList()});
+q.addEventListener('keydown',function(ev){var lis=qlist.querySelectorAll('[data-go]');
+ if(ev.key==='ArrowDown'){ev.preventDefault();qi=Math.min(lis.length-1,qi+1);renderList()}
+ else if(ev.key==='ArrowUp'){ev.preventDefault();qi=Math.max(0,qi-1);renderList()}
+ else if(ev.key==='Enter'){ev.preventDefault();var li=lis[Math.max(0,qi)];if(li)pick(li.getAttribute('data-go'))}
+ else if(ev.key==='Escape'){if(query){ev.stopPropagation();clearSearch();refresh()}}});
+qlist.addEventListener('mousedown',function(ev){var li=ev.target.closest('[data-go]');if(li){ev.preventDefault();pick(li.getAttribute('data-go'))}});
+q.addEventListener('blur',function(){setTimeout(function(){qlist.hidden=true;q.setAttribute('aria-expanded','false')},120)});
+
+/* ---------- controls, i18n, hash ---------- */
+function setLang(l,pin){lang=l==='ru'?'ru':'en';if(pin){langPinned=true;store.set('foma-graph-lang',lang)}applyText();render();if(sel)renderDetail(sel);if(play.on)renderPlay(false);writeHash()}
+function applyText(){
+ document.documentElement.lang=lang;document.title=t('doc_title');
+ document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.getAttribute('data-t'))});
+ document.querySelectorAll('[data-tp]').forEach(function(e){e.setAttribute('placeholder',t(e.getAttribute('data-tp')))});
+ document.querySelectorAll('[data-ta]').forEach(function(e){e.setAttribute('aria-label',t(e.getAttribute('data-ta')))});
+ var nf=lang==='ru'?'ru-RU':'en-US',auto=D.count-D.manual;
+ $('#stats').innerHTML='<li class="hot"><b>'+D.count+'</b><span>'+esc(t('st_skills'))+'</span></li>'+
+  '<li class="hot"><b>≈'+kfmt(D.always_total)+'</b><span>'+esc(t('st_always'))+'</span><small>'+esc(t('st_est'))+'</small></li>'+
+  '<li><b>'+auto+' · '+D.manual+'</b><span>'+esc(t('st_auto'))+' · '+esc(t('st_manual'))+'</span></li>'+
+  '<li><b>'+D.agents+'</b><span>'+esc(t('st_agents'))+'</span></li>';
+ var f=$('#filters');f.querySelectorAll('.chip').forEach(function(c){c.remove()});
+ ['all'].concat(GROUPS).forEach(function(g){var b=document.createElement('button');b.type='button';b.className='chip';b.setAttribute('data-f',g);
+  if(g!=='all')b.style.setProperty('--c',COL[g]);b.innerHTML=(g==='all'?'':'<i></i>')+esc(g==='all'?t('all'):D.ui[lang].chips[g]);f.appendChild(b)});
+ syncControls();renderIntro();
+ var r=D.repo;$('#foot').innerHTML='<div class="links" style="justify-content:center;margin:0 0 8px"><a href="'+r+'">'+esc(t('repo'))+'</a><a href="'+r+'#readme">'+esc(t('readme'))+'</a><a href="'+r+'/blob/main/'+(lang==='ru'?'docs/ru/skills.md':'README.md#skills')+'">'+esc(t('skills_ref'))+'</a></div>'+esc(t('foot'));
+}
+function renderIntro(){
+ var ui=D.ui[lang],h='<h2>'+esc(t('legend_h'))+'</h2><ul class="lg">';
+ h+='<li><svg width="44" height="12"><path d="M2 6H38" stroke="#86b2f2" stroke-width="2"/><path d="M36 2l6 4-6 4z" fill="#86b2f2"/><circle cx="20" cy="6" r="3" fill="#fff"/></svg>'+esc(t('lg_call'))+'</li>';
+ h+='<li><svg width="44" height="12"><path d="M2 6H38" stroke="#f2b44f" stroke-width="2" stroke-dasharray="5 5"/><path d="M36 2l6 4-6 4z" fill="#f2b44f"/></svg>'+esc(t('lg_signal'))+'</li>';
+ h+='<li><svg width="44" height="26"><circle cx="22" cy="13" r="11" fill="none" stroke="rgba(244,236,230,.15)" stroke-width="2"/><circle cx="22" cy="13" r="11" fill="none" stroke="#5fceb4" stroke-width="2.4" stroke-dasharray="48 100" transform="rotate(-90 22 13)"/><circle cx="22" cy="13" r="6.5" fill="#5fceb4"/></svg>'+esc(t('lg_ring'))+'</li>';
+ h+='<li><svg width="44" height="26"><polygon points="22,2 31.5,7.5 31.5,18.5 22,24 12.5,18.5 12.5,7.5" fill="#f08fb4" fill-opacity=".5" stroke="#f08fb4"/></svg>'+esc(t('lg_agent'))+'</li>';
+ h+='<li><svg width="44" height="26"><circle cx="22" cy="13" r="11" fill="none" stroke="rgba(244,236,230,.45)" stroke-width="2" stroke-dasharray="3 4"/><circle cx="22" cy="13" r="6.5" fill="#f08fb4"/></svg>'+esc(t('lg_manual'))+'</li>';
+ h+='<li><svg width="44" height="16"><rect x="2" y="3" width="40" height="10" rx="4" fill="rgba(232,113,74,.18)" stroke="#e8714a"/></svg>'+esc(t('contract_name'))+'</li></ul>';
+ h+='<h3>'+esc(t('levels_h'))+'</h3><ul class="lv">';
+ GROUPS.forEach(function(g){h+='<li style="--c:'+COL[g]+'"><i></i><div><b>'+esc(ui.groups[g])+'</b> <span>— '+esc(ui.group_desc[g])+'</span></div></li>'});
+ h+='</ul><p class="note">'+esc(t('lv_rule'))+'</p>';
+ var nf=lang==='ru'?'ru-RU':'en-US';
+ h+='<h3>'+esc(t('budget_h'))+'</h3><p class="note" style="margin:0">'+esc(fmt(t('budget_txt'),{total:D.always_total.toLocaleString(nf),min:D.min_invoke.toLocaleString(nf),max:D.max_invoke.toLocaleString(nf)}))+'</p><div class="budget" role="img" aria-label="'+esc(t('budget_h'))+': ≈'+D.always_total+'">';
+ var ordered=[].concat(D.order.setup,D.order.meta,D.order.process,D.order.methods,D.order.atomic);
+ ordered.forEach(function(id){var n=N[id];h+='<span title="'+id+' · ~'+n.always+'" style="flex:'+n.always+';--c:'+COL[n.group]+'"></span>'});
+ h+='</div><div class="bcap"><span>0</span><span>≈'+D.always_total.toLocaleString(nf)+' · '+esc(t('st_est'))+'</span></div>';
+ h+='<h3>'+esc(t('install_h'))+'</h3><div class="inst-row"><span class="note" style="margin:0">Claude Code</span><button type="button" class="chip" id="copy">'+esc(t('copy'))+'</button></div><pre class="inst" id="inst">/plugin marketplace add t8jwscc7qy-sketch/foma-skills\n/plugin install foma-skills@foma</pre>';
+ h+='<div class="links"><a href="'+D.repo+'">'+esc(t('repo'))+' ↗</a><a href="'+D.repo+'/blob/main/'+(lang==='ru'?'README.ru.md':'README.md')+'">'+esc(t('readme'))+' ↗</a></div>';
+ $('#intro').innerHTML=h;
+ $('#copy').addEventListener('click',function(){var b=this,txt=$('#inst').textContent;function ok(){b.textContent=t('copied');setTimeout(function(){b.textContent=t('copy')},1600)}
+  try{navigator.clipboard.writeText(txt).then(ok,function(){})}catch(e){}});
+}
+function syncControls(){
+ document.querySelectorAll('#filters .chip').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-f')===filter))});
+ document.querySelectorAll('#size button').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-v')===sizeMode))});
+ document.querySelectorAll('#lang button').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-v')===lang))});
+}
+$('#filters').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;var f=b.getAttribute('data-f');filter=(f===filter&&f!=='all')?'all':f;if(play.on)stopPlay(true);syncControls();refresh();writeHash()});
+$('#size').addEventListener('click',function(ev){var b=ev.target.closest('[data-v]');if(!b)return;sizeMode=b.getAttribute('data-v');firstRender=true;syncControls();render();writeHash()});
+$('#lang').addEventListener('click',function(ev){var b=ev.target.closest('[data-v]');if(b)setLang(b.getAttribute('data-v'),true)});
+$('#playbtn').addEventListener('click',function(){startPlay(0,true);var b=$('#cap [data-a="pp"]');if(b)b.focus({preventScroll:true})});
+var lastHash='';
+function writeHash(){
+ var p=[];if(sel)p.push('skill='+encodeURIComponent(sel));if(langPinned)p.push('lang='+lang);if(filter!=='all')p.push('filter='+filter);
+ if(sizeMode!=='tokens')p.push('size='+sizeMode);if(play.on)p.push('play='+(play.step+1));
+ var h=p.length?'#'+p.join('&'):'';lastHash=h;
+ try{history.replaceState(null,'',h||location.pathname+location.search)}catch(e){}
+}
+function readHash(){
+ var p={};location.hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)p[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});return p;
+}
+function applyHash(init){
+ var p=readHash();
+ if(p.lang==='en'||p.lang==='ru'){lang=p.lang;langPinned=true}
+ filter=GROUPS.indexOf(p.filter)>=0?p.filter:'all';
+ sizeMode=p.size==='equal'?'equal':'tokens';
+ applyText();render();
+ if(p.play){var s=parseInt(p.play,10);if(s>=1&&s<=D.play.length){startPlay(s-1,false);return}}
+ if(play.on)stopPlay(true);
+ if(p.skill&&N[p.skill]){select(p.skill);if(init)scrollToNode(p.skill)}else if(sel)closeSel(false);
+}
+window.addEventListener('hashchange',function(){if(location.hash!==lastHash)applyHash(false)});
+document.addEventListener('keydown',function(ev){
+ if(ev.key==='/'&&document.activeElement!==q&&!ev.ctrlKey&&!ev.metaKey){ev.preventDefault();q.focus()}
+ else if(ev.key==='Escape'){if(play.on){stopPlay();$('#playbtn').focus()}else if(sel)closeSel(true);hideTip()}
+});
+window.addEventListener('pointermove',function(ev){tmx=ev.clientX/innerWidth-.5;tmy=ev.clientY/innerHeight-.5},{passive:true});
+var lastW=0,rt=0;
+function onResize(){clearTimeout(rt);rt=setTimeout(function(){initStars();if(Math.round(gwrap.clientWidth)!==lastW){lastW=Math.round(gwrap.clientWidth);hideTip();render()}},120)}
+window.addEventListener('resize',onResize);
+
+/* ---------- main loop ---------- */
+var prev=0;
+function frame(ts){
+ var dt=Math.min(.05,(ts-(prev||ts))/1000);prev=ts;
+ if(!document.hidden){
+  drawStars(ts);parallax();
+  for(var i=0;i<parts.length;i++){var q2=parts[i];q2.t=(q2.t+dt/q2.dur)%1;var f=q2.t*48,k=f|0,u=f-k,a=q2.pts;
+   var x=a[k*2]+(a[k*2+2]-a[k*2])*u,y=a[k*2+1]+(a[k*2+3]-a[k*2+1])*u;
+   q2.c.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+')');q2.c.setAttribute('opacity',Math.min(1,Math.sin(q2.t*Math.PI)*2.2).toFixed(2))}
+  if(intro.length){if(!introT0)introT0=ts;var done=true;for(var j=0;j<intro.length;j++){var o=intro[j],pr0=((ts-introT0)/1000-o.d)/.7;if(pr0<1)done=false;pr0=Math.max(0,Math.min(1,pr0));
+    var bk=1+2.2*Math.pow(pr0-1,3)+1.2*Math.pow(pr0-1,2);o.el.style.opacity=Math.min(1,pr0*2.5).toFixed(2);o.el.style.transform=pr0>=1?'':'scale('+(.3+.7*bk).toFixed(3)+')'}if(done){intro.forEach(function(o){o.el.style.opacity='';o.el.style.transform=''});intro=[]}}
+  if(comet){if(!comet.t0)comet.t0=ts;var pr=Math.min(1,(ts-comet.t0)/900),e2=1-Math.pow(1-pr,3),L2=comet.path.getTotalLength(),pt=comet.path.getPointAtLength(L2*e2);
+   comet.el.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');if(pr>=1)comet=null}
+ }
+ if(!RM)requestAnimationFrame(frame);
+}
+/* ---------- boot ---------- */
+var saved=store.get('foma-graph-lang');
+lang=saved==='ru'||saved==='en'?saved:((navigator.language||'en').toLowerCase().indexOf('ru')===0?'ru':'en');
+if(saved)langPinned=true;
+initStars();lastW=Math.round(gwrap.clientWidth);
+applyHash(true);booted=true;
+if(RM){drawStars(0);parallax()}else requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>

@@ -53,7 +53,7 @@ T = {  # all visible text, per language
         "map_title": "Skill map", "map_sub": "who calls whom. Solid arrows = calls, dashed = signals.",
         "bands": {"setup": "setup & upkeep", "proc": "processes", "meth": "methods", "atom": "atomic", "agent": "agents"},
         "contract": "CLAUDE.md contract  ·  Commands  ·  Where things live  ·  Workflow",
-        "hub": "executing calls each of these",
+        "hub": "executing calls these (refactoring runs on its own)",
         "flow_title": "Propose first, write after your ok", "flow_sub": "The rule every skill that changes files follows.",
         "steps": [("You ask", "“Clean up the repo”"), ("Skill reads", "only what it needs"), ("Shows the change", "file, diff, what goes"),
                   ("You say “ok”", "per item, nothing before"), ("Then it writes", "reversible: .trash/, git rm"), ("Report", "ends with “Not checked: …”")],
@@ -74,7 +74,7 @@ T = {  # all visible text, per language
         "map_title": "Карта скиллов", "map_sub": "кто кого вызывает. Сплошные стрелки — вызов, пунктир — сигнал.",
         "bands": {"setup": "подготовка", "proc": "процессы", "meth": "методы", "atom": "атомарные", "agent": "агенты"},
         "contract": "Договор в CLAUDE.md  ·  Команды  ·  Где что лежит  ·  Порядок работы",
-        "hub": "executing вызывает каждый из них",
+        "hub": "executing вызывает эти (refactoring запускается отдельно)",
         "flow_title": "Сначала предлагает, пишет после вашего «ок»", "flow_sub": "Правило каждого скилла, который меняет файлы.",
         "steps": [("Вы просите", "«Убери лишнее»"), ("Скилл читает", "только нужное"), ("Показывает изменение", "файл, diff, что уйдёт"),
                   ("Вы говорите «ок»", "по каждому пункту"), ("Только потом пишет", "обратимо: .trash/, git rm"), ("Отчёт", "в конце «Не проверено: …»")],
@@ -384,7 +384,7 @@ NODES = [  # id, name key, centre x, row, group, width
 ]
 ROWS = {"hook": 180, "setup": 290, "contract": 380, "proc": 500, "meth": 630, "atom": 740, "agent": 850}
 EDGES = [("hook", "hand"), ("hook", "tune", "dash"), ("hand", "tidy", "dash"), ("hand", "learn", "dash"), ("shape", "plan", "dash"), ("design", "plan", "dash"),
-         ("shape", "doc"), ("plan", "doc"), ("exec", "dbg"), ("exec", "rev"), ("exec", "ref"), ("exec", "tdd"), ("exec", "com"), ("exec", "doc"),
+         ("shape", "doc"), ("plan", "doc"), ("exec", "dbg"), ("exec", "rev"), ("exec", "tdd"), ("exec", "com"), ("exec", "doc"),
          ("exec", "impl"), ("exec", "rvw"), ("exec", "expl"), ("dbg", "tdd"), ("dbg", "expl"), ("ref", "tdd"), ("impl", "tdd"), ("rvw", "rev")]
 NH = 52
 CONTRACT = (215, 1235)  # x span of the contract bar
@@ -483,6 +483,7 @@ def skill_map(lang):
     rt = routes(nd)
     hub = {b for a, b, *_ in EDGES if a == "exec"}
     inside = {k for k, v in nd.items() if v["g"] in ("meth", "atom", "agent")}
+    inside -= {"ref"}  # refactoring sits in the panel but is not called by executing (its frontmatter `uses` omits it)
     if hub != inside:
         sys.exit(f"skill map: executing must call exactly the panel nodes ({sorted(hub ^ inside)})")
     todo = [e for e in EDGES if e[0] != "exec"] + [("gw", "CONTRACT"), ("learn", "CONTRACT", "dash"), ("exec", "PANEL")]
