@@ -14,7 +14,7 @@ metadata:
 Finds which pack skills are not earning their place, from files already on disk, and fixes the worst few with the least spend. Evidence first and free; model work only for flagged skills.
 
 ## Steps
-1. *Always.* Run `python3 "${CLAUDE_SKILL_DIR}/scripts/evidence.py" $ARGUMENTS` and read nothing else yet. It prints the mode (`repo` = the pack's own repository, `project` = anything else), fire counts, skills that never fired, and failing or flaky saved task runs. Nothing flagged, or a log under 20 sessions and no failing runs: say so and stop.
+1. *Always.* Run `python3 "${CLAUDE_SKILL_DIR}/scripts/evidence.py" $ARGUMENTS` and read nothing else yet. It prints the mode (`repo` = the pack's own repository, `project` = anything else), fire counts, skills that never fired, and failing or flaky saved task runs (runs older than the skill's last edit are ignored and listed: rerun its smoke instead of judging it). Nothing flagged, or a log under 20 sessions and no failing runs: say so and stop.
 2. Take at most 3 flagged skills, failing runs first. Read each one's description only; read a body only for a skill with a failing run, together with that run's reason.
 3. Diagnose one cause per skill. Never fired: the description misses how the user words the task, or the skill is not needed here; ask for one prompt that should have fired it, do not guess. Failing or flaky run: the body lacks or ignores a line, or the test is wrong; say which. Fires on the wrong task: fix its "Not for" clause.
 4. Propose the smallest fix per skill: one description edit (at most 250 characters), one body line, switch off, or delete. Show evidence and the exact diff. Never rewrite a skill whole; never loosen a test to make it pass.

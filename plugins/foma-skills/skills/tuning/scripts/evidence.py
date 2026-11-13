@@ -4,10 +4,12 @@
 Usage: python3 evidence.py [--days N] [--log .scratch/fires.jsonl] [--runs tests/.runs]
 Prints: the mode (repo = the pack's own repository, project = anything else), fire counts
 (fires.py) and, in repo mode, tasks whose recent saved runs fail or flake (tests/.runs/<task>/*.json).
+A run older than the last edit of its skill's files is ignored (the skill changed since) and listed apart.
 """
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -48,12 +50,46 @@ def verdict(record):
     return bool(items) and all(items)
 
 
-def run_history(runs_dir, last=LAST, limit=8):
-    """Lines for tasks whose last `last` verdicts are not all PASS (newest run decides 'failing now')."""
-    out = []
+def skill_for_task(task, pack):
+    """The pack skill a task file tests: the longest skill name that is the task name or its prefix."""
+    names = [s for s in pack if task == s or task.startswith(s + "-")]
+    return max(names, key=len) if names else None
+
+
+def changed_at(skills_dir, skill):
+    """Latest modification time of the skill's files (0 if the folder is missing)."""
+    files = [p.stat().st_mtime for p in (Path(skills_dir) / skill).rglob("*") if p.is_file()]
+    return max(files, default=0)
+
+
+def run_time(path):
+    """Time of a saved run from its file name YYYYMMDD-HHMMSS-..., or 0."""
+    try:
+        return time.mktime(time.strptime(path.name[:15], "%Y%m%d-%H%M%S"))
+    except ValueError:
+        return 0
+
+
+def run_history(runs_dir, skills_dir=None, last=LAST, limit=8):
+    """Lines for tasks whose last `last` verdicts are not all PASS (newest run decides 'failing now').
+
+    With skills_dir: tasks that test no pack skill are skipped, and runs older than the skill's last edit
+    are ignored; a task left with no newer run is listed in a final line.
+    """
+    out, stale = [], []
+    pack = {p.name for p in Path(skills_dir).iterdir() if p.is_dir()} if skills_dir else None
     for task in sorted(Path(runs_dir).glob("*/")):
+        paths = sorted(task.glob("*.json"))
+        if pack is not None:
+            skill = skill_for_task(task.name, pack)
+            if skill is None:
+                continue
+            fresh = [p for p in paths if run_time(p) > changed_at(skills_dir, skill)]
+            if paths and not fresh:
+                stale.append(task.name)
+            paths = fresh
         records = []
-        for path in sorted(task.glob("*.json"))[-last * 2:]:
+        for path in paths[-last * 2:]:
             try:
                 records.append(json.loads(path.read_text()))
             except (OSError, ValueError):
@@ -67,8 +103,10 @@ def run_history(runs_dir, last=LAST, limit=8):
         reason = fails[-1].get("reason", "").replace("\n", " ")[:160]
         out.append((state != "FAILING now", f"{state} {task.name} {passed}/{len(verdicts)} recent; last fail: {reason}"))
     out.sort()
-    lines = [line for _, line in out][:limit]
-    return lines or ["saved task runs: none failing in the last %d" % last]
+    lines = [line for _, line in out][:limit] or ["saved task runs: none failing in the last %d" % last]
+    if stale:
+        lines.append("older than the skill's last edit, ignored (rerun the smoke to judge): " + ", ".join(stale))
+    return lines
 
 
 def main():
@@ -82,7 +120,7 @@ def main():
     print("mode: " + ("repo (pack sources and test scripts found)" if repo else "project (pack files are read-only)"))
     print("\n".join(fire_lines(args.log, args.days, pack)))
     if repo and Path(args.runs).is_dir():
-        print("\n".join(run_history(args.runs)))
+        print("\n".join(run_history(args.runs, fires.SKILLS)))
     return 0
 
 

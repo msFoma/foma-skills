@@ -3,9 +3,11 @@
 Run: python3 -m unittest scripts/test_harness.py
 """
 import json
+import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -176,6 +178,32 @@ class EvidenceTest(unittest.TestCase):
         self.assertEqual(len(lines), 2)
         self.assertTrue(lines[0].startswith("FAILING now broken 1/2"))  # failing now sorts before flaky
         self.assertTrue(lines[1].startswith("flaky flaky 2/3") and "flaky reason" not in lines[0])
+
+    def test_run_history_ignores_runs_older_than_the_skills_last_edit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            skills, runs = Path(tmp) / "skills", Path(tmp) / "runs"
+            for name, age in (("alpha", 1000), ("beta", 5000)):  # alpha edited 1000 s ago, beta 5000 s ago
+                (skills / name).mkdir(parents=True)
+                f = skills / name / "SKILL.md"
+                f.write_text("x")
+                os.utime(f, (time.time() - age, time.time() - age))
+            stamp = time.strftime("%Y%m%d-%H%M%S", time.localtime(time.time() - 3000))  # between the two edits
+            for task in ("alpha-x", "beta", "orphan"):
+                (runs / task).mkdir(parents=True)
+                (runs / task / f"{stamp}-skill-sonnet.json").write_text(json.dumps(run_record(False, f"{task} fail")))
+            lines = evidence.run_history(runs, skills)
+        self.assertEqual(len(lines), 2)
+        self.assertTrue(lines[0].startswith("FAILING now beta 0/1"))  # newer than beta's edit
+        self.assertIn("ignored", lines[1])
+        self.assertIn("alpha-x", lines[1])
+        self.assertNotIn("orphan", " ".join(lines))  # tests no pack skill
+
+    def test_skill_for_task_takes_the_longest_name(self):
+        pack = {"skill-finder", "skill", "planning"}
+        self.assertEqual(evidence.skill_for_task("skill-finder-install", pack), "skill-finder")
+        self.assertEqual(evidence.skill_for_task("planning-routing", pack), "planning")
+        self.assertIsNone(evidence.skill_for_task("planningx", pack))
+        self.assertIsNone(evidence.skill_for_task("long-block", pack))
 
     def test_run_history_says_when_nothing_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
