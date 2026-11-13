@@ -7,6 +7,7 @@ Thanks for helping. foma-skills stays small on purpose: a skill earns its place 
 - Open an issue first for a new skill or a large change. Fixes and wording improvements can go straight to a pull request.
 - Read `docs/lite-standard.md`. Every skill follows it: layout, frontmatter keys, description and token caps, report format, attribution.
 - Decisions live in [`docs/engineering/`](docs/engineering/). Link the ID (`DEC-NNN`) when your change depends on one.
+- Be kind: see the [Code of Conduct](CODE_OF_CONDUCT.md). Add a line under *Unreleased* in [`CHANGELOG.md`](CHANGELOG.md) when a user would notice your change.
 
 ## Writing or changing a skill
 
