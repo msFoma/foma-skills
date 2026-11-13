@@ -1,0 +1,4 @@
+# Keep generated files and test data out of the language statistics
+docs/graph.html linguist-generated
+docs/assets/** linguist-generated
+tests/fixtures/** linguist-vendored
