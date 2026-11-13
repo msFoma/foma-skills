@@ -1,8 +1,24 @@
 # foma-skills
 
+[![validate](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml/badge.svg)](https://github.com/t8jwscc7qy-sketch/foma-skills/actions/workflows/validate.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Basic, lightweight skills for Claude Code. They take an idea from first question to merged commit and keep the workspace clean, with as little always-on token cost as possible.
 
-> **Status: pre-release (0.1.0).** All 17 skills are written and pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not yet done: the final eval against a no-pack baseline, and a first CI run (the repo has no remote yet). Treat the numbers below as unproven until then.
+**17 skills · about 0.9k always-on tokens · trigger tests and smoke runs for every skill · propose first, write after your ok**
+
+## Install
+
+```
+/plugin marketplace add t8jwscc7qy-sketch/foma-skills
+/plugin install foma-skills@foma
+```
+
+Skills fire on their own when the task fits; call one by hand as `/foma-skills:<skill>`. Remove with `/plugin uninstall foma-skills@foma`. Plugins are the only supported install.
+
+> **Status: pre-release (0.1.0).** All 17 skills are written and pass static checks, trigger tests (the 16 automatic ones) and one smoke run each. Not yet done: the final eval against a no-pack baseline. The numbers in `research/` come from small samples; treat them as indicative, not proven.
+
+## How the skills connect
 
 ```mermaid
 flowchart TD
@@ -74,15 +90,6 @@ flowchart TD
 ```
 
 Interactive version: [`docs/graph.html`](docs/graph.html).
-
-## Install
-
-```
-/plugin marketplace add foma/foma-skills
-/plugin install foma-skills@foma
-```
-
-Skills are namespaced: `/foma-skills:<skill>`. Plugins are the only supported install.
 
 ## Skills
 
