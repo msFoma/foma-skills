@@ -257,6 +257,8 @@ Rules the models already follow are not skills here. Tested on Haiku and Sonnet 
 
 ## 🤝 Contributing
 
+> 🎯 **A skill did not fire?** That is the most useful report you can send: [tell us the exact words you said](https://github.com/t8jwscc7qy-sketch/foma-skills/issues/new?template=skill_didnt_fire.yml).
+
 Issues and pull requests are welcome; see [`CONTRIBUTING.md`](CONTRIBUTING.md). The pack stays small on purpose: a skill earns its place only if it beats a plain one-line instruction in tests.
 
 ## 📄 License

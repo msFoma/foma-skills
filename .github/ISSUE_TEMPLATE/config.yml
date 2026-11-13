@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "❓ Вопрос новичка? Сначала загляните в FAQ"
+    url: https://github.com/t8jwscc7qy-sketch/foma-skills/blob/main/docs/ru/faq.md
+    about: Частые вопросы про установку, срабатывание скиллов и токены.
+  - name: "🚀 Quick start (English)"
+    url: https://github.com/t8jwscc7qy-sketch/foma-skills#install
+    about: Two commands to install, then restart Claude Code in your project.

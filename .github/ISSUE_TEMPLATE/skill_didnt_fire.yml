@@ -1,0 +1,74 @@
+name: "🎯 A skill did not fire (or fired when it should not)"
+description: The most useful report you can send. Your exact words decide how the description gets fixed.
+title: "[trigger] "
+labels: ["🎯 trigger-miss"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Skills fire from how you word the task, so **your exact sentence matters most**. Do not paste secrets or private code.
+        Tip: you can always call a skill by hand, e.g. `/foma-skills:planning`.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What happened?
+      options:
+        - A skill should have fired and did not
+        - A skill fired when it should not have
+        - A different skill fired than I expected
+    validations:
+      required: true
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - groundwork
+        - tidying
+        - learning
+        - skill-finder
+        - handoff
+        - shaping
+        - design-interview
+        - planning
+        - executing
+        - debugging
+        - reviewing
+        - refactoring
+        - tdd
+        - committing
+        - documenting
+        - writing-skills
+        - tuning
+        - not sure / the router or hooks
+    validations:
+      required: true
+  - type: textarea
+    id: words
+    attributes:
+      label: The exact words you said to Claude
+      placeholder: "Make a plan for the refunds feature"
+    validations:
+      required: true
+  - type: dropdown
+    id: model
+    attributes:
+      label: Model
+      description: Haiku misses more often than Sonnet and Opus; this helps tell a wording problem from a model one.
+      options:
+        - Haiku
+        - Sonnet
+        - Opus
+        - other / not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Claude Code and pack versions
+      placeholder: "Claude Code 2.1.323, foma-skills 0.1.0 (claude --version, claude plugin list)"
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: What Claude did instead, other plugins installed, language of the prompt.

@@ -1,0 +1,26 @@
+name: "📚 Docs problem (English or Русский)"
+description: Something is unclear, wrong or missing in the README or docs. Русский язык приветствуется.
+title: "[docs] "
+labels: ["📚 docs"]
+body:
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Language
+      options:
+        - English
+        - Русский
+        - Both / translation differs
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      placeholder: "README.ru.md, docs/ru/faq.md, ..."
+  - type: textarea
+    id: what
+    attributes:
+      label: What is unclear, wrong or missing?
+    validations:
+      required: true

@@ -1,0 +1,34 @@
+name: "💡 Pitch a skill"
+description: Propose a new skill. The pack stays small on purpose, so the pitch has to say why a skill beats one line.
+title: "[idea] "
+labels: ["💡 skill-idea"]
+body:
+  - type: markdown
+    attributes:
+      value: A skill earns its place only if it beats a plain one-line instruction in tests (see CONTRIBUTING.md).
+  - type: textarea
+    id: habit
+    attributes:
+      label: Which repeated task or habit should it cover?
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: How do you handle it today?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is a CLAUDE.md line not enough?
+      description: A skill is for a repeated multi-step procedure or a method, not for one fact.
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Example prompts that should wake it up
+      placeholder: |
+        - ...
+        - ...

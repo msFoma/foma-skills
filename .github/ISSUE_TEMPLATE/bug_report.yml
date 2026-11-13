@@ -1,0 +1,55 @@
+name: "🐛 Bug in a skill or hook"
+description: A skill did the wrong thing, a hook misbehaved, or a script failed.
+title: "[bug] "
+labels: ["🐛 bug"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - groundwork
+        - tidying
+        - learning
+        - skill-finder
+        - handoff
+        - shaping
+        - design-interview
+        - planning
+        - executing
+        - debugging
+        - reviewing
+        - refactoring
+        - tdd
+        - committing
+        - documenting
+        - writing-skills
+        - tuning
+        - not sure / the router or hooks
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: The prompt you used and the state of the project (new or existing, git or not). No secrets, please.
+  - type: dropdown
+    id: model
+    attributes:
+      label: Model
+      options:
+        - Haiku
+        - Sonnet
+        - Opus
+        - other / not sure
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "macOS 15 / Linux / Windows with Git Bash; Claude Code version"
