@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="298" height="40" viewBox="0 0 298 40" role="img" aria-label="Документация на русском">
+<svg xmlns="http://www.w3.org/2000/svg" width="282" height="38" viewBox="0 0 282 38" role="img" aria-label="Документация на русском">
 <title>Документация на русском</title>
-<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#e8714a"/></linearGradient><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient></defs><rect x="0.75" y="0.75" width="296.5" height="38.5" rx="19.25" fill="url(#gh)" stroke="#e8714a" stroke-opacity="0.55" stroke-width="1.5"/><g transform="translate(16,11) scale(0.8)" fill="none" stroke="#e8714a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#e8714a"/></linearGradient><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient><linearGradient id="lv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8714a" stop-opacity="0.3"/><stop offset="1" stop-color="#0d0b12"/></linearGradient><linearGradient id="lvs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset="1" stop-color="#86b2f2"/></linearGradient></defs><rect x="0.9" y="0.9" width="280.2" height="36.2" rx="18.1" fill="url(#gh)" stroke="#e8714a" stroke-opacity="0.55" stroke-width="1.5"/><g transform="translate(16,10) scale(0.8)" fill="none" stroke="#e8714a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="m5 8 6 6" />
   <path d="m4 14 6-6 2-3" />
   <path d="M2 5h12" />
   <path d="M7 2h1" />
   <path d="m22 22-5-10-5 10" />
   <path d="M14 18h6" />
-</g><text x="43" y="25.4" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#f4ece6">Документация на русском</text></svg>
+</g><text x="43" y="24" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#f4ece6">Документация на русском</text></svg>

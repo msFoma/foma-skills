@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="166" height="40" viewBox="0 0 166 40" role="img" aria-label="Все скиллы">
+<svg xmlns="http://www.w3.org/2000/svg" width="159" height="38" viewBox="0 0 159 38" role="img" aria-label="Все скиллы">
 <title>Все скиллы</title>
-<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#e8714a"/></linearGradient><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient></defs><rect x="0.75" y="0.75" width="164.5" height="38.5" rx="19.25" fill="url(#gh)" stroke="#e8714a" stroke-opacity="0.55" stroke-width="1.5"/><g transform="translate(16,11) scale(0.8)" fill="none" stroke="#e8714a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="#e8714a"/></linearGradient><linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient><linearGradient id="lv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8714a" stop-opacity="0.3"/><stop offset="1" stop-color="#0d0b12"/></linearGradient><linearGradient id="lvs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset="1" stop-color="#86b2f2"/></linearGradient></defs><rect x="0.9" y="0.9" width="157.2" height="36.2" rx="18.1" fill="url(#gh)" stroke="#e8714a" stroke-opacity="0.55" stroke-width="1.5"/><g transform="translate(16,10) scale(0.8)" fill="none" stroke="#e8714a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="M16 12v4" />
   <path d="M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
   <path d="M17 6a2 2 0 011.414.586l3 3A2 2 0 0122 11v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8a2 2 0 01.586-1.414l3-3A2 2 0 017 6z" />
   <path d="M2 14h20" />
   <path d="M8 12v4" />
-</g><text x="43" y="25.4" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#f4ece6">Все скиллы</text></svg>
+</g><text x="43" y="24" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#f4ece6">Все скиллы</text></svg>

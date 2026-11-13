@@ -10,7 +10,9 @@
 
 ### Say what you want. The right skill wakes up, asks first, and does the careful part.
 
-<p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="40" alt="Install"></a> <a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.en.svg" height="40" alt="What you get"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.en.svg" height="40" alt="First 5 minutes"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.en.svg" height="40" alt="All skills"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.en.svg" height="40" alt="Документация на русском"></a></p>
+<p><a href="#install"><img src="docs/assets/header/nav-install.en.svg" height="44" alt="Install"></a> <a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/header/nav-map.en.svg" height="44" alt="Live map"></a></p>
+
+<p><a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.en.svg" height="38" alt="What you get"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.en.svg" height="38" alt="First 5 minutes"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.en.svg" height="38" alt="All skills"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.en.svg" height="38" alt="Документация на русском"></a></p>
 
 </div>
 
@@ -20,17 +22,28 @@
 <a id="install"></a>
 ## <img src="docs/assets/icons/install.svg" width="28" height="28" align="absmiddle" alt=""> Install
 
-In Claude Code, run two commands:
+In Claude Code, run two commands, then restart:
+
+<img src="docs/assets/install/step-1.en.svg" alt="Step 1: add the marketplace">
 
 ```
 /plugin marketplace add t8jwscc7qy-sketch/foma-skills
+```
+
+<img src="docs/assets/install/step-2.en.svg" alt="Step 2: install the plugin">
+
+```
 /plugin install foma-skills@foma
 ```
 
-Then **restart Claude Code in your project** (the plugin loads when a session starts) and just talk to it. Nothing else to configure.
+<img src="docs/assets/install/step-3.en.svg" alt="Step 3: restart Claude Code in your project">
+
+Then just talk to it. Nothing else to configure.
 
 > [!TIP]
 > Try it on a small or throwaway project first. To remove it: `/plugin uninstall foma-skills@foma`. Install only for one project with `--scope local` (`claude plugin install foma-skills@foma --scope local`).
+
+<a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=en"><img src="docs/assets/graph-teaser.en.svg" alt="The live skill map in a browser window: 17 skills in five groups, who calls whom. Click to open it." width="100%"></a>
 
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> What you get

@@ -10,7 +10,9 @@
 
 ### Скажите, что нужно. Нужный скилл включится сам, сначала спросит и аккуратно сделает работу.
 
-<p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="40" alt="Установка"></a> <a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.ru.svg" height="40" alt="Что вы получаете"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.ru.svg" height="40" alt="Первые 5 минут"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.ru.svg" height="40" alt="Все скиллы"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.ru.svg" height="40" alt="Подробная документация"></a></p>
+<p><a href="#install"><img src="docs/assets/header/nav-install.ru.svg" height="44" alt="Установка"></a> <a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/header/nav-map.ru.svg" height="44" alt="Живая карта"></a></p>
+
+<p><a href="#what-you-get"><img src="docs/assets/header/nav-what-you-get.ru.svg" height="38" alt="Что вы получаете"></a> <a href="#first-5-minutes"><img src="docs/assets/header/nav-first-5-minutes.ru.svg" height="38" alt="Первые 5 минут"></a> <a href="#skills"><img src="docs/assets/header/nav-skills.ru.svg" height="38" alt="Все скиллы"></a> <a href="docs/ru/quickstart.md"><img src="docs/assets/header/nav-docs.ru.svg" height="38" alt="Подробная документация"></a></p>
 
 </div>
 
@@ -20,17 +22,28 @@
 <a id="install"></a>
 ## <img src="docs/assets/icons/install.svg" width="28" height="28" align="absmiddle" alt=""> Установка
 
-В Claude Code выполните две команды:
+В Claude Code выполните две команды, затем перезапустите:
+
+<img src="docs/assets/install/step-1.ru.svg" alt="Шаг 1: добавьте маркетплейс">
 
 ```
 /plugin marketplace add t8jwscc7qy-sketch/foma-skills
+```
+
+<img src="docs/assets/install/step-2.ru.svg" alt="Шаг 2: установите плагин">
+
+```
 /plugin install foma-skills@foma
 ```
 
-Потом **перезапустите Claude Code в вашем проекте** (плагин подключается при старте сессии) и просто общайтесь как обычно. Больше ничего настраивать не нужно.
+<img src="docs/assets/install/step-3.ru.svg" alt="Шаг 3: перезапустите Claude Code в проекте">
+
+Дальше просто общайтесь как обычно. Больше ничего настраивать не нужно.
 
 > [!TIP]
 > Сначала попробуйте на небольшом или тестовом проекте. Удалить: `/plugin uninstall foma-skills@foma`. Установить только для одного проекта: `claude plugin install foma-skills@foma --scope local`.
+
+<a href="https://t8jwscc7qy-sketch.github.io/foma-skills/graph.html#lang=ru"><img src="docs/assets/graph-teaser.ru.svg" alt="Живая карта скиллов в окне браузера: 17 скиллов в пяти группах, кто кого вызывает. Нажмите, чтобы открыть." width="100%"></a>
 
 <a id="what-you-get"></a>
 ## <img src="docs/assets/icons/what-you-get.svg" width="28" height="28" align="absmiddle" alt=""> Что вы получаете

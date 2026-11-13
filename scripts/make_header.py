@@ -41,20 +41,32 @@ def svg(w, h, label, body, css=""):
             f'<title>{esc(label)}</title>{css}\n{body}</svg>\n')
 
 
-def pill(label, icon_name, cta=False):
-    h, fs = 40, 15
+def pill(label, icon_name, style=None):
+    """style: "cta" (filled, the main action), "live" (accent outline and a pulsing dot, for the live map) or None."""
+    cta, live = style == "cta", style == "live"
+    h, fs, isz = (44, 16, 20) if (cta or live) else (38, 14, 18)  # the two main actions are larger
     tw = mc.tw(label, fs, True) * 1.04
-    w = math.ceil(16 + 18 + 9 + tw + 18)
+    w = math.ceil(16 + isz + 9 + tw + 18 + (14 if live else 0))
     fg = "#1c0b05" if cta else INK
-    ic = "#1c0b05" if cta else BRAND
-    fill = ("url(#cta)" if cta else "url(#gh)")
-    stroke = (f'stroke="{HOT}" stroke-opacity="0.9"' if cta else f'stroke="{BRAND}" stroke-opacity="0.55"')
+    ic = "#1c0b05" if cta else (HOT if live else BRAND)
+    fill = "url(#cta)" if cta else ("url(#lv)" if live else "url(#gh)")
+    stroke = (f'stroke="{HOT}" stroke-opacity="0.9"' if cta else
+              ('stroke="url(#lvs)" stroke-opacity="1"' if live else f'stroke="{BRAND}" stroke-opacity="0.55"'))
     body = (f'<defs><linearGradient id="cta" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f08a5c"/><stop offset="1" stop-color="{BRAND}"/></linearGradient>'
-            f'<linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient></defs>'
-            f'<rect x="0.75" y="0.75" width="{w - 1.5}" height="{h - 1.5}" rx="{h / 2 - 0.75}" fill="{fill}" {stroke} stroke-width="1.5"/>'
-            f'{icon(icon_name, ic, 16, 11, 18)}'
-            f'<text x="{n(16 + 18 + 9)}" y="25.4" font-family="{FONT}" font-size="{fs}" font-weight="{700 if cta else 600}" fill="{fg}">{esc(label)}</text>')
-    return svg(w, h, label, body)
+            f'<linearGradient id="gh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a151c"/><stop offset="1" stop-color="#0d0b12"/></linearGradient>'
+            f'<linearGradient id="lv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{BRAND}" stop-opacity="0.3"/><stop offset="1" stop-color="#0d0b12"/></linearGradient>'
+            f'<linearGradient id="lvs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{HOT}"/><stop offset="1" stop-color="#86b2f2"/></linearGradient></defs>'
+            f'<rect x="0.9" y="0.9" width="{w - 1.8}" height="{h - 1.8}" rx="{h / 2 - 0.9}" fill="{fill}" {stroke} stroke-width="{1.8 if live else 1.5}"/>'
+            f'{icon(icon_name, ic, 16, (h - isz) / 2, isz)}'
+            f'<text x="{n(16 + isz + 9)}" y="{n(h / 2 + fs * 0.36)}" font-family="{FONT}" font-size="{fs}" font-weight="{700 if (cta or live) else 600}" fill="{fg}">{esc(label)}</text>')
+    css = ""
+    if live:
+        cx, cy = w - 17, h / 2
+        body += (f'<circle cx="{n(cx)}" cy="{n(cy)}" r="3.4" fill="#5fceb4"/>'
+                 f'<circle class="pl" cx="{n(cx)}" cy="{n(cy)}" r="3.4" fill="none" stroke="#5fceb4" stroke-width="1.4"/>')
+        css = mc.motion(".pl{transform-box:fill-box;transform-origin:center;animation:pl 2.4s ease-out infinite}"
+                        "@keyframes pl{0%{transform:scale(1);opacity:.9}70%,100%{transform:scale(2.9);opacity:0}}")
+    return svg(w, h, label, body, css)
 
 
 def lang_pill(label, on):
@@ -111,12 +123,12 @@ def stats(lang):
 
 
 NAV = {
-    "en": [("install", "Install", "install", True), ("what-you-get", "What you get", "what-you-get", False),
-           ("first-5-minutes", "First 5 minutes", "first-5-minutes", False), ("skills", "All skills", "all-skills", False),
-           ("docs", "Документация на русском", "lang", False)],
-    "ru": [("install", "Установка", "install", True), ("what-you-get", "Что вы получаете", "what-you-get", False),
-           ("first-5-minutes", "Первые 5 минут", "first-5-minutes", False), ("skills", "Все скиллы", "all-skills", False),
-           ("docs", "Подробная документация", "docs", False)],
+    "en": [("install", "Install", "install", "cta"), ("map", "Live map", "skill-map", "live"),
+           ("what-you-get", "What you get", "what-you-get", None), ("first-5-minutes", "First 5 minutes", "first-5-minutes", None),
+           ("skills", "All skills", "all-skills", None), ("docs", "Документация на русском", "lang", None)],
+    "ru": [("install", "Установка", "install", "cta"), ("map", "Живая карта", "skill-map", "live"),
+           ("what-you-get", "Что вы получаете", "what-you-get", None), ("first-5-minutes", "Первые 5 минут", "first-5-minutes", None),
+           ("skills", "Все скиллы", "all-skills", None), ("docs", "Документация", "docs", None)],
 }
 
 
@@ -124,8 +136,12 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for lang in ("en", "ru"):
         (OUT / f"stats.{lang}.svg").write_text(stats(lang))
-        for key, label, ic, cta in NAV[lang]:
-            (OUT / f"nav-{key}.{lang}.svg").write_text(pill(label, ic, cta))
+        widths = []
+        for key, label, ic, style in NAV[lang]:
+            text = pill(label, ic, style)
+            (OUT / f"nav-{key}.{lang}.svg").write_text(text)
+            widths.append(int(re.search(r'width="(\d+)"', text).group(1)))
+        print(f"nav {lang}: {len(widths)} pills, {sum(widths)} px + gaps")
     for lang, label in (("en", "English"), ("ru", "Русский")):
         for on in (True, False):
             (OUT / f"lang-{lang}.{'on' if on else 'off'}.svg").write_text(lang_pill(label, on))
